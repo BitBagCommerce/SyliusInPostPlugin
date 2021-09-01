@@ -1,0 +1,71 @@
+{% set inpostGatewayCode = constant('BitBag\\SyliusInPostPlugin\\EventListener\\ShippingExportEventListener::INPOST_POINT_SHIPPING_GATEWAY_CODE') %}
+
+{% set gatewayCode = '' %}
+
+{% if order.hasShipments %}
+    {% for shipment in order.shipments %}
+        {% if shipment.method is defined and shipment.method is not null %}
+            {% set gatewayCode = shipment.method.code %}
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+{% if order.billingAddress is not null %}
+    <h4 class="ui attached styled header{% if order.shippingAddress is null %} top{% endif %}">
+        {{ 'sylius.ui.billing_address'|trans }}
+    </h4>
+    <div class="ui attached segment" id="billing-address">
+        {% include '@SyliusAdmin/Common/_address.html.twig' with {'address': order.billingAddress} %}
+    </div>
+{% endif %}
+
+{% if gatewayCode is defined and inpostGatewayCode == gatewayCode %}
+    <h4 class="ui attached styled header">
+        {{ 'sylius.ui.shipping_address'|trans }}
+    </h4>
+    <div class="ui attached segment" id="app-inpost-point">
+        {% if order.point is not null %}
+            {% set point = inpostClient.getPointByName(order.point.name) %}
+        {% endif %}
+        <address style="{{ order.point is null ? 'display: none;' : '' }}">
+        <span class="inpost-point-line1">
+            {{ point.address.line1 is defined ? 'ul.' ~ point.address.line1 : '' }}
+        </span>
+            <br>
+            <span class="inpost-point-line2">
+            {{ point.address.line2 is defined ? point.address.line2 : '' }}
+        </span>
+            <br>
+            <strong class="inpost-point-name">
+                {{ order.point.name is defined ? order.point.name : '' }}
+            </strong>
+        </address>
+        <div class="ui segment">
+            <button type="button" id="bitbag-inpost-admin-select-point" data-path="{{ path('bitbag_inpost_plugin_admin_add_point_to_order') }}" data-order-id="{{ order.id }}" class="ui icon labeled tiny fluid yellow button">
+                <i class="pencil icon"></i> {{ 'bitbag.inpost.ui.select_point'|trans }}
+            </button>
+        </div>
+    </div>
+{% else %}
+
+    {% if order.shippingAddress is not null %}
+        <h4 class="ui top attached styled header">
+            {{ 'sylius.ui.shipping_address'|trans }}
+        </h4>
+        <div class="ui attached segment" id="shipping-address">
+            {% include '@SyliusAdmin/Common/_address.html.twig' with {'address': order.shippingAddress} %}
+        </div>
+    {% endif %}
+
+    <div class="ui attached segment" id="edit-addresses">
+        <a href="{{ path('sylius_admin_order_update', {'id': order.id}) }}" class="ui icon labeled tiny fluid button">
+            <i class="pencil icon"></i> {{ 'sylius.ui.edit_addresses'|trans }}
+        </a>
+    </div>
+
+{% endif %}
+
+
+
+
+

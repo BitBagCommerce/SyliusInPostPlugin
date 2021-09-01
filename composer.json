@@ -1,15 +1,18 @@
 {
-    "name": "sylius/plugin-skeleton",
+    "name": "bitbag/inpost-plugin",
     "type": "sylius-plugin",
-    "description": "Acme example plugin for Sylius.",
+    "description": "Inpost plugin for Sylius",
     "keywords": [
         "sylius",
-        "sylius-plugin"
+        "sylius-plugin",
+        "inpost"
     ],
     "license": "MIT",
     "require": {
         "php": "^7.4 || ^8.0",
-        "sylius/sylius": "~1.9.0 || ~1.10.0@beta"
+        "bitbag/shipping-export-plugin": "^1.5",
+        "sylius/sylius": "~1.9.0 || ~1.10.0",
+        "ext-soap": "*"
     },
     "require-dev": {
         "behat/behat": "^3.6.1",
@@ -51,8 +54,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Acme\\SyliusExamplePlugin\\": "src/",
-            "Tests\\Acme\\SyliusExamplePlugin\\": "tests/"
+            "BitBag\\SyliusInPostPlugin\\": "src/",
+            "Tests\\BitBag\\SyliusInPostPlugin\\": "tests/"
         }
     },
     "autoload-dev": {

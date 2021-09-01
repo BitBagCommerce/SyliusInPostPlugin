@@ -1,0 +1,29 @@
+bitbag:
+    inpost:
+        ui:
+            access_token: Access token
+            organization_id: Organization ID
+            environment: Environment
+            sandbox: Sandbox
+            production: Production
+            service: Service
+            insurance_amount: Insurance amount
+            cod_payment_method_code: COD Payment Method Code
+            additional_services: Additional Services
+            is_return: Return Package
+            select_point: Select Point
+        main_service:
+            inpost_locker_standard: Inpost Locker Standard
+            inpost_locker_pass_thru: Inpost Locker Pass Thru
+            inpost_courier_standard: Inpost Courier Standard
+            inpost_courier_express_1000: Inpost Courier With Delivery By 10am
+            inpost_courier_express_1200: Inpost Courier With Delivery By 12pm
+            inpost_courier_express_1700: Inpost Courier With Delivery By 17pm
+            inpost_courier_local_standard: Inpost Courier Local Standard
+            inpost_courier_local_express: Inpost Courier Local Express
+            inpost_courier_local_super_express: Inpost Courier Local Super Express
+        additional_service:
+            sms: SMS Notification
+            email: E-mail Notification
+            saturday: Saturday Delivery
+            rod: ROD

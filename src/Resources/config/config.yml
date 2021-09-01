@@ -1,0 +1,6 @@
+imports:
+    - { resource: "resource/bitbag_inpost.yml" }
+    - { resource: "@BitBagSyliusInPostPlugin/Resources/config/sylius_ui.yml" }
+twig:
+    globals:
+        inpostClient: '@bitbag.inpost_plugin.api.web_client'

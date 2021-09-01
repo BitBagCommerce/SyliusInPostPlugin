@@ -1,0 +1,25 @@
+services:
+    bitbag.inpost_plugin.behat.context.ui.admin.shipping_gateway:
+        class: Tests\BitBag\SyliusInPostPlugin\Behat\Context\Ui\Admin\ShippingGatewayContext
+        public: true
+        arguments:
+            - '@bitbag.inpost_plugin.behat.page.admin.shipping_gateway.create'
+            - '@sylius.behat.current_page_resolver'
+            - '@sylius.behat.notification_checker'
+
+    bitbag.inpost_plugin.behat.context.setup.shipping_gateway:
+        class: Tests\BitBag\SyliusInPostPlugin\Behat\Context\Setup\ShippingGatewayContext
+        public: true
+        arguments:
+            - '@sylius.product_variant_resolver.default'
+            - '@sylius.repository.order'
+            - '@sylius.repository.shipment'
+            - '@doctrine.orm.entity_manager'
+            - '@sylius.behat.shared_storage'
+
+    bitbag.inpost_plugin.behat.context.ui.admin.shipping_export:
+        class: Tests\BitBag\SyliusInPostPlugin\Behat\Context\Ui\Admin\ShippingExportContext
+        public: true
+        arguments:
+            - '@bitbag.behat.page.admin.shipping_export.index'
+            - '@bitbag.inpost_plugin.behat.mocker.inpost_api_mocker'
