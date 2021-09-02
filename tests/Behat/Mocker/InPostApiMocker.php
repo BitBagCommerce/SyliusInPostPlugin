@@ -15,10 +15,9 @@ namespace Tests\BitBag\SyliusInPostPlugin\Behat\Mocker;
 use BitBag\SyliusInPostPlugin\Api\SoapClientInterface;
 use Sylius\Behat\Service\Mocker\MockerInterface;
 
-class InpostApiMocker
+class InPostApiMocker
 {
-    /** @var MockerInterface */
-    private $mocker;
+    private MockerInterface $mocker;
 
     public function __construct(MockerInterface $mocker)
     {
@@ -46,7 +45,7 @@ class InpostApiMocker
         $this
             ->mocker
             ->mockService(
-                'bitbag.inpost_plugin.api.soap_client',
+                'bitbag.sylius_inpost_plugin.api.soap_client',
                 SoapClientInterface::class
             )
             ->shouldReceive('createShipment')

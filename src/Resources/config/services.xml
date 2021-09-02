@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service
+                class="BitBag\SyliusInPostPlugin\Form\Type\ShippingGatewayType"
+                id="bitbag.sylius_inpost_plugin.form.type.inpost_shipping_gateway"
+        >
+            <tag name="bitbag.shipping_gateway_configuration_type" type="inpost" label="INPOST_PL"/>
+        </service>
+
+        <service
+                class="BitBag\SyliusInPostPlugin\EventListener\ShippingExportEventListener"
+                id="bitbag.sylius_inpost_plugin.event_listener.inpost_shipping_export"
+        >
+            <argument type="service" id="doctrine.orm.default_entity_manager"/>
+            <argument type="service" id="session.flash_bag"/>
+            <argument type="service" id="bitbag.sylius_inpost_plugin.api.web_client"/>
+            <argument type="service" id="filesystem"/>
+            <argument key="$shippingLabelsPath">%bitbag.shipping_labels_path%</argument>
+
+            <tag name="kernel.event_listener" event="bitbag.shipping_export.export_shipment" method="exportShipment"/>
+        </service>
+
+        <service
+                class="BitBag\SyliusInPostPlugin\Api\WebClient"
+                id="bitbag.sylius_inpost_plugin.api.web_client"
+        >
+            <argument type="service" id="sylius.http_client"/>
+        </service>
+
+        <service
+                class="BitBag\SyliusInPostPlugin\Api\SoapClient"
+                id="bitbag.sylius_inpost_plugin.api.soap_client"
+        >
+        </service>
+        
+        <service
+                class="BitBag\SyliusInPostPlugin\Controller\AddPointToOrderAction"
+                id="bitbag.sylius_inpost_plugin.controller.add_point_to_order"
+        >
+            <argument type="service" id="sylius.repository.order"/>
+            <argument type="service" id="bitbag.factory.inpost_point"/>
+            <argument type="service" id="sylius.manager.order"/>
+            <argument type="service" id="bitbag.sylius_inpost_plugin.api.web_client"/>
+            <argument type="service" id="sylius.context.cart"/>
+        </service>
+    </services>
+</container>

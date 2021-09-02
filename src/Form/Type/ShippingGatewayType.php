@@ -25,74 +25,74 @@ final class ShippingGatewayType extends AbstractType
     {
         $builder
             ->add('access_token', TextType::class, [
-                'label' => 'bitbag.inpost.ui.access_token',
+                'label' => 'bitbag_sylius_inpost_plugin.ui.access_token',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'bitbag.inpost.ui.organization_id.not_blank',
+                        'message' => 'bitbag_sylius_inpost_plugin.ui.organization_id.not_blank',
                         'groups' => 'bitbag',
                     ]),
                 ],
             ])
             ->add('organization_id', TextType::class, [
-                'label' => 'bitbag.inpost.ui.organization_id',
+                'label' => 'bitbag_sylius_inpost_plugin.ui.organization_id',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'bitbag.inpost.ui.organization_id.not_blank',
+                        'message' => 'bitbag_sylius_inpost_plugin.ui.organization_id.not_blank',
                         'groups' => 'bitbag',
                     ]),
                 ],
             ])
             ->add('environment', ChoiceType::class, [
-                'label' => 'bitbag.inpost.ui.environment',
+                'label' => 'bitbag_sylius_inpost_plugin.ui.environment',
                 'choices' => [
-                    'bitbag.inpost.ui.sandbox' => WebClientInterface::SANDBOX_ENVIRONMENT,
-                    'bitbag.inpost.ui.production' => WebClientInterface::PRODUCTION_API_ENDPOINT,
+                    'bitbag_sylius_inpost_plugin.ui.sandbox' => WebClientInterface::SANDBOX_ENVIRONMENT,
+                    'bitbag_sylius_inpost_plugin.ui.production' => WebClientInterface::PRODUCTION_API_ENDPOINT,
                 ],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'bitbag.inpost.ui.environment.not_blank',
+                        'message' => 'bitbag_sylius_inpost_plugin.ui.environment.not_blank',
                         'groups' => 'bitbag',
                     ]),
                 ],
             ])
             ->add('service', ChoiceType::class, [
-                'label' => 'bitbag.inpost.ui.service',
+                'label' => 'bitbag_sylius_inpost_plugin.ui.service',
                 'choices' => [
-                    'bitbag.inpost.main_service.inpost_locker_standard' => WebClientInterface::INPOST_LOCKER_STANDARD_SERVICE,
-                    'bitbag.inpost.main_service.inpost_locker_pass_thru' => WebClientInterface::INPOST_LOCKER_PASS_THRU_SERVICE,
-                    'bitbag.inpost.main_service.inpost_courier_standard' => WebClientInterface::INPOST_COURIER_STANDARD_SERVICE,
-                    'bitbag.inpost.main_service.inpost_courier_express_1000' => WebClientInterface::INPOST_COURIER_EXPRESS_1000_SERVICE,
-                    'bitbag.inpost.main_service.inpost_courier_express_1200' => WebClientInterface::INPOST_COURIER_EXPRESS_1200_SERVICE,
-                    'bitbag.inpost.main_service.inpost_courier_express_1700' => WebClientInterface::INPOST_COURIER_EXPRESS_1700_SERVICE,
-                    'bitbag.inpost.main_service.inpost_courier_local_standard' => WebClientInterface::INPOST_COURIER_LOCAL_STANDARD_SERVICE,
-                    'bitbag.inpost.main_service.inpost_courier_local_express' => WebClientInterface::INPOST_COURIER_LOCAL_EXPRESS_SERVICE,
-                    'bitbag.inpost.main_service.inpost_courier_local_super_express' => WebClientInterface::INPOST_COURIER_LOCAL_SUPER_EXPRESS_SERVICE,
+                    'bitbag_sylius_inpost_plugin.main_service.inpost_locker_standard' => WebClientInterface::INPOST_LOCKER_STANDARD_SERVICE,
+                    'bitbag_sylius_inpost_plugin.main_service.inpost_locker_pass_thru' => WebClientInterface::INPOST_LOCKER_PASS_THRU_SERVICE,
+                    'bitbag_sylius_inpost_plugin.main_service.inpost_courier_standard' => WebClientInterface::INPOST_COURIER_STANDARD_SERVICE,
+                    'bitbag_sylius_inpost_plugin.main_service.inpost_courier_express_1000' => WebClientInterface::INPOST_COURIER_EXPRESS_1000_SERVICE,
+                    'bitbag_sylius_inpost_plugin.main_service.inpost_courier_express_1200' => WebClientInterface::INPOST_COURIER_EXPRESS_1200_SERVICE,
+                    'bitbag_sylius_inpost_plugin.main_service.inpost_courier_express_1700' => WebClientInterface::INPOST_COURIER_EXPRESS_1700_SERVICE,
+                    'bitbag_sylius_inpost_plugin.main_service.inpost_courier_local_standard' => WebClientInterface::INPOST_COURIER_LOCAL_STANDARD_SERVICE,
+                    'bitbag_sylius_inpost_plugin.main_service.inpost_courier_local_express' => WebClientInterface::INPOST_COURIER_LOCAL_EXPRESS_SERVICE,
+                    'bitbag_sylius_inpost_plugin.main_service.inpost_courier_local_super_express' => WebClientInterface::INPOST_COURIER_LOCAL_SUPER_EXPRESS_SERVICE,
                 ],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'app.inpost.service.not_blank',
+                        'message' => 'bitbag_sylius_inpost_plugin.ui.not_blank',
                         'groups' => 'bitbag',
                     ]),
                 ],
             ])
             ->add('insurance_amount', NumberType::class, [
-                'label' => 'bitbag.inpost.ui.insurance_amount',
+                'label' => 'bitbag_sylius_inpost_plugin.ui.insurance_amount',
                 'required' => false,
             ])
             ->add('cod_payment_method_code', TextType::class, [
-                'label' => 'bitbag.inpost.ui.cod_payment_method_code',
+                'label' => 'bitbag_sylius_inpost_plugin.ui.cod_payment_method_code',
                 'required' => false,
             ])
             ->add('is_return', CheckboxType::class, [
-                'label' => 'bitbag.inpost.ui.is_return',
+                'label' => 'bitbag_sylius_inpost_plugin.ui.is_return',
             ])
             ->add('additional_services', ChoiceType::class, [
-                'label' => 'bitbag.inpost.ui.additional_services',
+                'label' => 'bitbag_sylius_inpost_plugin.ui.additional_services',
                 'choices' => [
-                    'bitbag.inpost.additional_service.sms' => WebClientInterface::SMS_ADDITIONAL_SERVICE,
-                    'bitbag.inpost.additional_service.email' => WebClientInterface::EMAIL_ADDITIONAL_SERVICE,
-                    'bitbag.inpost.additional_service.saturday' => WebClientInterface::SATURDAY_ADDITIONAL_SERVICE,
-                    'bitbag.inpost.additional_service.rod' => WebClientInterface::ROD_ADDITIONAL_SERVICE,
+                    'bitbag_sylius_inpost_plugin.additional_service.sms' => WebClientInterface::SMS_ADDITIONAL_SERVICE,
+                    'bitbag_sylius_inpost_plugin.additional_service.email' => WebClientInterface::EMAIL_ADDITIONAL_SERVICE,
+                    'bitbag_sylius_inpost_plugin.additional_service.saturday' => WebClientInterface::SATURDAY_ADDITIONAL_SERVICE,
+                    'bitbag_sylius_inpost_plugin.additional_service.rod' => WebClientInterface::ROD_ADDITIONAL_SERVICE,
                 ],
                 'expanded' => true,
                 'multiple' => true,

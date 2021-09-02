@@ -13,22 +13,20 @@ declare(strict_types=1);
 namespace Tests\BitBag\SyliusInPostPlugin\Behat\Context\Ui\Admin;
 
 use Behat\Behat\Context\Context;
-use Tests\BitBag\SyliusInPostPlugin\Behat\Mocker\InpostApiMocker;
+use Tests\BitBag\SyliusInPostPlugin\Behat\Mocker\InPostApiMocker;
 use Tests\BitBag\SyliusShippingExportPlugin\Behat\Page\Admin\ShippingExport\IndexPageInterface;
 
 final class ShippingExportContext implements Context
 {
-    /** @var IndexPageInterface */
-    private $indexPage;
+    private IndexPageInterface $indexPage;
 
-    /** @var InpostApiMocker */
-    private $DHLApiMocker;
+    private InPostApiMocker $inPostApiMocker;
 
     public function __construct(
         IndexPageInterface $indexPage,
-        InpostApiMocker $DHLApiMocker
+        InPostApiMocker $inPostApiMocker
     ) {
-        $this->DHLApiMocker = $DHLApiMocker;
+        $this->inPostApiMocker = $inPostApiMocker;
         $this->indexPage = $indexPage;
     }
 
@@ -37,7 +35,7 @@ final class ShippingExportContext implements Context
      */
     public function iExportAllNewShipments(): void
     {
-        $this->DHLApiMocker->performActionInApiSuccessfulScope(function () {
+        $this->inPostApiMocker->performActionInApiSuccessfulScope(function () {
             $this->indexPage->exportAllShipments();
         });
     }
@@ -47,7 +45,7 @@ final class ShippingExportContext implements Context
      */
     public function iExportFirsShipments(): void
     {
-        $this->DHLApiMocker->performActionInApiSuccessfulScope(function () {
+        $this->inPostApiMocker->performActionInApiSuccessfulScope(function () {
             $this->indexPage->exportFirsShipment();
         });
     }

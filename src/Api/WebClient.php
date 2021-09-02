@@ -22,17 +22,13 @@ use Webmozart\Assert\Assert;
 
 final class WebClient implements WebClientInterface
 {
-    /** @var Client */
     private Client $apiClient;
 
-    /** @var string */
-    private $organizationId;
+    private string $organizationId;
 
-    /** @var string */
-    private $accessToken;
+    private string $accessToken;
 
-    /** @var string */
-    private $environment;
+    private string $environment;
 
     /** @var ShippingGatewayInterface */
     private ShippingGatewayInterface $shippingGateway;
@@ -294,7 +290,6 @@ final class WebClient implements WebClientInterface
     {
         return $this->shippingGateway->getConfigValue($config);
     }
-
 
     private function resolveHouseNumber(AddressInterface $address): string
     {

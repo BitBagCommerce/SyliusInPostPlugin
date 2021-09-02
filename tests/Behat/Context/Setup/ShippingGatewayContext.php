@@ -26,20 +26,15 @@ use Sylius\Component\Resource\Repository\RepositoryInterface;
 
 final class ShippingGatewayContext implements Context
 {
-    /** @var ProductVariantResolverInterface */
-    private $defaultVariantResolver;
+    private ProductVariantResolverInterface $defaultVariantResolver;
 
-    /** @var RepositoryInterface */
-    private $orderRepository;
+    private RepositoryInterface $orderRepository;
 
-    /** @var RepositoryInterface */
-    private $shipmentRepository;
+    private RepositoryInterface $shipmentRepository;
 
-    /** @var EntityManagerInterface */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /** @var SharedStorageInterface */
-    private $sharedStorage;
+    private SharedStorageInterface $sharedStorage;
 
     public function __construct(
         ProductVariantResolverInterface $productVariantResolver,

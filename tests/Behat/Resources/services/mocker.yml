@@ -1,5 +1,5 @@
 services:
-    bitbag.inpost_plugin.behat.mocker.inpost_api_mocker:
-        class: Tests\BitBag\SyliusInPostPlugin\Behat\Mocker\InpostApiMocker
+    bitbag.sylius_inpost_plugin.behat.mocker.inpost_api_mocker:
+        class: Tests\BitBag\SyliusInPostPlugin\Behat\Mocker\InPostApiMocker
         arguments:
             - '@sylius.behat.mocker'

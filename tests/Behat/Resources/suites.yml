@@ -27,7 +27,7 @@ default:
                 - bitbag.behat.context.setup.shipping_export
 
 
-                - bitbag.inpost_plugin.behat.context.ui.admin.shipping_gateway
+                - bitbag.sylius_inpost_plugin.behat.context.ui.admin.shipping_gateway
             filters:
                 tags: "@managing_shipping_gateway_inpost && @ui"
 
@@ -56,10 +56,10 @@ default:
                 - sylius.behat.context.setup.shop_security
                 - bitbag.behat.context.setup.shipping_gateway
                 - bitbag.behat.context.setup.shipping_export
-                - bitbag.inpost_plugin.behat.context.setup.shipping_gateway
+                - bitbag.sylius_inpost_plugin.behat.context.setup.shipping_gateway
 
                 - bitbag.behat.context.ui.admin.shipping_gateway
                 - bitbag.behat.context.ui.admin.shipping_export
-                - bitbag.inpost_plugin.behat.context.ui.admin.shipping_export
+                - bitbag.sylius_inpost_plugin.behat.context.ui.admin.shipping_export
             filters:
                 tags: "@managing_shipping_export_inpost && @ui"

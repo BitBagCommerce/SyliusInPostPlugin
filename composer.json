@@ -1,7 +1,7 @@
 {
     "name": "bitbag/inpost-plugin",
     "type": "sylius-plugin",
-    "description": "Inpost plugin for Sylius",
+    "description": "InPost plugin for Sylius",
     "keywords": [
         "sylius",
         "sylius-plugin",

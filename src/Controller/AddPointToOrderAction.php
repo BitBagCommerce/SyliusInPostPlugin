@@ -27,19 +27,19 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 final class AddPointToOrderAction
 {
     /** @var OrderRepositoryInterface */
-    private $orderRepository;
+    private OrderRepositoryInterface $orderRepository;
 
     /** @var FactoryInterface */
-    private $pointFactory;
+    private FactoryInterface $pointFactory;
 
     /** @var EntityManagerInterface */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
     /** @var WebClientInterface */
-    private $client;
+    private WebClientInterface $client;
 
     /** @var CartContextInterface */
-    private $cartContext;
+    private CartContextInterface $cartContext;
 
     public function __construct(
         OrderRepositoryInterface $orderRepository,

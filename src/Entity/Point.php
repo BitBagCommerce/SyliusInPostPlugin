@@ -14,13 +14,10 @@ use Sylius\Component\Order\Model\OrderInterface;
 
 class Point implements PointInterface
 {
-    /** @var int|null */
     protected ?int $id;
 
-    /** @var string|null */
     private ?string $name;
 
-    /** @var OrderInterface */
     private OrderInterface $order;
 
     public function getId(): ?int

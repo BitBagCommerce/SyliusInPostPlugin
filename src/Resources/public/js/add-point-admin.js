@@ -10,7 +10,6 @@ $button.click(function (event) {
         $.ajax({
             method: "POST",
             url: path + "?orderId=" + orderId + "&name=" + point.name,
-            // data: { "orderId" : orderId, "name" : point.name }
         })
             .done(function () {
                 $buttonText.text(point.name);

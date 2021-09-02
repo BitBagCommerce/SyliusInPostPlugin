@@ -11,13 +11,13 @@
     <div class="content">
         <a class="header" {{ sylius_test_html_attribute('shipping-method-label') }}>{{ form_label(form) }}</a>
         <div class="description">
-            <button type="button" id="bitbag-inpost-checkout-select-point" data-path="{{ path('bitbag_inpost_plugin_add_point_to_order') }}" class="fluid ui yellow labeled icon button">
+            <button type="button" id="bitbag-inpost-checkout-select-point" data-path="{{ path('bitbag_sylius_inpost_plugin_shop_add_point_to_order') }}" class="fluid ui yellow labeled icon button">
                 <i class="box icon"></i>
                 <span id="bitbag-inpost-checkout-select-point-text">
                 {% if order.point is not null %}
                     {{ order.point.name }}
                 {% else %}
-                    {{ 'bitbag.inpost.ui.select_point'|trans }}
+                    {{ 'bitbag_sylius_inpost_plugin.ui.select_point'|trans }}
                 {% endif %}
                 </span>
             </button>

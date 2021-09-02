@@ -25,20 +25,15 @@ final class ShippingExportEventListener
     const INPOST_SHIPPING_GATEWAY_CODE = 'inpost';
     const INPOST_POINT_SHIPPING_GATEWAY_CODE = 'inpost_point';
 
-    /** @var WebClientInterface */
-    private $webClient;
+    private WebClientInterface $webClient;
 
-    /** @var FlashBagInterface */
-    private $flashBag;
+    private FlashBagInterface $flashBag;
 
-    /** @var Filesystem */
-    private $filesystem;
+    private Filesystem $filesystem;
 
-    /** @var string */
-    private $shippingLabelsPath;
+    private string $shippingLabelsPath;
 
-    /** @var ObjectManager */
-    private $shippingExportManager;
+    private ObjectManager $shippingExportManager;
 
     public function __construct(
         ObjectManager $shippingExportManager,
@@ -54,7 +49,7 @@ final class ShippingExportEventListener
         $this->shippingLabelsPath = $shippingLabelsPath;
     }
 
-    public function exportShipment(ResourceControllerEvent $exportShipmentEvent)
+    public function exportShipment(ResourceControllerEvent $exportShipmentEvent): void
     {
         /** @var ShippingExportInterface $shippingExport */
         $shippingExport = $exportShipmentEvent->getSubject();

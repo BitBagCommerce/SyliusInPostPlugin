@@ -1,21 +1,10 @@
-bitbag_inpost_plugin_add_point_to_order:
+bitbag_sylius_inpost_plugin_shop_add_point_to_order:
     path: /point
     defaults:
-        _controller: bitbag.inpost_plugin.controller.add_point_to_order:addPointToCartAction
+        _controller: bitbag.sylius_inpost_plugin.controller.add_point_to_order:addPointToCartAction
 
-bitbag_inpost_plugin_admin_add_point_to_order:
+bitbag_sylius_inpost_plugin_admin_add_point_to_order:
     path: /admin/point
     methods: [POST]
     defaults:
-        _controller: bitbag.inpost_plugin.controller.add_point_to_order:addPointToOrderAction
-
-app_shipping_inpost_notify:
-    path: /shipping/inpost/notify
-    methods: [POST]
-    defaults:
-        _controller: app.controller.action.shipping.inpost.notify
-
-app_test_controller:
-    path: /test/test
-    defaults:
-        _controller: BitBag\SyliusInPostPlugin\Controller\TestController:test
+        _controller: bitbag.sylius_inpost_plugin.controller.add_point_to_order:addPointToOrderAction

@@ -3,7 +3,7 @@ sylius_ui:
     sylius.shop.layout.javascripts:
       blocks:
         bitbag_inpost_scripts:
-          template: "@BitBagSyliusInPostPlugin/_shopJavascripts.html.twig"
+          template: "@BitBagSyliusInPostPlugin/Shop/_javascripts.html.twig"
           priority: 0
     sylius.shop.checkout.select_shipping.before_form:
         blocks:
@@ -13,7 +13,7 @@ sylius_ui:
     sylius.admin.layout.javascripts:
       blocks:
         bitbag_inpost_scripts:
-          template: "@BitBagSyliusInPostPlugin/_adminJavascripts.html.twig"
+          template: "@BitBagSyliusInPostPlugin/Admin/_javascripts.html.twig"
           priority: 0
     sylius.admin.order.show.sidebar:
       blocks:

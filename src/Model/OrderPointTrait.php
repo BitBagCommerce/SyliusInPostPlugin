@@ -14,7 +14,6 @@ use BitBag\SyliusInPostPlugin\Entity\PointInterface;
 
 trait OrderPointTrait
 {
-    /** @var ?PointInterface */
     protected ?PointInterface $point;
 
     public function getPoint(): ?PointInterface
