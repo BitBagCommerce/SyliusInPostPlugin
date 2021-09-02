@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusInPostPlugin\Api;
 
+use BitBag\SyliusInPostPlugin\Entity\Point;
 use Sylius\Component\Core\Model\AddressInterface;
 use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Order\Model\OrderInterface;
@@ -172,7 +173,6 @@ final class WebClient implements WebClientInterface
 
         $url = $this->getApiEndpointForShipment();
 
-        dd($data);
         return $this->request('POST', $url, $data);
     }
 
@@ -226,6 +226,7 @@ final class WebClient implements WebClientInterface
         /** @var OrderInterface $order */
         $order = $shipment->getOrder();
 
+        /** @var Point $point */
         $point = $order->getPoint();
 
         if (null === $point) {
