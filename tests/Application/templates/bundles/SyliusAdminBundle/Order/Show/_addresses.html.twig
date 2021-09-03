@@ -25,7 +25,7 @@
     </h4>
     <div class="ui attached segment" id="app-inpost-point">
         {% if order.point is not null %}
-            {% set point = inpostClient.getPointByName(order.point.name) %}
+            {% set point = inpost_client.getPointByName(order.point.name) %}
         {% endif %}
         <address style="{{ order.point is null ? 'display: none;' : '' }}">
         <span class="inpost-point-line1">

@@ -54,11 +54,13 @@
     },
     "autoload": {
         "psr-4": {
-            "BitBag\\SyliusInPostPlugin\\": "src/",
-            "Tests\\BitBag\\SyliusInPostPlugin\\": "tests/"
+            "BitBag\\SyliusInPostPlugin\\": "src/"
         }
     },
     "autoload-dev": {
+        "psr-4": {
+            "Tests\\BitBag\\SyliusInPostPlugin\\": "tests/"
+        },
         "classmap": [
             "tests/Application/Kernel.php"
         ]

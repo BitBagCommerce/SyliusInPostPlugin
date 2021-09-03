@@ -40,8 +40,8 @@ final class ShippingExportEventListener
         FlashBagInterface $flashBag,
         WebClientInterface $webClient,
         Filesystem $filesystem,
-        string $shippingLabelsPath)
-    {
+        string $shippingLabelsPath
+    ) {
         $this->flashBag = $flashBag;
         $this->webClient = $webClient;
         $this->filesystem = $filesystem;
@@ -80,10 +80,14 @@ final class ShippingExportEventListener
                 $this->saveShippingLabel($shippingExport, $this->webClient->getLabels([$data['id']]), 'pdf');
             }
         } catch (ClientException $exception) {
-            $this->flashBag->add('error', sprintf('InPost Web Service for #%s order: %s',
-            $shipment->getOrder()->getNumber(),
-            $exception->getMessage()
-            ));
+            $this->flashBag->add(
+                'error',
+                sprintf(
+                    'InPost Web Service for #%s order: %s',
+                    $shipment->getOrder()->getNumber(),
+                    $exception->getMessage()
+                )
+            );
 
             return;
         }
@@ -97,9 +101,12 @@ final class ShippingExportEventListener
         string $labelContent,
         string $labelExtension
     ): void {
-        $labelPath = $this->shippingLabelsPath
-            . '/' . $this->getFilename($shippingExport)
-            . '.' . $labelExtension;
+        $labelPath = sprintf(
+            "%s/%s.%s",
+            $this->shippingLabelsPath,
+            $this->getFilename($shippingExport),
+            $labelExtension
+        );
 
         $this->filesystem->dumpFile($labelPath, $labelContent);
         $shippingExport->setLabelPath($labelPath);

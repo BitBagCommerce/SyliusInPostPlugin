@@ -4,4 +4,4 @@ imports:
     - { resource: "@BitBagSyliusInPostPlugin/Resources/config/sylius_ui.yml" }
 twig:
     globals:
-        inpostClient: '@bitbag.sylius_inpost_plugin.api.web_client'
+        inpost_client: '@bitbag.sylius_inpost_plugin.api.web_client'
