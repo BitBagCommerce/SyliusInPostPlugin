@@ -70,6 +70,7 @@ Define new Entity mapping inside your src/Resources/config/doctrine directory. (
             <cascade>
                 <cascade-persist />
                 <cascade-remove />
+                <cascade-refresh />
             </cascade>
             <join-column name="point_id" referenced-column-name="id" nullable="true" />
         </one-to-one>

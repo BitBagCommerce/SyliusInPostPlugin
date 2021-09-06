@@ -31,12 +31,6 @@
         </service>
 
         <service
-                class="BitBag\SyliusInPostPlugin\Api\SoapClient"
-                id="bitbag.sylius_inpost_plugin.api.soap_client"
-        >
-        </service>
-        
-        <service
                 class="BitBag\SyliusInPostPlugin\Controller\AddPointToOrderAction"
                 id="bitbag.sylius_inpost_plugin.controller.add_point_to_order"
         >
