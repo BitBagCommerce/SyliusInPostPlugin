@@ -10,18 +10,18 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusInPostPlugin\Model;
 
-use BitBag\SyliusInPostPlugin\Entity\PointInterface;
+use BitBag\SyliusInPostPlugin\Entity\InPostPointInterface;
 
 trait OrderPointTrait
 {
-    protected ?PointInterface $point;
+    protected ?InPostPointInterface $point;
 
-    public function getPoint(): ?PointInterface
+    public function getPoint(): ?InPostPointInterface
     {
         return $this->point;
     }
 
-    public function setPoint(?PointInterface $point): void
+    public function setPoint(?InPostPointInterface $point): void
     {
         $this->point = $point;
     }

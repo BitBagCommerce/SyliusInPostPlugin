@@ -12,7 +12,7 @@ namespace BitBag\SyliusInPostPlugin\Entity;
 
 use Sylius\Component\Order\Model\OrderInterface;
 
-class Point implements PointInterface
+class InPostPoint implements InPostPointInterface
 {
     protected ?int $id;
 

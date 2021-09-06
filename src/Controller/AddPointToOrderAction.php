@@ -30,7 +30,7 @@ final class AddPointToOrderAction
     private OrderRepositoryInterface $orderRepository;
 
     /** @var FactoryInterface */
-    private FactoryInterface $pointFactory;
+    private FactoryInterface $inPostPointFactory;
 
     /** @var EntityManagerInterface */
     private EntityManagerInterface $entityManager;
@@ -43,13 +43,13 @@ final class AddPointToOrderAction
 
     public function __construct(
         OrderRepositoryInterface $orderRepository,
-        FactoryInterface $pointFactory,
+        FactoryInterface $inPostPointFactory,
         EntityManagerInterface $entityManager,
         WebClientInterface $client,
         CartContextInterface $cartContext
     ) {
         $this->orderRepository = $orderRepository;
-        $this->pointFactory = $pointFactory;
+        $this->inPostPointFactory = $inPostPointFactory;
         $this->entityManager = $entityManager;
         $this->client = $client;
         $this->cartContext = $cartContext;
@@ -98,7 +98,7 @@ final class AddPointToOrderAction
         $point = $order->getPoint();
 
         if (null === $point) {
-            $point = $this->pointFactory->createNew();
+            $point = $this->inPostPointFactory->createNew();
         }
 
         $point->setName($name);

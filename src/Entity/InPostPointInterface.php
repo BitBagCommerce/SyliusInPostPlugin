@@ -12,7 +12,7 @@ namespace BitBag\SyliusInPostPlugin\Entity;
 
 use Sylius\Component\Resource\Model\ResourceInterface;
 
-interface PointInterface extends ResourceInterface
+interface InPostPointInterface extends ResourceInterface
 {
     public function getName(): ?string;
 

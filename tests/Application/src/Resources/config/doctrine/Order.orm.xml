@@ -8,7 +8,7 @@
 >
     <entity name="Tests\BitBag\SyliusInPostPlugin\Application\src\Entity\Order" table="sylius_order">
 
-       <one-to-one field="point" target-entity="BitBag\SyliusInPostPlugin\Entity\Point">
+       <one-to-one field="point" target-entity="BitBag\SyliusInPostPlugin\Entity\InPostPoint">
            <cascade>
                <cascade-persist />
                <cascade-remove />

@@ -5,7 +5,7 @@
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                                       http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <mapped-superclass name="BitBag\SyliusInPostPlugin\Entity\Point" table="bitbag_inpost_point">
+    <mapped-superclass name="BitBag\SyliusInPostPlugin\Entity\InPostPoint" table="bitbag_inpost_point">
 
         <id name="id" column="id" type="integer">
             <generator strategy="AUTO" />
