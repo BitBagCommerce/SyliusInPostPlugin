@@ -1,0 +1,22 @@
+sylius_ui:
+  events:
+    sylius.shop.layout.javascripts:
+      blocks:
+        bitbag_inpost_scripts:
+          template: "@BitBagSyliusInPostPlugin/Shop/_javascripts.html.twig"
+          priority: 0
+    sylius.shop.checkout.select_shipping.before_form:
+        blocks:
+          bitbag_inpost_scripts:
+            template: "@BitBagSyliusInPostPlugin/_inPostGeowidget.html.twig"
+            priority: 0
+    sylius.admin.layout.javascripts:
+      blocks:
+        bitbag_inpost_scripts:
+          template: "@BitBagSyliusInPostPlugin/Admin/_javascripts.html.twig"
+          priority: 0
+    sylius.admin.order.show.sidebar:
+      blocks:
+        bitbag_inpost_scripts:
+          template: "@BitBagSyliusInPostPlugin/_inPostGeowidget.html.twig"
+          priority: 60

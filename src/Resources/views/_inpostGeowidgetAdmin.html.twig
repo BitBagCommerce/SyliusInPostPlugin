@@ -1,0 +1,33 @@
+<script src="https://geowidget.easypack24.net/js/sdk-for-javascript.js"></script>
+<link rel="stylesheet" href="https://geowidget.easypack24.net/css/easypack.css"/>
+<script>
+
+    const path = '{{ path('bitbag_sylius_inpost_plugin_admin_add_point_to_order') }}';
+    const orderId = '{{ order.id }}';
+
+    window.easyPackAsyncInit = function () {
+        easyPack.init({
+            defaultLocale: 'pl',
+            mapType: 'osm',
+            searchType: 'osm',
+            points: {
+                types: ['parcel_locker']
+            },
+            map: {
+                initialTypes: ['parcel_locker']
+            }
+        });
+    };
+
+    function openModal() {
+        easyPack.modalMap(function(point, modal) {
+            modal.closeModal();
+            console.log(point.name);
+            const xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("POST", path );
+            xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xmlhttp.send( "orderId=" + orderId + "&name=" + point.name );
+        }, { width: 500, height: 600 });
+    }
+
+</script>

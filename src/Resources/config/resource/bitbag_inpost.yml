@@ -1,0 +1,7 @@
+sylius_resource:
+    resources:
+        bitbag.inpost_point:
+            driver: doctrine/orm
+            classes:
+                model: BitBag\SyliusInPostPlugin\Entity\InPostPoint
+                interface: BitBag\SyliusInPostPlugin\Entity\InPostPointInterface

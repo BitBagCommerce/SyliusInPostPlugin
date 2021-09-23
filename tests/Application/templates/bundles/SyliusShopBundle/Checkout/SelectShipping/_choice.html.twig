@@ -1,0 +1,56 @@
+{% import '@SyliusShop/Common/Macro/money.html.twig' as money %}
+
+{% if 'inpost_point' in form.vars['value'] %}
+
+<div class="item" {{ sylius_test_html_attribute('shipping-item') }}>
+    <div class="field">
+        <div class="ui radio checkbox" {{ sylius_test_html_attribute('shipping-method-checkbox') }}>
+            {{ form_widget(form, sylius_test_form_attribute('shipping-method-select')) }}
+        </div>
+    </div>
+    <div class="content">
+        <a class="header" {{ sylius_test_html_attribute('shipping-method-label') }}>{{ form_label(form) }}</a>
+        <div class="description">
+            <button type="button" id="bitbag-inpost-checkout-select-point" data-path="{{ path('bitbag_sylius_inpost_plugin_shop_add_point_to_order') }}" class="fluid ui yellow labeled icon button">
+                <i class="box icon"></i>
+                <span id="bitbag-inpost-checkout-select-point-text">
+                {% if order.point is not null %}
+                    {{ order.point.name }}
+                {% else %}
+                    {{ 'bitbag_sylius_inpost_plugin.ui.select_point'|trans }}
+                {% endif %}
+                </span>
+            </button>
+        </div>
+    </div>
+    <div class="extra">
+        <div class="ui large right floated fee label" {{ sylius_test_html_attribute('shipping-method-fee') }}>
+            {{ money.convertAndFormat(fee) }}
+        </div>
+    </div>
+</div>
+
+{% else %}
+
+<div class="item" {{ sylius_test_html_attribute('shipping-item') }}>
+    <div class="field">
+        <div class="ui radio checkbox" {{ sylius_test_html_attribute('shipping-method-checkbox') }}>
+            {{ form_widget(form, sylius_test_form_attribute('shipping-method-select')) }}
+        </div>
+    </div>
+    <div class="content">
+        <a class="header" {{ sylius_test_html_attribute('shipping-method-label') }}>{{ form_label(form) }}</a>
+        {% if method.description is not null %}
+            <div class="description">
+                <p>{{ method.description }}</p>
+            </div>
+        {% endif %}
+    </div>
+    <div class="extra">
+        <div class="ui large right floated fee label" {{ sylius_test_html_attribute('shipping-method-fee') }}>
+            {{ money.convertAndFormat(fee) }}
+        </div>
+    </div>
+</div>
+
+{% endif %}
