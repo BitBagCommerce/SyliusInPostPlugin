@@ -1,0 +1,20 @@
+{
+  "entrypoints": {
+    "bitbag-inpost-shop": {
+      "css": [
+        "/public/bitbag-inpost-shop.css"
+      ],
+      "js": [
+        "/public/bitbag-inpost-shop.js"
+      ]
+    },
+    "bitbag-inpost-admin": {
+      "css": [
+        "/public/bitbag-inpost-admin.css"
+      ],
+      "js": [
+        "/public/bitbag-inpost-admin.js"
+      ]
+    }
+  }
+}

@@ -1,0 +1,11 @@
+framework:
+    assets:
+        packages:
+            shop:
+                json_manifest_path: '%kernel.project_dir%/public/build/shop/manifest.json'
+            admin:
+                json_manifest_path: '%kernel.project_dir%/public/build/admin/manifest.json'
+            inpost_shop:
+                json_manifest_path: '%kernel.project_dir%/public/build/bitbag/inpost/shop/manifest.json'
+            inpost_admin:
+                json_manifest_path: '%kernel.project_dir%/public/build/bitbag/inpost/admin/manifest.json'
