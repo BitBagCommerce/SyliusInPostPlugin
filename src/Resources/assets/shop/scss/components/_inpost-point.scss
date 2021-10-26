@@ -1,0 +1,33 @@
+.bb-inpost-point {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: $spacer 0;
+    padding: $spacer;
+    border: 1px solid $gray-200;
+    border-radius: $border-radius;
+
+    &-btn {
+        display: block;
+        border: none;
+        background: $gray-200;
+        padding: $spacer * .5 $spacer;
+        border-radius: 2px;
+        cursor: pointer;
+    }
+
+    &-wrapper {
+        display: flex;
+        align-items: center;
+    }
+
+    &-img {
+        width: 120px;
+        border-radius: $border-radius;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.16);
+    }
+
+    &-desc {
+        margin: 0 0 0 $spacer;
+    }
+}
