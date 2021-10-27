@@ -1,11 +1,12 @@
 <div class="bb-inpost-point">
     <div id="bb-inpost-point-preview-wrapper" class="bb-inpost-point-wrapper">
-        {% include "@BitBagSyliusInPostPlugin/_InPostGeowidgetPreview.html.twig" %}
+        {% include "@BitBagSyliusInPostPlugin/InPostGeowidgetPreview.html.twig" %}
     </div>
     <button
         data-bb-event="select-inpost-point"
         data-bb-path="{{ path('bitbag_sylius_inpost_plugin_shop_add_point_to_order') }}"
         data-bb-target="#bb-inpost-point-preview-wrapper"
+        data-bb-order="{{ order.id }}"
         class="bb-inpost-point-btn"
     >
         {{ 'bitbag_sylius_inpost_plugin.ui.select_point'|trans }}

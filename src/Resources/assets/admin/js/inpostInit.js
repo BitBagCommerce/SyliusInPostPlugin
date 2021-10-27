@@ -1,26 +1,53 @@
+import {DEFAULT_SELECTORS} from '../../common/js/geowidget/config';
+import triggerCustomEvent from '../../common/js/utilities/triggerCustomEvent';
 import {GeoWidget} from '../../common/js/geowidget';
 
 new GeoWidget().init();
 
-const $button = $('bb-inpost-point-btn');
-const path = $button.data('path');
-const orderId = $button.data('order-id');
-console.log(orderId);
+class SaveChangedPoint {
+    constructor(nodeSelector) {
+        this.saveBtn = document.querySelector(nodeSelector);
+    }
 
-// $button.click(function (event) {
-//     event.preventDefault();
-//     easyPack.modalMap(function(point, modal) {
-//         modal.closeModal();
-//         $.ajax({
-//             method: "POST",
-//             url: path + "?orderId=" + orderId + "&name=" + point.name,
-//         })
-//             .done(function () {
-//                 // $buttonText.text(point.name);
-//             })
-//             .fail(function () {
-//                 // $buttonText.text('Try again');
-//             })
-//         ;
-//     }, { width: 500, height: 600 });
-// });
+    init() {
+        if (!this.saveBtn) {
+            throw new Error('Please pass proper node selector, into class constructor - couldnt find given one.');
+        }
+        this._saveNewShipping();
+    }
+
+    _saveNewShipping() {
+        this.saveBtn.addEventListener('bb.inpost.point.save.completed', (event) => {
+            const data = this.saveBtn.dataset;
+            const url = `/admin${data.bbPath}?orderId=${data.bbOrder}&name=${event.detail.name}`;
+            this._postNewPoint(url);
+        });
+    }
+
+    async _postNewPoint(path = '/') {
+        const settings = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+        };
+        try {
+            const response = await fetch(path, settings);
+
+            if (!response.ok) throw Error(response.statusText);
+            const data = await response.json();
+            console.log(data);
+
+            triggerCustomEvent(this.saveBtn, 'inpost.point.order.save.completed', data);
+            triggerCustomEvent(this.saveBtn, 'inpost.point.order.save.after');
+
+            return data;
+        } catch (error) {
+            triggerCustomEvent(this.saveBtn, 'inpost.point.order.save.error', error);
+            triggerCustomEvent(this.saveBtn, 'inpost.point.order.save.after');
+        }
+    }
+}
+
+new SaveChangedPoint(DEFAULT_SELECTORS.button).init();

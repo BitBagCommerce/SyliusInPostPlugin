@@ -1,10 +1,10 @@
 const triggerCustomEvent = (node, eventName, data) => {
-    const eventPrefix = "bb";
-    const costomEvent = new Event(`${eventPrefix}.${eventName}`, data)
+    const eventPrefix = 'bb';
+    const customEvent = new CustomEvent(`${eventPrefix}.${eventName}`, {detail: data});
 
-    node.dispatchEvent(costomEvent)
+    node.dispatchEvent(customEvent);
 
     return node;
-}
+};
 
-export default triggerCustomEvent
+export default triggerCustomEvent;
