@@ -1,6 +1,7 @@
 .bb-inpost-point {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
     align-items: center;
     margin: $spacer 0;
     padding: $spacer;
@@ -11,9 +12,10 @@
         display: block;
         border: none;
         background: $gray-200;
-        padding: $spacer * .5 $spacer;
+        padding: $spacer * 0.5 $spacer;
         border-radius: 2px;
         cursor: pointer;
+        margin: $spacer * 0.5 0;
     }
 
     &-wrapper {
@@ -24,10 +26,24 @@
     &-img {
         width: 120px;
         border-radius: $border-radius;
-        box-shadow: 0 3px 6px rgba(0,0,0,0.16);
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
     }
 
     &-desc {
         margin: 0 0 0 $spacer;
+    }
+}
+
+@media (max-width: $mobile) {
+    .bb-inpost-point {
+        padding: $spacer * 0.5;
+
+        &-img {
+            width: 95px;
+        }
+
+        &-desc {
+            margin-left: $spacer * 0.5;
+        }
     }
 }

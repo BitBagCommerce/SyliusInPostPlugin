@@ -1,4 +1,4 @@
-import {GeoWidget} from './geowidget';
+import {GeoWidget} from '../../common/js/geowidget';
 
 new GeoWidget().init();
 

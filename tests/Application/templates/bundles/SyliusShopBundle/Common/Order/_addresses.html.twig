@@ -7,7 +7,7 @@
         <div class="column" id="sylius-shipping-address" {{ sylius_test_html_attribute('shipping-address') }}>
             <div class="ui small dividing header">{{ 'sylius.ui.shipping_address'|trans }}</div>
             {% if order.point.name %}
-                {% include "@BitBagSyliusInPostPlugin/Shop/Checkout/SelectShipping/_InPostGeowidgetPreview.html.twig" %}
+                {% include "@BitBagSyliusInPostPlugin/_InPostGeowidgetPreview.html.twig" %}
             {% else %}
                 {% include '@SyliusShop/Common/_address.html.twig' with {'address': order.shippingAddress} %}
             {% endif %}

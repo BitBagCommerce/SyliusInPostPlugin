@@ -1,7 +1,7 @@
 {% if 'inpost_point' in form.vars.value %}
     {% set wrapperId = "#{ form.vars.id }_details" %}
     <div class="bb-inpost-point">
-        {% include "@BitBagSyliusInPostPlugin/Shop/Checkout/SelectShipping/_InPostGeowidgetPreview.html.twig" %}
+        {% include "@BitBagSyliusInPostPlugin/_InPostGeowidgetPreview.html.twig" %}
         <button
             data-bb-event="select-inpost-point"
             data-bb-path="{{ path('bitbag_sylius_inpost_plugin_shop_add_point_to_order') }}"

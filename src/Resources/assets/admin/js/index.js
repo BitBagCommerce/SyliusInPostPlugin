@@ -1,1 +1,1 @@
-import './add-point'
+import './inpostInit';
