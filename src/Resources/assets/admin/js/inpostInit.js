@@ -37,7 +37,6 @@ class SaveChangedPoint {
 
             if (!response.ok) throw Error(response.statusText);
             const data = await response.json();
-            console.log(data);
 
             triggerCustomEvent(this.saveBtn, 'inpost.point.order.save.completed', data);
             triggerCustomEvent(this.saveBtn, 'inpost.point.order.save.after');

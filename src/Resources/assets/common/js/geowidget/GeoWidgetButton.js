@@ -16,6 +16,14 @@ export class GeoWidgetButton {
     }
 
     init() {
+        if (!this.button) {
+            throw new Error('BitBagInPostPlugin - The specified button node could not be found in the DOM');
+        }
+        if (!this.container) {
+            throw new Error(
+                'BitBagInPostPlugin - The specified button bbTarget node for container element, could not be found in the DOM'
+            );
+        }
         this.button.addEventListener('click', this._onClickSelectorButton.bind(this));
     }
 
@@ -50,11 +58,10 @@ export class GeoWidgetButton {
             const data = await response.json();
 
             triggerCustomEvent(this.button, 'inpost.point.save.completed', data);
-            triggerCustomEvent(this.button, 'inpost.point.save.after');
-
             return data;
         } catch (error) {
             triggerCustomEvent(this.button, 'inpost.point.save.error', error);
+        } finally {
             triggerCustomEvent(this.button, 'inpost.point.save.after');
         }
     }

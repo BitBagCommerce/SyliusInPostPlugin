@@ -12,7 +12,7 @@ class InpostPointEvents {
 
     init() {
         if (this.shippingGroups.length === 0) {
-            throw new Error('Couldnt find any nodes regarding inpost points');
+            throw new Error('InPostPlugin - Couldnt find any nodes in the DOM, regarding inpost points');
         }
         this.watchInputChanges();
     }
@@ -20,11 +20,13 @@ class InpostPointEvents {
     watchInputChanges() {
         this.shippingGroups.forEach((groupFields) => {
             groupFields.forEach((field) => {
-                field.addEventListener(
-                    'change',
-                    triggerCustomEvent(`inpost.point.${field.value === 'inpost_point' ? 'selected' : 'deselected'}`)
-                );
-                new ValidateNextBtn().init(field);
+                field.addEventListener('change', () => {
+                    triggerCustomEvent(
+                        field,
+                        `inpost.point.${field.value === 'inpost_point' ? 'selected' : 'deselected'}`
+                    );
+                });
+                new ValidateNextBtn({node: field}).init();
             });
         });
     }

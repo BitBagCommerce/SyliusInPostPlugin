@@ -1,5 +1,5 @@
-import { API_POINTS } from "./config";
-
+import {API_POINTS} from './config';
+import {DEFAULT_SELECTORS} from './config';
 
 export class GeoWidgetPreview {
     constructor(node) {
@@ -14,20 +14,22 @@ export class GeoWidgetPreview {
 
             if (!response.ok) throw Error(response.statusText);
 
-            const data = await response.json()
+            const data = await response.json();
 
-            this.renderTemplate(data)
-
-        } catch (error) {
-
-        }
+            this.renderTemplate(data);
+        } catch (error) {}
     }
 
     renderTemplate(data) {
+        if (!this.wrapper) {
+            throw new Error('BitBagInPostPlugin - The specified wrapper node could not be found in the DOM');
+        }
         this.wrapper.innerHTML = '';
-        this.wrapper.insertAdjacentHTML('beforeend', `
+        this.wrapper.insertAdjacentHTML(
+            'beforeend',
+            `
             <img src="${data.image_url}" class="bb-inpost-point-img"/>
-            <div class="bb-inpost-point-desc">
+            <div class="bb-inpost-point-desc" ${DEFAULT_SELECTORS.previewRaw}>
                 <b>
                     ${data.name}
                 </b>
@@ -37,7 +39,8 @@ export class GeoWidgetPreview {
                     <small>${data.location_description}</small>
                 </p>
             </div>
-        `)
+        `
+        );
     }
 }
 
