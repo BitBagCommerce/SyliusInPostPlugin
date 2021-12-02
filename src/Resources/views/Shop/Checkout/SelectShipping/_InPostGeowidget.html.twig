@@ -1,6 +1,6 @@
 {% if 'inpost_point' in form.vars.value %}
     {% set wrapperId = "#{ form.vars.id }_details" %}
-    <div class="bb-inpost-point">
+    <div class="bb-inpost-point" data-bb-target="inpost-geowidget">
         {% include "@BitBagSyliusInPostPlugin/InPostGeowidgetPreview.html.twig" %}
         <button
             data-bb-event="select-inpost-point"
