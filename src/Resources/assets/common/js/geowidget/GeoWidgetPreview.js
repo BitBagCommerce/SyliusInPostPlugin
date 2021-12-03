@@ -17,7 +17,9 @@ export class GeoWidgetPreview {
             const data = await response.json();
 
             this.renderTemplate(data);
-        } catch (error) {}
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     renderTemplate(data) {

@@ -25,6 +25,7 @@ export class GeoWidgetButton {
                 'BitBagInPostPlugin - The specified button bbTarget node for container element, could not be found in the DOM'
             );
         }
+
         this.button.addEventListener('click', this._onClickSelectorButton.bind(this));
     }
 

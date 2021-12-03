@@ -11,6 +11,7 @@ export class InpostPointEvents {
         if (this.shippingGroups.length === 0) {
             throw new Error('InPostPlugin - Couldnt find any nodes in the DOM, regarding inpost points');
         }
+
         this.watchInputChanges();
     }
 

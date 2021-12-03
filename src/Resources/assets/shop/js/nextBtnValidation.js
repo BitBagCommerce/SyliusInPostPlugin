@@ -12,9 +12,11 @@ export class ValidateNextBtn {
         if (!this.submit) {
             throw new Error('BitBagInPostPlugin - The specified submit selector could not be found in the DOM');
         }
+
         if (!this.input) {
             throw new Error('BitBagInPostPlugin - The specified input node could not be found in the DOM');
         }
+
         this._handleSubmitListeners();
     }
 
