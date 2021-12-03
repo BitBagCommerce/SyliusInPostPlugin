@@ -19,6 +19,7 @@ export class GeoWidgetButton {
         if (!this.button) {
             throw new Error('BitBagInPostPlugin - The specified button node could not be found in the DOM');
         }
+
         if (!this.container) {
             throw new Error(
                 'BitBagInPostPlugin - The specified button bbTarget node for container element, could not be found in the DOM'

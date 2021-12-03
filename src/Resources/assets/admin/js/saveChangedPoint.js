@@ -9,6 +9,7 @@ export class SaveChangedPoint {
         if (!this.saveBtn) {
             throw new Error('Please pass proper node selector, into class constructor - couldnt find given one.');
         }
+
         this._saveNewShipping();
     }
 
@@ -28,10 +29,12 @@ export class SaveChangedPoint {
                 'Content-Type': 'application/json',
             },
         };
+
         try {
             const response = await fetch(path, settings);
 
             if (!response.ok) throw Error(response.statusText);
+
             const data = await response.json();
 
             triggerCustomEvent(this.saveBtn, 'inpost.point.order.save.completed', data);

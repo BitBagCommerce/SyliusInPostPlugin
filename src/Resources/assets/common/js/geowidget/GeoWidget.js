@@ -1,9 +1,9 @@
-import { GeoWidgetButton, GeoWidgetPreview } from "./index";
-import { DEFAULT_SELECTORS, DEFAULT_EASYPACK_CONFIG } from "./config";
+import {GeoWidgetButton, GeoWidgetPreview} from './index';
+import {DEFAULT_SELECTORS, DEFAULT_EASYPACK_CONFIG} from './config';
 
 export class GeoWidget {
     constructor(options = {}) {
-        const { selectors, easyPackConfig } = options;
+        const {selectors, easyPackConfig} = options;
 
         this.selectors = Object.assign({}, DEFAULT_SELECTORS, selectors);
         this.easyPackConfig = Object.assign({}, DEFAULT_EASYPACK_CONFIG, easyPackConfig);
@@ -18,15 +18,15 @@ export class GeoWidget {
     }
 
     initButtons() {
-        const nodes = [...document.querySelectorAll(this.selectors.button)]
-        const buttons = nodes.map(node => new GeoWidgetButton(node))
-        return buttons
+        const nodes = [...document.querySelectorAll(this.selectors.button)];
+        const buttons = nodes.map((node) => new GeoWidgetButton(node));
+        return buttons;
     }
 
     initPreviews() {
-        const nodes = [...document.querySelectorAll(this.selectors.wrapper)]
-        const wrappers = nodes.map(node => new GeoWidgetPreview(node).renderFromCode(node.dataset.bbPoint))
-        return wrappers
+        const nodes = [...document.querySelectorAll(this.selectors.wrapper)];
+        const wrappers = nodes.map((node) => new GeoWidgetPreview(node).renderFromCode(node.dataset.bbPoint));
+        return wrappers;
     }
 }
 
