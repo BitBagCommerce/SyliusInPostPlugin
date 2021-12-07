@@ -11,6 +11,8 @@ bitbag_sylius_inpost_plugin:
         additional_services: Additional Services
         is_return: Return Package
         select_point: Select Point
+        selected_point: Selected point
+        no_point_selected: No point selected
         not_blank: This field cannot be blank
     main_service:
         inpost_locker_standard: Inpost Locker Standard

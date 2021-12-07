@@ -20,31 +20,11 @@
 {% endif %}
 
 {% if gatewayCode is defined and inpostGatewayCode == gatewayCode %}
-    <h4 class="ui attached styled header">
-        {{ 'sylius.ui.shipping_address'|trans }}
-    </h4>
-    <div class="ui attached segment" id="app-inpost-point">
-        {% if order.point is not null %}
-            {% set point = inpost_client.getPointByName(order.point.name) %}
-        {% endif %}
-        <address style="{{ order.point is null ? 'display: none;' : '' }}">
-        <span class="inpost-point-line1">
-            {{ point.address.line1 is defined ? 'ul.' ~ point.address.line1 : '' }}
-        </span>
-            <br>
-            <span class="inpost-point-line2">
-            {{ point.address.line2 is defined ? point.address.line2 : '' }}
-        </span>
-            <br>
-            <strong class="inpost-point-name">
-                {{ order.point.name is defined ? order.point.name : '' }}
-            </strong>
-        </address>
-        <div class="ui segment">
-            <button type="button" id="bitbag-inpost-admin-select-point" data-path="{{ path('bitbag_sylius_inpost_plugin_admin_add_point_to_order') }}" data-order-id="{{ order.id }}" class="ui icon labeled tiny fluid yellow button">
-                <i class="pencil icon"></i> {{ 'bitbag_sylius_inpost_plugin.ui.select_point'|trans }}
-            </button>
-        </div>
+    <div id="admin-inpost-wrapper">
+        <h4 class="ui attached styled header inpost-header">
+            {{ 'sylius.ui.shipping_address'|trans }}
+        </h4>
+        {% include "@BitBagSyliusInPostPlugin/Admin/Order/Show/_InPostGeowidget.html.twig" %}
     </div>
 {% else %}
 

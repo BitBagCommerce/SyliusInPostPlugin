@@ -1,0 +1,7 @@
+#widget-modal {
+    box-shadow: 0 0 0 100vw rgba($black, 0.1);
+
+    &__map:not(.mobile) {
+        overflow: auto !important;
+    }
+}
