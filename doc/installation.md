@@ -31,7 +31,7 @@ Import routing in your `config/routes.yaml` file:
 ...
 
 bitbag_sylius_inpost_plugin:
-    resource: "@BitBagSyliusInPostPlugin/Resources/config/routing.yml"
+    resource: "@BitBagSyliusInPostPlugin/Resources/config/routes.yml"
 ```
 
 This plugin was made on top of [SyliusShippingExportPlugin](https://github.com/BitBagCommerce/SyliusShippingExportPlugin), so please remember to do the same for it's configuration.
