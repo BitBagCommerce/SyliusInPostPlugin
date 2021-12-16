@@ -28,5 +28,5 @@ sylius_ui:
     sylius.admin.order.show.sidebar:
       blocks:
         bitbag_inpost_scripts:
-          template: "@BitBagSyliusInPostPlugin/inPostGeowidgetAssets.html.twig"
+          template: "@BitBagSyliusInPostPlugin/InPostGeowidgetAssets.html.twig"
           priority: 60
