@@ -15,7 +15,7 @@ Select 'Shipping methods' from Sylius Admin Panel and add methods for Courier an
 ![Shipping Methods](ShippingMethods.jpg)
 
 **Important:**
-- field 'code' for service *Parcel Lockers* must be equal to **inpost_locker**
+- field 'code' for service *Parcel Lockers* must be equal to **inpost_point**
 - field 'code' for service *Courier* must be equal to **inpost**
 
 Keep in mind that:

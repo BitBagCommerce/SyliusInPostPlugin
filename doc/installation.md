@@ -1,9 +1,11 @@
 ## Installation
+
 ```bash
 $ composer require bitbag/inpost-plugin
 ```
 
 Add plugin dependencies to your `config/bundles.php` file:
+
 ```php
 return [
     ...
@@ -18,9 +20,9 @@ Import required config in your `config/packages/_sylius.yaml` file:
 # config/packages/_sylius.yaml
 
 imports:
-    ...
-    
-    - { resource: "@BitBagSyliusInPostPlugin/Resources/config/config.yml" }
+  ...
+
+  - { resource: "@BitBagSyliusInPostPlugin/Resources/config/config.yml" }
 ```
 
 Import routing in your `config/routes.yaml` file:
@@ -31,12 +33,15 @@ Import routing in your `config/routes.yaml` file:
 ...
 
 bitbag_sylius_inpost_plugin:
-    resource: "@BitBagSyliusInPostPlugin/Resources/config/routes.yml"
+  resource: "@BitBagSyliusInPostPlugin/Resources/config/routes.yml"
 ```
 
-This plugin was made on top of [SyliusShippingExportPlugin](https://github.com/BitBagCommerce/SyliusShippingExportPlugin), so please remember to do the same for it's configuration.
+This plugin was made on top
+of [SyliusShippingExportPlugin](https://github.com/BitBagCommerce/SyliusShippingExportPlugin), so please remember to do
+the same for it's configuration.
 
 Add trait to your Order entity class:
+
 ```php
 <?php
 
@@ -53,7 +58,8 @@ class Order extends BaseOrder
 }
 ```
 
-Define new Entity mapping inside your src/Resources/config/doctrine directory. (You can do it with annotations if you prefer)
+Define new Entity mapping inside your src/Resources/config/doctrine directory. (You can do it with annotations if you
+prefer)
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -68,20 +74,19 @@ Define new Entity mapping inside your src/Resources/config/doctrine directory. (
 
         <one-to-one field="point" target-entity="BitBag\SyliusInPostPlugin\Entity\Point">
             <cascade>
-                <cascade-persist />
-                <cascade-remove />
-                <cascade-refresh />
+                <cascade-persist/>
+                <cascade-remove/>
+                <cascade-refresh/>
             </cascade>
-            <join-column name="point_id" referenced-column-name="id" nullable="true" />
+            <join-column name="point_id" referenced-column-name="id" nullable="true"/>
         </one-to-one>
 
     </entity>
 </doctrine-mapping>
 ```
 
-
-
 Finish the installation by updating the database schema:
+
 ```
 $ bin/console doctrine:migrations:diff
 $ bin/console doctrine:migrations:migrate
@@ -90,11 +95,12 @@ $ bin/console sylius:theme:assets:install --symlink
 ```
 
 ## Testing & running the plugin
+
 ```bash
 $ composer install
 $ cd tests/Application
 $ yarn install
-$ yarn run gulp
+$ yarn encore dev
 $ bin/console assets:install public -e test
 $ bin/console doctrine:schema:create -e test
 $ bin/console server:run 127.0.0.1:8080 -d public -e test
