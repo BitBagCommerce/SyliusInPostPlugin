@@ -68,7 +68,7 @@ final class ShippingExportEventListenerSpec extends ObjectBehavior
         $webClient->getShipmentById(10)->willReturn(['status' => WebClientInterface::CONFIRMED_STATUS, 'id' => 10]);
         $webClient->getLabels()->willReturn('Label content');
         $shipment->getOrder()->willReturn($order);
-
+        $order->getNumber()->willReturn(1);
         $this->exportShipment($exportShipmentEvent);
     }
 

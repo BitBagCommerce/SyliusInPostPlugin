@@ -44,6 +44,9 @@
         "symfony/webpack-encore-bundle": "^1.12",
         "vimeo/psalm": "4.7.1"
     },
+    "conflict": {
+        "doctrine/orm": "^2.10"
+    },
     "config": {
         "sort-packages": true
     },

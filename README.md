@@ -12,6 +12,7 @@ Like what we do? Want to join us? Check out our job listings on our [career page
 
 * [Overview](#overview)
 * [Support](#we-are-here-to-help)
+* [Known issues](doc/known_issues.md)
 * [About us](#about-us)
     * [Community](#community)
 * [Demo](#demo)
