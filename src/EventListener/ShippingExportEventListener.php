@@ -92,7 +92,7 @@ final class ShippingExportEventListener
             return;
         }
 
-        $this->flashBag->add('success', 'bitbag.ui.shipping_export_error');
+        $this->flashBag->add('success', 'bitbag.ui.shipment_data_has_been_exported');
         $this->markShipmentAsExported($shippingExport);
     }
 
