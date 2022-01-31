@@ -49,10 +49,10 @@ final class ShippingExportEventListenerSpec extends ObjectBehavior
 
         $webClient->setShippingGateway($shippingGateway)->shouldBeCalled();
         $webClient->createShipment($shipment)->shouldBeCalled();
-        $shippingExport->setExternalId("10")->shouldBeCalled();
+        $shippingExport->setExternalId('10')->shouldBeCalled();
         $webClient->getLabels([10])->shouldBeCalled();
         $shipment->getId()->shouldBeCalled();
-        $shippingExport->setLabelPath("labels/_.pdf")->shouldBeCalled();
+        $shippingExport->setLabelPath('labels/_.pdf')->shouldBeCalled();
         $shippingExport->setState('exported')->shouldBeCalled();
 
         /** @var \DateTime $date */
@@ -71,5 +71,4 @@ final class ShippingExportEventListenerSpec extends ObjectBehavior
         $order->getNumber()->willReturn(1);
         $this->exportShipment($exportShipmentEvent);
     }
-
 }

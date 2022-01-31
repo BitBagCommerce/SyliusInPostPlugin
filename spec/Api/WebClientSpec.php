@@ -14,14 +14,14 @@ use BitBag\SyliusInPostPlugin\Api\WebClient;
 use BitBag\SyliusInPostPlugin\Api\WebClientInterface;
 use BitBag\SyliusShippingExportPlugin\Entity\ShippingGatewayInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use GuzzleHttp\Client;
 use PhpSpec\ObjectBehavior;
 use Sylius\Component\Core\Model\AddressInterface;
 use Sylius\Component\Core\Model\CustomerInterface;
-use Tests\BitBag\SyliusInPostPlugin\Application\src\Entity\Order;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\Model\PaymentMethod;
 use Sylius\Component\Core\Model\ShipmentInterface;
-use GuzzleHttp\Client;
+use Tests\BitBag\SyliusInPostPlugin\Application\src\Entity\Order;
 
 final class WebClientSpec extends ObjectBehavior
 {
@@ -50,7 +50,7 @@ final class WebClientSpec extends ObjectBehavior
         $shippingGateway->getConfigValue('insurance_amount')->willReturn(null);
         $shippingGateway->getConfigValue('additional_services')->willReturn([]);
         $shippingGateway->getConfigValue('cod_payment_method_code')->willReturn(null);
-        $shippingGateway->getConfigValue('environment')->willReturn("sandbox");
+        $shippingGateway->getConfigValue('environment')->willReturn('sandbox');
         $shippingGateway->getConfigValue('access_token')->willReturn('1234567890.abcdefghij');
         $shippingGateway->getConfigValue('organization_id')->willReturn('123456');
         $shippingGateway->getConfigValue('environment')->willReturn('https://sandbox-api-shipx-pl.easypack24.net');

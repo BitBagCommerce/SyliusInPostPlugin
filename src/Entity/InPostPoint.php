@@ -10,15 +10,11 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusInPostPlugin\Entity;
 
-use Sylius\Component\Order\Model\OrderInterface;
-
 class InPostPoint implements InPostPointInterface
 {
     protected ?int $id;
 
     private ?string $name;
-
-    private OrderInterface $order;
 
     public function getId(): ?int
     {

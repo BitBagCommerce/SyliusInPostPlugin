@@ -11,13 +11,16 @@ declare(strict_types=1);
 namespace BitBag\SyliusInPostPlugin\Api;
 
 use BitBag\SyliusInPostPlugin\Entity\InPostPoint;
-use Sylius\Component\Core\Model\AddressInterface;
-use Sylius\Component\Core\Model\CustomerInterface;
-use Sylius\Component\Order\Model\OrderInterface;
-use Sylius\Component\Core\Model\ShipmentInterface;
+use BitBag\SyliusInPostPlugin\Model\InPostPointsAwareInterface;
 use BitBag\SyliusShippingExportPlugin\Entity\ShippingGatewayInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\GuzzleException;
+use Psr\Http\Message\ResponseInterface;
+use Sylius\Component\Core\Model\AddressInterface;
+use Sylius\Component\Core\Model\CustomerInterface;
+use Sylius\Component\Core\Model\OrderInterface;
+use Sylius\Component\Core\Model\ShipmentInterface;
 use Webmozart\Assert\Assert;
 
 final class WebClient implements WebClientInterface
@@ -30,7 +33,6 @@ final class WebClient implements WebClientInterface
 
     private ?string $environment = null;
 
-    /** @var ShippingGatewayInterface */
     private ShippingGatewayInterface $shippingGateway;
 
     public function __construct(Client $client)
@@ -146,14 +148,14 @@ final class WebClient implements WebClientInterface
             'parcels' => [$this->createParcel($shipment)],
             'service' => $this->getShippingGatewayConfig('service'),
             'additional_services' => $this->getAdditionalServices(),
-            'reference' => "Order: ".$order->getNumber(),
+            'reference' => 'Order: ' . $order->getNumber(),
             'comments' => $this->resolveComment($order),
             'is_return' => $this->shippingGateway->getConfigValue('is_return'),
         ];
 
-        if (!empty($this->getShippingGatewayConfig('insurance_amount'))) {
+        if (null !== $this->getShippingGatewayConfig('insurance_amount')) {
             $data['insurance'] = [
-                'amount' => $this->shippingGateway->getConfigValue('insurance_amount'),
+                'amount' => $this->getShippingGatewayConfig('insurance_amount'),
                 'currency' => $order->getCurrencyCode(),
             ];
         }
@@ -180,6 +182,11 @@ final class WebClient implements WebClientInterface
         ];
     }
 
+    /**
+     * @return mixed|string
+     *
+     * @throws GuzzleException
+     */
     public function request(string $method, string $url, array $data = [], bool $returnJson = true)
     {
         $options = [
@@ -190,9 +197,10 @@ final class WebClient implements WebClientInterface
         try {
             $result = $this->apiClient->request($method, $url, $options);
         } catch (ClientException $exception) {
+            /** @var ?ResponseInterface $result */
             $result = $exception->getResponse();
 
-            throw new ClientException((string) $result->getBody(), $exception->getRequest());
+            throw new ClientException(null !== $result ? (string) $result->getBody() : 'Request failed for url' . $url, $exception->getRequest());
         }
 
         if (false === $returnJson) {
@@ -219,10 +227,11 @@ final class WebClient implements WebClientInterface
 
     private function createCustomAttributes(ShipmentInterface $shipment): array
     {
-        /** @var OrderInterface $order */
+        /** @var ?InPostPointsAwareInterface $order */
         $order = $shipment->getOrder();
+        Assert::notNull($order);
 
-        /** @var InPostPoint $point */
+        /** @var ?InPostPoint $point */
         $point = $order->getPoint();
 
         if (null === $point) {
@@ -237,6 +246,8 @@ final class WebClient implements WebClientInterface
     private function createReceiverDetails(OrderInterface $order): array
     {
         $customer = $order->getCustomer();
+        Assert::notNull($customer);
+
         /** @var AddressInterface $shippingAddress */
         $shippingAddress = $order->getShippingAddress();
 
@@ -263,6 +274,8 @@ final class WebClient implements WebClientInterface
         $payments = $order->getPayments();
 
         foreach ($payments as $payment) {
+            Assert::notNull($payment->getMethod());
+
             return $codPaymentMethodCode === $payment->getMethod()->getCode();
         }
 
@@ -286,6 +299,7 @@ final class WebClient implements WebClientInterface
         ];
     }
 
+    /** @return mixed */
     private function getShippingGatewayConfig(string $config)
     {
         return $this->shippingGateway->getConfigValue($config);
@@ -294,6 +308,8 @@ final class WebClient implements WebClientInterface
     private function resolveHouseNumber(AddressInterface $address): string
     {
         $street = $address->getStreet();
+        Assert::notNull($street);
+
         $streetParts = explode(' ', $street);
 
         Assert::greaterThan(count($streetParts), 0, sprintf(
@@ -315,7 +331,7 @@ final class WebClient implements WebClientInterface
         }
 
         if (strlen($comments) >= 100) {
-            $comments = substr($comments, 0, 97)."...";
+            $comments = substr($comments, 0, 97) . '...';
         }
 
         return $comments;

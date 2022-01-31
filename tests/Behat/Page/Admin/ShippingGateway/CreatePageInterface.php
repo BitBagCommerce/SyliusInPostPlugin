@@ -21,4 +21,6 @@ interface CreatePageInterface extends BaseCreatePageInterface
     public function fillField(string $field, string $value): void;
 
     public function submit(): void;
+
+    public function hasError(string $message, string $errorClass = '.sylius-validation-error'): bool;
 }

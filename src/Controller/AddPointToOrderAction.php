@@ -10,10 +10,12 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusInPostPlugin\Controller;
 
-use Sylius\Component\Core\Model\OrderInterface;
 use BitBag\SyliusInPostPlugin\Api\WebClientInterface;
+use BitBag\SyliusInPostPlugin\Entity\InPostPointInterface;
+use BitBag\SyliusInPostPlugin\Model\InPostPointsAwareInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Exception\ClientException;
+use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Repository\OrderRepositoryInterface;
 use Sylius\Component\Order\Context\CartContextInterface;
 use Sylius\Component\Order\Model\OrderInterface as BaseOrderInterface;
@@ -23,22 +25,18 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Webmozart\Assert\Assert;
 
 final class AddPointToOrderAction
 {
-    /** @var OrderRepositoryInterface */
     private OrderRepositoryInterface $orderRepository;
 
-    /** @var FactoryInterface */
     private FactoryInterface $inPostPointFactory;
 
-    /** @var EntityManagerInterface */
     private EntityManagerInterface $entityManager;
 
-    /** @var WebClientInterface */
     private WebClientInterface $client;
 
-    /** @var CartContextInterface */
     private CartContextInterface $cartContext;
 
     public function __construct(
@@ -57,12 +55,9 @@ final class AddPointToOrderAction
 
     public function addPointToCartAction(Request $request): Response
     {
-        /** @var OrderInterface $cart */
+        /** @var InPostPointsAwareInterface $cart */
         $cart = $this->cartContext->getCart();
-
-        if (null === $cart) {
-            throw new NotFoundHttpException();
-        }
+        Assert::isInstanceOf($cart, OrderInterface::class);
 
         if (BaseOrderInterface::STATE_CART !== $cart->getState()) {
             throw new BadRequestHttpException();
@@ -73,8 +68,8 @@ final class AddPointToOrderAction
 
     public function addPointToOrderAction(Request $request): Response
     {
-        /** @var OrderInterface $order */
-        $order = $this->orderRepository->find($request->get('orderId'));
+        /** @var ?InPostPointsAwareInterface $order */
+        $order = $this->orderRepository->findOneBy(['id' => $request->get('orderId')]);
 
         if (null === $order) {
             throw new NotFoundHttpException();
@@ -83,7 +78,7 @@ final class AddPointToOrderAction
         return $this->addPoint($request, $order);
     }
 
-    private function addPoint(Request $request, OrderInterface $order): Response
+    private function addPoint(Request $request, InPostPointsAwareInterface $order): Response
     {
         $name = $request->get('name');
 
@@ -98,6 +93,7 @@ final class AddPointToOrderAction
         $point = $order->getPoint();
 
         if (null === $point) {
+            /** @var InPostPointInterface $point */
             $point = $this->inPostPointFactory->createNew();
         }
 
