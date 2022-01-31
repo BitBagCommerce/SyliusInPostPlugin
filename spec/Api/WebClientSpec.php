@@ -33,7 +33,7 @@ final class WebClientSpec extends ObjectBehavior
     function it_is_initializable(): void
     {
         $this->shouldHaveType(WebClient::class);
-        $this->shouldHaveType(WebClientInterface::class);
+        $this->shouldImplement(WebClientInterface::class);
     }
 
     function it_creates_api_endpoint_for_shipment(

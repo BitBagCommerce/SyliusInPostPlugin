@@ -88,7 +88,9 @@ final class ShippingGatewayContext implements Context
 
         /** @var ShipmentInterface $shipment */
         foreach ($shipments as $shipment) {
-            Assert::notNull($shipment->getOrder());
+            if (null === $shipment->getOrder()) {
+                continue;
+            }
             /** @var OrderItemInterface $orderItem */
             foreach ($shipment->getOrder()->getItems() as $orderItem) {
                 /** @var ShipmentUnitInterface $itemUnit */

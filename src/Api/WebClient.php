@@ -183,7 +183,7 @@ final class WebClient implements WebClientInterface
     }
 
     /**
-     * @return mixed|string
+     * @return mixed
      *
      * @throws GuzzleException
      */
@@ -200,7 +200,10 @@ final class WebClient implements WebClientInterface
             /** @var ?ResponseInterface $result */
             $result = $exception->getResponse();
 
-            throw new ClientException(null !== $result ? (string) $result->getBody() : 'Request failed for url' . $url, $exception->getRequest());
+            throw new ClientException(
+                null !== $result ? (string) $result->getBody() : 'Request failed for url' . $url,
+                $exception->getRequest()
+            );
         }
 
         if (false === $returnJson) {
@@ -274,7 +277,9 @@ final class WebClient implements WebClientInterface
         $payments = $order->getPayments();
 
         foreach ($payments as $payment) {
-            Assert::notNull($payment->getMethod());
+            if (null === $payment->getMethod()) {
+                continue;
+            }
 
             return $codPaymentMethodCode === $payment->getMethod()->getCode();
         }
