@@ -78,6 +78,8 @@ final class ShippingExportEventListener
 
             $data = $this->webClient->getShipmentById($externalId);
             Assert::notNull($data);
+            Assert::keyExists($data, 'status');
+            Assert::keyExists($data, 'id');
 
             if (WebClientInterface::CONFIRMED_STATUS === $data['status'] && null !== $this->webClient->getLabels([$data['id']])) {
                 $this->saveShippingLabel($shippingExport, $this->webClient->getLabels([$data['id']]), 'pdf');
