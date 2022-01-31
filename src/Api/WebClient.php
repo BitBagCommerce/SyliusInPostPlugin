@@ -153,9 +153,10 @@ final class WebClient implements WebClientInterface
             'is_return' => $this->shippingGateway->getConfigValue('is_return'),
         ];
 
-        if (null !== $this->getShippingGatewayConfig('insurance_amount')) {
+        $insuranceAmount = $this->getShippingGatewayConfig('insurance_amount');
+        if (null !== $insuranceAmount) {
             $data['insurance'] = [
-                'amount' => $this->getShippingGatewayConfig('insurance_amount'),
+                'amount' => $insuranceAmount,
                 'currency' => $order->getCurrencyCode(),
             ];
         }
