@@ -49,9 +49,9 @@ declare(strict_types=1);
 
 namespace App\Entity\Order;
 
-use BitBag\SyliusInPostPlugin\Model\InPostPointsAwareInterface;use Sylius\Component\Core\Model\Order as BaseOrder;
-use BitBag\SyliusInPostPlugin\Model\OrderPointTrait;
 use BitBag\SyliusInPostPlugin\Model\InPostPointsAwareInterface;
+use Sylius\Component\Core\Model\Order as BaseOrder;
+use BitBag\SyliusInPostPlugin\Model\OrderPointTrait;
 
 class Order extends BaseOrder implements InPostPointsAwareInterface
 {
