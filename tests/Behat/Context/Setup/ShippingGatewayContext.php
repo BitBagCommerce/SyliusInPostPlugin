@@ -21,6 +21,8 @@ use Sylius\Component\Core\Model\ProductVariantInterface;
 use Sylius\Component\Core\Model\ShipmentInterface;
 use Sylius\Component\Product\Resolver\ProductVariantResolverInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
+use Sylius\Component\Shipping\Model\ShipmentUnitInterface;
+use Webmozart\Assert\Assert;
 
 final class ShippingGatewayContext implements Context
 {
@@ -86,8 +88,12 @@ final class ShippingGatewayContext implements Context
 
         /** @var ShipmentInterface $shipment */
         foreach ($shipments as $shipment) {
+            if (null === $shipment->getOrder()) {
+                continue;
+            }
             /** @var OrderItemInterface $orderItem */
             foreach ($shipment->getOrder()->getItems() as $orderItem) {
+                /** @var ShipmentUnitInterface $itemUnit */
                 foreach ($orderItem->getUnits() as $itemUnit) {
                     $shipment->addUnit($itemUnit);
                 }

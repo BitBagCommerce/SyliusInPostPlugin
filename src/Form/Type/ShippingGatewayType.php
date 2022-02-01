@@ -21,12 +21,12 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 final class ShippingGatewayType extends AbstractType
 {
-    const ENVIRONMENT_CHOICES = [
+    public const ENVIRONMENT_CHOICES = [
         'bitbag_sylius_inpost_plugin.ui.sandbox' => WebClientInterface::SANDBOX_ENVIRONMENT,
         'bitbag_sylius_inpost_plugin.ui.production' => WebClientInterface::PRODUCTION_API_ENDPOINT,
     ];
 
-    const SERVICE_CHOICES = [
+    public const SERVICE_CHOICES = [
         'bitbag_sylius_inpost_plugin.main_service.inpost_locker_standard' => WebClientInterface::INPOST_LOCKER_STANDARD_SERVICE,
         'bitbag_sylius_inpost_plugin.main_service.inpost_locker_pass_thru' => WebClientInterface::INPOST_LOCKER_PASS_THRU_SERVICE,
         'bitbag_sylius_inpost_plugin.main_service.inpost_courier_standard' => WebClientInterface::INPOST_COURIER_STANDARD_SERVICE,
@@ -38,7 +38,7 @@ final class ShippingGatewayType extends AbstractType
         'bitbag_sylius_inpost_plugin.main_service.inpost_courier_local_super_express' => WebClientInterface::INPOST_COURIER_LOCAL_SUPER_EXPRESS_SERVICE,
     ];
 
-    const ADDITIONAL_SERVICE_CHOICES = [
+    public const ADDITIONAL_SERVICE_CHOICES = [
         'bitbag_sylius_inpost_plugin.additional_service.sms' => WebClientInterface::SMS_ADDITIONAL_SERVICE,
         'bitbag_sylius_inpost_plugin.additional_service.email' => WebClientInterface::EMAIL_ADDITIONAL_SERVICE,
         'bitbag_sylius_inpost_plugin.additional_service.saturday' => WebClientInterface::SATURDAY_ADDITIONAL_SERVICE,

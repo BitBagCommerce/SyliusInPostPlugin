@@ -16,12 +16,11 @@ use Sylius\Behat\NotificationType;
 use Sylius\Behat\Service\NotificationCheckerInterface;
 use Sylius\Behat\Service\Resolver\CurrentPageResolverInterface;
 use Tests\BitBag\SyliusInPostPlugin\Behat\Page\Admin\ShippingGateway\CreatePageInterface;
-use Tests\BitBag\SyliusShippingExportPlugin\Behat\Behaviour\ContainsError;
 use Webmozart\Assert\Assert;
 
 final class ShippingGatewayContext implements Context
 {
-    /** @var CreatePageInterface|ContainsError */
+    /** @var CreatePageInterface */
     private $createPage;
 
     private CurrentPageResolverInterface $currentPageResolver;
@@ -51,7 +50,9 @@ final class ShippingGatewayContext implements Context
      */
     public function iSelectTheShippingMethod(string $name): void
     {
-        $this->resolveCurrentPage()->selectShippingMethod($name);
+        /** @var CreatePageInterface $currentPage */
+        $currentPage = $this->resolveCurrentPage();
+        $currentPage->selectShippingMethod($name);
     }
 
     /**
@@ -59,7 +60,9 @@ final class ShippingGatewayContext implements Context
      */
     public function iFillTheFieldWith(string $field, string $value): void
     {
-        $this->resolveCurrentPage()->fillField($field, $value);
+        /** @var CreatePageInterface $currentPage */
+        $currentPage = $this->resolveCurrentPage();
+        $currentPage->fillField($field, $value);
     }
 
     /**
@@ -67,7 +70,9 @@ final class ShippingGatewayContext implements Context
      */
     public function iClearTheField(string $field): void
     {
-        $this->resolveCurrentPage()->fillField($field, '');
+        /** @var CreatePageInterface $currentPage */
+        $currentPage = $this->resolveCurrentPage();
+        $currentPage->fillField($field, '');
     }
 
     /**
@@ -76,7 +81,9 @@ final class ShippingGatewayContext implements Context
      */
     public function iTryToAddIt(): void
     {
-        $this->resolveCurrentPage()->submit();
+        /** @var CreatePageInterface $currentPage */
+        $currentPage = $this->resolveCurrentPage();
+        $currentPage->submit();
     }
 
     /**
@@ -96,7 +103,9 @@ final class ShippingGatewayContext implements Context
      */
     public function errorMessageForFieldShouldBeDisplayed(string $message): void
     {
-        Assert::true($this->resolveCurrentPage()->hasError($message));
+        /** @var CreatePageInterface $currentPage */
+        $currentPage = $this->resolveCurrentPage();
+        Assert::true($currentPage->hasError($message));
     }
 
     /**
@@ -104,11 +113,13 @@ final class ShippingGatewayContext implements Context
      */
     public function iFillTheSelectOptionWith(string $filed, string $option): void
     {
-        $this->resolveCurrentPage()->selectFieldOption($filed, $option);
+        /** @var CreatePageInterface $currentPage */
+        $currentPage = $this->resolveCurrentPage();
+        $currentPage->selectFieldOption($filed, $option);
     }
 
     /**
-     * @return CreatePageInterface|ContainsError|SymfonyPageInterface
+     * @return CreatePageInterface|SymfonyPageInterface
      */
     private function resolveCurrentPage(): SymfonyPageInterface
     {

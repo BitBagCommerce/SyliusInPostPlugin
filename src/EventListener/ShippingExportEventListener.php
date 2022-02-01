@@ -10,20 +10,21 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusInPostPlugin\EventListener;
 
-use Doctrine\Persistence\ObjectManager;
-use GuzzleHttp\Exception\ClientException;
-use Sylius\Bundle\ResourceBundle\Event\ResourceControllerEvent;
 use BitBag\SyliusInPostPlugin\Api\WebClientInterface;
 use BitBag\SyliusShippingExportPlugin\Entity\ShippingExportInterface;
 use BitBag\SyliusShippingExportPlugin\Entity\ShippingGatewayInterface;
+use Doctrine\Persistence\ObjectManager;
+use GuzzleHttp\Exception\ClientException;
+use Sylius\Bundle\ResourceBundle\Event\ResourceControllerEvent;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Webmozart\Assert\Assert;
 
 final class ShippingExportEventListener
 {
-    const INPOST_SHIPPING_GATEWAY_CODE = 'inpost';
-    const INPOST_POINT_SHIPPING_GATEWAY_CODE = 'inpost_point';
+    public const INPOST_SHIPPING_GATEWAY_CODE = 'inpost';
+
+    public const INPOST_POINT_SHIPPING_GATEWAY_CODE = 'inpost_point';
 
     private WebClientInterface $webClient;
 
@@ -51,15 +52,16 @@ final class ShippingExportEventListener
 
     public function exportShipment(ResourceControllerEvent $exportShipmentEvent): void
     {
-        /** @var ShippingExportInterface $shippingExport */
+        /** @var ?ShippingExportInterface $shippingExport */
         $shippingExport = $exportShipmentEvent->getSubject();
         Assert::isInstanceOf($shippingExport, ShippingExportInterface::class);
 
-        /** @var ShippingGatewayInterface $shippingGateway */
+        /** @var ?ShippingGatewayInterface $shippingGateway */
         $shippingGateway = $shippingExport->getShippingGateway();
         Assert::notNull($shippingGateway);
 
         $shipment = $shippingExport->getShipment();
+        Assert::notNull($shipment);
 
         if ($shippingGateway->getCode() !== self::INPOST_SHIPPING_GATEWAY_CODE) {
             return;
@@ -75,11 +77,17 @@ final class ShippingExportEventListener
             $shippingExport->setExternalId((string) $externalId);
 
             $data = $this->webClient->getShipmentById($externalId);
+            Assert::notNull($data);
+            Assert::keyExists($data, 'status');
+            Assert::keyExists($data, 'id');
 
             if (WebClientInterface::CONFIRMED_STATUS === $data['status']) {
-                $this->saveShippingLabel($shippingExport, $this->webClient->getLabels([$data['id']]), 'pdf');
+                $labels = $this->webClient->getLabels([$data['id']]);
+                Assert::notNull($labels);
+                $this->saveShippingLabel($shippingExport, $labels, 'pdf');
             }
         } catch (ClientException $exception) {
+            Assert::notNull($shipment->getOrder());
             $this->flashBag->add(
                 'error',
                 sprintf(
@@ -102,7 +110,7 @@ final class ShippingExportEventListener
         string $labelExtension
     ): void {
         $labelPath = sprintf(
-            "%s/%s.%s",
+            '%s/%s.%s',
             $this->shippingLabelsPath,
             $this->getFilename($shippingExport),
             $labelExtension
@@ -124,6 +132,7 @@ final class ShippingExportEventListener
         Assert::notNull($order);
 
         $orderNumber = $order->getNumber();
+        Assert::notNull($orderNumber);
 
         $shipmentId = $shipment->getId();
 

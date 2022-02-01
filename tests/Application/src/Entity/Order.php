@@ -10,10 +10,11 @@ declare(strict_types=1);
 
 namespace Tests\BitBag\SyliusInPostPlugin\Application\src\Entity;
 
-use Sylius\Component\Core\Model\Order as BaseOrder;
+use BitBag\SyliusInPostPlugin\Model\InPostPointsAwareInterface;
 use BitBag\SyliusInPostPlugin\Model\OrderPointTrait;
+use Sylius\Component\Core\Model\Order as BaseOrder;
 
-class Order extends BaseOrder
+class Order extends BaseOrder implements InPostPointsAwareInterface
 {
     use OrderPointTrait;
 }

@@ -40,7 +40,7 @@ This plugin was made on top
 of [SyliusShippingExportPlugin](https://github.com/BitBagCommerce/SyliusShippingExportPlugin), so please remember to do
 the same for it's configuration.
 
-Add trait to your Order entity class:
+Add trait and interface to your Order entity class:
 
 ```php
 <?php
@@ -49,10 +49,11 @@ declare(strict_types=1);
 
 namespace App\Entity\Order;
 
+use BitBag\SyliusInPostPlugin\Model\InPostPointsAwareInterface;
 use Sylius\Component\Core\Model\Order as BaseOrder;
 use BitBag\SyliusInPostPlugin\Model\OrderPointTrait;
 
-class Order extends BaseOrder
+class Order extends BaseOrder implements InPostPointsAwareInterface
 {
     use OrderPointTrait;
 }
