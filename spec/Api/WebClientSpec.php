@@ -18,6 +18,7 @@ use GuzzleHttp\Client;
 use PhpSpec\ObjectBehavior;
 use Sylius\Component\Core\Model\AddressInterface;
 use Sylius\Component\Core\Model\CustomerInterface;
+use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\Model\PaymentMethod;
 use Sylius\Component\Core\Model\ShipmentInterface;
@@ -25,6 +26,10 @@ use Tests\BitBag\SyliusInPostPlugin\Application\src\Entity\Order;
 
 final class WebClientSpec extends ObjectBehavior
 {
+    const ORGANIZATION_ID = '123456';
+    const API_ENDPOINT = 'https://api-shipx-pl.easypack24.net/v1';
+    const POINT_NAME = 'AAA666';
+
     function let(Client $client): void
     {
         $this->beConstructedWith($client);
@@ -38,7 +43,7 @@ final class WebClientSpec extends ObjectBehavior
 
     function it_creates_api_endpoint_for_shipment(
         ShippingGatewayInterface $shippingGateway,
-        Order $order,
+        OrderInterface $order,
         ShipmentInterface $shipment,
         PaymentInterface $payment,
         PaymentMethod $paymentMethod,
@@ -52,7 +57,7 @@ final class WebClientSpec extends ObjectBehavior
         $shippingGateway->getConfigValue('cod_payment_method_code')->willReturn(null);
         $shippingGateway->getConfigValue('environment')->willReturn('sandbox');
         $shippingGateway->getConfigValue('access_token')->willReturn('1234567890.abcdefghij');
-        $shippingGateway->getConfigValue('organization_id')->willReturn('123456');
+        $shippingGateway->getConfigValue('organization_id')->willReturn(self::ORGANIZATION_ID);
         $shippingGateway->getConfigValue('environment')->willReturn('https://sandbox-api-shipx-pl.easypack24.net');
 
         $customer->getId()->willReturn(1);
@@ -83,10 +88,10 @@ final class WebClientSpec extends ObjectBehavior
 
         $this->setShippingGateway($shippingGateway);
 
-        $this->getApiEndpointForShipment();
-        $this->getApiEndpointForPointByName('AAA666');
-        $this->getApiEndpointForOrganizations();
-        $this->getApiEndpointForLabels();
-        $this->getApiEndpointForShipmentById(1);
+        $this->getApiEndpointForShipment()->shouldReturn(self::API_ENDPOINT . '/organizations/' . self::ORGANIZATION_ID .'/shipments');
+        $this->getApiEndpointForPointByName(self::POINT_NAME)->shouldReturn(self::API_ENDPOINT . '/points/' . self::POINT_NAME);
+        $this->getApiEndpointForOrganizations()->shouldReturn(self::API_ENDPOINT . '/organizations');
+        $this->getApiEndpointForLabels()->shouldReturn(self::API_ENDPOINT . '/organizations/'. self::ORGANIZATION_ID .'/shipments/labels');
+        $this->getApiEndpointForShipmentById(1)->shouldReturn(self::API_ENDPOINT . '/shipments/1');
     }
 }

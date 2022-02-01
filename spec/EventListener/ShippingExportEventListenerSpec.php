@@ -19,6 +19,7 @@ use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use Sylius\Bundle\ResourceBundle\Event\ResourceControllerEvent;
 use Sylius\Component\Core\Model\Order;
+use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\ShipmentInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
@@ -42,7 +43,7 @@ final class ShippingExportEventListenerSpec extends ObjectBehavior
         ShipmentInterface $shipment,
         WebClientInterface $webClient,
         ShippingExportInterface $shippingExport,
-        Order $order
+        OrderInterface $order
     ): void {
         $shippingGateway->getCode()->willReturn(ShippingExportEventListener::INPOST_SHIPPING_GATEWAY_CODE);
         $shippingGateway->getConfigValue('wsdl')->willReturn('wsdl');
@@ -53,7 +54,7 @@ final class ShippingExportEventListenerSpec extends ObjectBehavior
         $webClient->getLabels([10])->shouldBeCalled();
         $shipment->getId()->shouldBeCalled();
         $shippingExport->setLabelPath('labels/_.pdf')->shouldBeCalled();
-        $shippingExport->setState('exported')->shouldBeCalled();
+        $shippingExport->setState(ShippingExportInterface::STATE_EXPORTED)->shouldBeCalled();
 
         /** @var \DateTime $date */
         $date = Argument::type(\DateTime::class);
