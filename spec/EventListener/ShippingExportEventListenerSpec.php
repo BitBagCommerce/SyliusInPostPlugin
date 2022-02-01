@@ -18,7 +18,6 @@ use Doctrine\Persistence\ObjectManager;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use Sylius\Bundle\ResourceBundle\Event\ResourceControllerEvent;
-use Sylius\Component\Core\Model\Order;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\ShipmentInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -26,10 +25,20 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 final class ShippingExportEventListenerSpec extends ObjectBehavior
 {
-    function let(ObjectManager $manager, FlashBagInterface $flashBag, WebClientInterface $webClient, Filesystem $filesystem): void
-    {
+    function let(
+        ObjectManager $manager,
+        FlashBagInterface $flashBag,
+        WebClientInterface $webClient,
+        Filesystem $filesystem
+    ): void {
         $shippingLabelsPath = 'labels';
-        $this->beConstructedWith($manager, $flashBag, $webClient, $filesystem, $shippingLabelsPath);
+        $this->beConstructedWith(
+            $manager,
+            $flashBag,
+            $webClient,
+            $filesystem,
+            $shippingLabelsPath
+        );
     }
 
     function it_is_initializable(): void
