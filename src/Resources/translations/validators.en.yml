@@ -1,0 +1,4 @@
+bitbag_sylius_inpost_plugin:
+    order:
+        phone_number_is_required: 'Phone number is required in order to use InPost shipping method.'
+        not_allowed_payment_method: 'Cash on delivery is not allowed to use with InPost shipping method.'
