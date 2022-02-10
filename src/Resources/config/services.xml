@@ -6,8 +6,6 @@
         <import resource="./services/**/*.xml"/>
     </imports>
     <services>
-        <defaults public="true"/>
-
         <service
                 class="BitBag\SyliusInPostPlugin\Form\Type\ShippingGatewayType"
                 id="bitbag.sylius_inpost_plugin.form.type.inpost_shipping_gateway"
