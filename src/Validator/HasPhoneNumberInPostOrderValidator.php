@@ -10,17 +10,23 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusInPostPlugin\Validator;
 
-use BitBag\SyliusInPostPlugin\EventListener\ShippingExportEventListener;
+use BitBag\SyliusInPostPlugin\Checker\ShippingMethodCheckerInterface;
 use BitBag\SyliusInPostPlugin\Model\InPostPointsAwareInterface;
 use BitBag\SyliusInPostPlugin\Validator\Constraint\HasPhoneNumberInPostOrder;
 use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Core\Model\ShipmentInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 class HasPhoneNumberInPostOrderValidator extends ConstraintValidator
 {
     public const CASH_ON_DELIVERY = 'cash_on_delivery';
+
+    private ShippingMethodCheckerInterface $shippingMethodChecker;
+
+    public function __construct(ShippingMethodCheckerInterface $shippingMethodChecker)
+    {
+        $this->shippingMethodChecker = $shippingMethodChecker;
+    }
 
     /**
      * @param mixed $value
@@ -36,7 +42,7 @@ class HasPhoneNumberInPostOrderValidator extends ConstraintValidator
             return;
         }
 
-        $isInPostShipment = $this->isSelectedInPostShippingMethod($value);
+        $isInPostShipment = $this->shippingMethodChecker->isInPost($value);
         if (false === $isInPostShipment) {
             return;
         }
@@ -44,21 +50,6 @@ class HasPhoneNumberInPostOrderValidator extends ConstraintValidator
         if (false === $this->validatePhoneNumber($value)) {
             $this->addPhoneNumberViolation();
         }
-    }
-
-    private function isSelectedInPostShippingMethod(OrderInterface $order): bool
-    {
-        return $order->getShipments()->exists(function (int $index, ShipmentInterface $shipment): bool {
-            if (null === $shipment->getMethod()) {
-                return false;
-            }
-
-            $shipmentCode = $shipment->getMethod()->getCode();
-            $isInPostPoint = ShippingExportEventListener::INPOST_POINT_SHIPPING_GATEWAY_CODE === $shipmentCode;
-            $isInPost = ShippingExportEventListener::INPOST_SHIPPING_GATEWAY_CODE === $shipmentCode;
-
-            return $isInPostPoint || $isInPost;
-        });
     }
 
     private function validatePhoneNumber(OrderInterface $order): bool

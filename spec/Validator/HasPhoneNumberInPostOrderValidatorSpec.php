@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace spec\BitBag\SyliusInPostPlugin\Validator;
 
+use BitBag\SyliusInPostPlugin\Checker\ShippingMethodCheckerInterface;
 use BitBag\SyliusInPostPlugin\Model\InPostPointsAwareInterface;
 use BitBag\SyliusInPostPlugin\Validator\Constraint\HasPhoneNumberInPostOrder;
 use BitBag\SyliusInPostPlugin\Validator\HasPhoneNumberInPostOrderValidator;
@@ -21,11 +22,17 @@ use Sylius\Component\Core\Model\OrderInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
+use Tests\BitBag\SyliusInPostPlugin\Spec\Builder\AddressBuilder;
 use Tests\BitBag\SyliusInPostPlugin\Spec\ObjectMother\AddressObjectMother;
 use Tests\BitBag\SyliusInPostPlugin\Spec\ObjectMother\ShipmentObjectMother;
 
 class HasPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
 {
+    function let(ShippingMethodCheckerInterface $shippingMethodChecker): void
+    {
+        $this->beConstructedWith($shippingMethodChecker);
+    }
+
     function it_is_initializable()
     {
         $this->shouldHaveType(HasPhoneNumberInPostOrderValidator::class);
@@ -56,13 +63,12 @@ class HasPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
     function it_should_do_nothing_if_selected_shipping_method_is_not_inpost(
         ExecutionContextInterface $context,
         Constraint $constraint,
-        OrderInterface $value
+        OrderInterface $value,
+        ShippingMethodCheckerInterface $shippingMethodChecker
     ): void {
-        $shipment = ShipmentObjectMother::createWithShippingMethodWithFooCode();
-
         $value->implement(InPostPointsAwareInterface::class);
-        $value->getShipments()->willReturn(new ArrayCollection([$shipment]));
         $context->buildViolation(Argument::type('string'))->shouldNotBeCalled();
+        $shippingMethodChecker->isInPost(Argument::type(OrderInterface::class))->willReturn(false);
 
         $this->initialize($context);
         $this->validate($value, $constraint);
@@ -71,14 +77,13 @@ class HasPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
     function it_should_do_nothing_if_phone_number_is_set(
         ExecutionContextInterface $context,
         Constraint $constraint,
-        OrderInterface $value
+        OrderInterface $value,
+        ShippingMethodCheckerInterface $shippingMethodChecker
     ): void {
-        $shipment = ShipmentObjectMother::createWithShippingMethodWithInPostCode();
-        $shippingAddress = AddressObjectMother::createWithPhoneNumber();
-
+        $addressBuilder = AddressBuilder::create()->withPhoneNumber('123456789')->build();
         $value->implement(InPostPointsAwareInterface::class);
-        $value->getShippingAddress()->willReturn($shippingAddress);
-        $value->getShipments()->willReturn(new ArrayCollection([$shipment]));
+        $value->getShippingAddress()->willReturn($addressBuilder);
+        $shippingMethodChecker->isInPost(Argument::type(OrderInterface::class))->willReturn(true);
 
         $context->buildViolation(Argument::type('string'))->shouldNotBeCalled();
 
@@ -90,14 +95,11 @@ class HasPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
         ExecutionContextInterface $context,
         Constraint $constraint,
         OrderInterface $value,
-        ConstraintViolationBuilderInterface $violationBuilder
+        ConstraintViolationBuilderInterface $violationBuilder,
+        ShippingMethodCheckerInterface $shippingMethodChecker
     ): void {
-        $shipment = ShipmentObjectMother::createWithShippingMethodWithInPostCode();
-        $shippingAddress = AddressObjectMother::createSimple();
-
         $value->implement(InPostPointsAwareInterface::class);
-        $value->getShippingAddress()->willReturn($shippingAddress);
-        $value->getShipments()->willReturn(new ArrayCollection([$shipment]));
+        $shippingMethodChecker->isInPost(Argument::type(OrderInterface::class))->willReturn(true);
 
         $violationBuilder->atPath('shippingAddress.phoneNumber')->willReturn($violationBuilder);
         $violationBuilder->addViolation()->shouldBeCalled();
