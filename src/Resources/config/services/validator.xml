@@ -6,6 +6,8 @@
                 class="BitBag\SyliusInPostPlugin\Validator\HasPhoneNumberInPostOrderValidator"
                 id="bitbag.sylius_inpost_plugin.validator.has_phone_number_inpost_order"
         >
+            <argument type="service" id="bitbag.sylius_inpost_plugin.checker.shipping_method_checker" />
+
             <tag
                     name="validator.constraint_validator"
                     alias="bitbag_sylius_inpost_plugin_validator_has_phone_number_inpost_order"
@@ -16,6 +18,8 @@
                 class="BitBag\SyliusInPostPlugin\Validator\HasAllowedPaymentMethodInPostOrderValidator"
                 id="bitbag.sylius_inpost_plugin.validator.has_allowed_payment_method_inpost_order"
         >
+            <argument type="service" id="bitbag.sylius_inpost_plugin.checker.shipping_method_checker" />
+
             <tag
                     name="validator.constraint_validator"
                     alias="bitbag_sylius_inpost_plugin_validator_has_allowed_payment_method_inpost_order"
