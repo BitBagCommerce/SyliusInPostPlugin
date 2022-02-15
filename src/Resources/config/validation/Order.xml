@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/services/constraint-mapping-1.0.xsd">
+    <class name="Sylius\Component\Core\Model\Order">
+        <constraint name="BitBag\SyliusInPostPlugin\Validator\Constraint\HasAllowedPaymentMethodInPostOrder">
+            <option name="groups">
+                <value>sylius_checkout_complete</value>
+                <value>bitbag_select_payment</value>
+            </option>
+        </constraint>
+        <constraint name="BitBag\SyliusInPostPlugin\Validator\Constraint\HasPhoneNumberInPostOrder">
+            <option name="groups">
+                <value>sylius_checkout_complete</value>
+                <value>bitbag_select_shipping</value>
+            </option>
+        </constraint>
+    </class>
+</constraint-mapping>

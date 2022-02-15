@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service
+                class="BitBag\SyliusInPostPlugin\Validator\HasPhoneNumberInPostOrderValidator"
+                id="bitbag.sylius_inpost_plugin.validator.has_phone_number_inpost_order"
+        >
+            <argument type="service" id="bitbag.sylius_inpost_plugin.checker.shipping_method_checker" />
+
+            <tag
+                    name="validator.constraint_validator"
+                    alias="bitbag_sylius_inpost_plugin_validator_has_phone_number_inpost_order"
+            />
+        </service>
+
+        <service
+                class="BitBag\SyliusInPostPlugin\Validator\HasAllowedPaymentMethodInPostOrderValidator"
+                id="bitbag.sylius_inpost_plugin.validator.has_allowed_payment_method_inpost_order"
+        >
+            <argument type="service" id="bitbag.sylius_inpost_plugin.checker.shipping_method_checker" />
+
+            <tag
+                    name="validator.constraint_validator"
+                    alias="bitbag_sylius_inpost_plugin_validator_has_allowed_payment_method_inpost_order"
+            />
+        </service>
+    </services>
+</container>
