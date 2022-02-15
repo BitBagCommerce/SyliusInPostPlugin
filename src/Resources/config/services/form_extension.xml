@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service
+                class="BitBag\SyliusInPostPlugin\Form\Type\Extension\SelectShippingTypeExtension"
+                id="bitbag.sylius_inpost_plugin.form.type.extension.select_shipping_type_extension"
+        >
+            <argument>%sylius.form.type.checkout_select_shipping.validation_groups%</argument>
+            <tag name="form.type_extension" />
+        </service>
+
+        <service
+                class="BitBag\SyliusInPostPlugin\Form\Type\Extension\SelectPaymentTypeExtension"
+                id="bitbag.sylius_inpost_plugin.form.type.extension.select_payment_type_extension"
+        >
+            <argument>%sylius.form.type.checkout_select_payment.validation_groups%</argument>
+            <tag name="form.type_extension" />
+        </service>
+    </services>
+</container>
