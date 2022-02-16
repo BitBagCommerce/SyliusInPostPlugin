@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--
+  ~ This file was created by developers working at BitBag
+  ~ Do you need more information about us and what we do? Visit our https://bitbag.io website!
+  ~ We are hiring developers from all over the world. Join us and start your new, exciting adventure and become part of us: https://bitbag.io/career
+  -->
+
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service
+                id="bitbag.sylius_inpost_plugin.inpost_shipping_export_action.confirmed"
+                class="BitBag\SyliusInPostPlugin\EventListener\ShippingExportEventListener\InPostShippingExportConfirmedAction"
+        >
+            <argument type="service" id="bitbag.repository.shipping_export" />
+            <argument type="service" id="bitbag.sylius_inpost_plugin.api.web_client"/>
+            <argument type="service" id="filesystem"/>
+            <argument type="service" id="session.flash_bag" />
+            <argument key="$shippingLabelsPath">%bitbag.shipping_labels_path%</argument>
+
+            <tag name="bitbag.inpost_shipping_export_action" />
+        </service>
+
+        <service
+                id="bitbag.sylius_inpost_plugin.inpost_shipping_export_action.default"
+                class="BitBag\SyliusInPostPlugin\EventListener\ShippingExportEventListener\InPostShippingExportDefaultAction"
+        >
+            <argument type="service" id="bitbag.repository.shipping_export" />
+            <argument type="service" id="session.flash_bag" />
+
+            <tag name="bitbag.inpost_shipping_export_action" priority="-1024" />
+        </service>
+
+        <service
+            id="bitbag.sylius_inpost_plugin.provider.inpost_shipping_export_action"
+            class="BitBag\SyliusInPostPlugin\EventListener\ShippingExportEventListener\InPostShippingExportActionProvider"
+        >
+            <argument type="tagged_iterator" tag="bitbag.inpost_shipping_export_action" />
+        </service>
+    </services>
+</container>
