@@ -1,0 +1,3 @@
+bitbag:
+    ui:
+        shipment_data_has_been_marked_as_pending: Shipment has been marked as pending. External provider's system is still processing a label. Please wait a few minutes before you try again.

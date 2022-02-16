@@ -6,6 +6,7 @@
 !/etc/build/.gitignore
 
 /tests/Application/yarn.lock
+/tests/Application/shipping_labels
 
 /.phpunit.result.cache
 /behat.yml

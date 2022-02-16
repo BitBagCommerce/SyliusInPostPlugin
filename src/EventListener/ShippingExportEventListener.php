@@ -11,12 +11,13 @@ declare(strict_types=1);
 namespace BitBag\SyliusInPostPlugin\EventListener;
 
 use BitBag\SyliusInPostPlugin\Api\WebClientInterface;
+use BitBag\SyliusInPostPlugin\EventListener\ShippingExportEventListener\InPostShippingExportActionProviderInterface;
 use BitBag\SyliusShippingExportPlugin\Entity\ShippingExportInterface;
 use BitBag\SyliusShippingExportPlugin\Entity\ShippingGatewayInterface;
-use Doctrine\Persistence\ObjectManager;
 use GuzzleHttp\Exception\ClientException;
+use Psr\Log\LoggerInterface;
 use Sylius\Bundle\ResourceBundle\Event\ResourceControllerEvent;
-use Symfony\Component\Filesystem\Filesystem;
+use Sylius\Component\Core\Model\ShipmentInterface;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Webmozart\Assert\Assert;
 
@@ -26,28 +27,28 @@ final class ShippingExportEventListener
 
     public const INPOST_POINT_SHIPPING_GATEWAY_CODE = 'inpost_point';
 
+    private const ID_KEY = 'id';
+
+    private const STATUS_KEY = 'status';
+
     private WebClientInterface $webClient;
+
+    private InPostShippingExportActionProviderInterface $shippingExportActionProvider;
 
     private FlashBagInterface $flashBag;
 
-    private Filesystem $filesystem;
-
-    private string $shippingLabelsPath;
-
-    private ObjectManager $shippingExportManager;
+    private LoggerInterface $logger;
 
     public function __construct(
-        ObjectManager $shippingExportManager,
-        FlashBagInterface $flashBag,
         WebClientInterface $webClient,
-        Filesystem $filesystem,
-        string $shippingLabelsPath
+        InPostShippingExportActionProviderInterface $shippingExportActionProvider,
+        FlashBagInterface $flashBag,
+        LoggerInterface $logger
     ) {
-        $this->flashBag = $flashBag;
         $this->webClient = $webClient;
-        $this->filesystem = $filesystem;
-        $this->shippingExportManager = $shippingExportManager;
-        $this->shippingLabelsPath = $shippingLabelsPath;
+        $this->shippingExportActionProvider = $shippingExportActionProvider;
+        $this->flashBag = $flashBag;
+        $this->logger = $logger;
     }
 
     public function exportShipment(ResourceControllerEvent $exportShipmentEvent): void
@@ -67,90 +68,55 @@ final class ShippingExportEventListener
             return;
         }
 
-        try {
-            $this->webClient->setShippingGateway($shippingGateway);
+        $this->webClient->setShippingGateway($shippingGateway);
 
-            $result = $this->webClient->createShipment($shipment);
-
-            $externalId = $result['id'];
-
-            $shippingExport->setExternalId((string) $externalId);
-
-            $data = $this->webClient->getShipmentById($externalId);
-            Assert::notNull($data);
-            Assert::keyExists($data, 'status');
-            Assert::keyExists($data, 'id');
-
-            if (WebClientInterface::CONFIRMED_STATUS === $data['status']) {
-                $labels = $this->webClient->getLabels([$data['id']]);
-                Assert::notNull($labels);
-                $this->saveShippingLabel($shippingExport, $labels, 'pdf');
+        if (null === $shippingExport->getExternalId()) {
+            try {
+                $createShipmentResponse = $this->webClient->createShipment($shipment);
+            } catch (ClientException $exception) {
+                $this->flashBag->add('error', 'bitbag.ui.shipping_export_error');
+                $this->logError($exception, $shipment);
+                return;
             }
-        } catch (ClientException $exception) {
-            Assert::notNull($shipment->getOrder());
-            $this->flashBag->add(
-                'error',
-                sprintf(
-                    'InPost Web Service for #%s order: %s',
-                    $shipment->getOrder()->getNumber(),
-                    $exception->getMessage()
-                )
-            );
+            $externalId = $createShipmentResponse[self::ID_KEY];
+            $shippingExport->setExternalId(strval($externalId));
+        }
 
+        try {
+            $shipmentData = $this->webClient->getShipmentById(intval($shippingExport->getExternalId()));
+        } catch (ClientException $exception) {
+            $this->flashBag->add('error', 'bitbag.ui.shipping_export_error');
+            $this->logError($exception, $shipment);
+            return;
+        }
+        Assert::notNull($shipmentData);
+        Assert::keyExists($shipmentData, self::ID_KEY);
+        Assert::keyExists($shipmentData, self::STATUS_KEY);
+
+        $status = $shipmentData[self::STATUS_KEY];
+        try {
+            $action = $this->shippingExportActionProvider->provide($status);
+        } catch (\Exception $exception) {
+            $this->flashBag->add('error', 'bitbag.ui.shipping_export_error');
+            $this->logError($exception, $shipment);
             return;
         }
 
-        $this->flashBag->add('success', 'bitbag.ui.shipment_data_has_been_exported');
-        $this->markShipmentAsExported($shippingExport);
+        $action->execute($shippingExport);
     }
 
-    public function saveShippingLabel(
-        ShippingExportInterface $shippingExport,
-        string $labelContent,
-        string $labelExtension
-    ): void {
-        $labelPath = sprintf(
-            '%s/%s.%s',
-            $this->shippingLabelsPath,
-            $this->getFilename($shippingExport),
-            $labelExtension
-        );
-
-        $this->filesystem->dumpFile($labelPath, $labelContent);
-        $shippingExport->setLabelPath($labelPath);
-
-        $this->shippingExportManager->persist($shippingExport);
-        $this->shippingExportManager->flush();
-    }
-
-    private function getFilename(ShippingExportInterface $shippingExport): string
+    private function logError(\Exception $exception, ShipmentInterface $shipment): void
     {
-        $shipment = $shippingExport->getShipment();
-        Assert::notNull($shipment);
-
         $order = $shipment->getOrder();
         Assert::notNull($order);
 
-        $orderNumber = $order->getNumber();
-        Assert::notNull($orderNumber);
-
-        $shipmentId = $shipment->getId();
-
-        return implode(
-            '_',
-            [
-                $shipmentId,
-                preg_replace('~[A-Za-z0-9]~', '', $orderNumber),
-            ]
+        $message = sprintf(
+            '%s %s: %s',
+            '[InPostPlugin] Error while exporting shipment for order number',
+            $order->getNumber(),
+            $exception->getMessage()
         );
-    }
 
-    private function markShipmentAsExported(ShippingExportInterface $shippingExport): void
-    {
-        $shippingExport->setState(ShippingExportInterface::STATE_EXPORTED);
-        $shippingExport->setExportedAt(new \DateTime());
-
-        $this->shippingExportManager->persist($shippingExport);
-        $this->shippingExportManager->flush();
+        $this->logger->error($message);
     }
 }

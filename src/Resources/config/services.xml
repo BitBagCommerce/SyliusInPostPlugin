@@ -17,11 +17,10 @@
                 class="BitBag\SyliusInPostPlugin\EventListener\ShippingExportEventListener"
                 id="bitbag.sylius_inpost_plugin.event_listener.inpost_shipping_export"
         >
-            <argument type="service" id="doctrine.orm.default_entity_manager"/>
-            <argument type="service" id="session.flash_bag"/>
             <argument type="service" id="bitbag.sylius_inpost_plugin.api.web_client"/>
-            <argument type="service" id="filesystem"/>
-            <argument key="$shippingLabelsPath">%bitbag.shipping_labels_path%</argument>
+            <argument type="service" id="bitbag.sylius_inpost_plugin.provider.inpost_shipping_export_action"/>
+            <argument type="service" id="session.flash_bag"/>
+            <argument type="service" id="logger"/>
 
             <tag name="kernel.event_listener" event="bitbag.shipping_export.export_shipment" method="exportShipment"/>
         </service>
