@@ -12,33 +12,47 @@ namespace spec\BitBag\SyliusInPostPlugin\EventListener;
 
 use BitBag\SyliusInPostPlugin\Api\WebClientInterface;
 use BitBag\SyliusInPostPlugin\EventListener\ShippingExportEventListener;
-use BitBag\SyliusShippingExportPlugin\Entity\ShippingExportInterface;
-use BitBag\SyliusShippingExportPlugin\Entity\ShippingGatewayInterface;
-use Doctrine\Persistence\ObjectManager;
+use BitBag\SyliusInPostPlugin\EventListener\ShippingExportEventListener\InPostShippingExportActionInterface;
+use BitBag\SyliusInPostPlugin\EventListener\ShippingExportEventListener\InPostShippingExportActionProviderInterface;
+use GuzzleHttp\Exception\ClientException;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
+use Psr\Log\LoggerInterface;
 use Sylius\Bundle\ResourceBundle\Event\ResourceControllerEvent;
-use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Core\Model\ShipmentInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Tests\BitBag\SyliusInPostPlugin\Spec\Builder\OrderBuilder;
+use Tests\BitBag\SyliusInPostPlugin\Spec\Builder\ShipmentBuilder;
+use Tests\BitBag\SyliusInPostPlugin\Spec\Builder\ShippingExportBuilder;
+use Tests\BitBag\SyliusInPostPlugin\Spec\Builder\ShippingGatewayBuilder;
 
 final class ShippingExportEventListenerSpec extends ObjectBehavior
 {
+    private const ERROR = 'error';
+
+    private const SHIPPING_EXPORT_ERROR_MESSAGE = 'bitbag.ui.shipping_export_error';
+
+    private const INPOST = 'inpost';
+
+    private const SHIPMENT_ID = 1;
+
+    private const ORDER_NUMBER = '0000000001';
+
+    private const EXPECTED_CREATE_SHIPMENT_RESPONSE = [
+        'id' => '1',
+    ];
+
+    private const EXPECTED_GET_SHIPMENT_RESPONSE = [
+        'id' => '1',
+        'status' => 'created',
+    ];
+
     function let(
-        ObjectManager $manager,
-        FlashBagInterface $flashBag,
         WebClientInterface $webClient,
-        Filesystem $filesystem
+        InPostShippingExportActionProviderInterface $shippingExportActionProvider,
+        FlashBagInterface $flashBag,
+        LoggerInterface $logger
     ): void {
-        $shippingLabelsPath = 'labels';
-        $this->beConstructedWith(
-            $manager,
-            $flashBag,
-            $webClient,
-            $filesystem,
-            $shippingLabelsPath
-        );
+        $this->beConstructedWith($webClient, $shippingExportActionProvider, $flashBag, $logger);
     }
 
     function it_is_initializable(): void
@@ -46,39 +60,147 @@ final class ShippingExportEventListenerSpec extends ObjectBehavior
         $this->shouldHaveType(ShippingExportEventListener::class);
     }
 
-    function it_exports_shipment(
-        ResourceControllerEvent $exportShipmentEvent,
-        ShippingGatewayInterface $shippingGateway,
-        ShipmentInterface $shipment,
-        WebClientInterface $webClient,
-        ShippingExportInterface $shippingExport,
-        OrderInterface $order
+    function it_should_throw_exception_if_subject_is_not_shipping_export_instance(ResourceControllerEvent $event): void
+    {
+        $event->getSubject()->willReturn(new \stdClass());
+
+        $this
+            ->shouldThrow(\InvalidArgumentException::class)
+            ->during('exportShipment', [$event])
+        ;
+    }
+
+    function it_should_throw_exception_if_shipping_gateway_is_null(ResourceControllerEvent $event): void
+    {
+        $shippingExport = ShippingExportBuilder::create()->build();
+        $event->getSubject()->willReturn($shippingExport);
+
+        $this
+            ->shouldThrow(\InvalidArgumentException::class)
+            ->during('exportShipment', [$event]);
+    }
+
+    function it_should_throw_exception_if_shipment_is_null(ResourceControllerEvent $event): void
+    {
+        $shippingGateway = ShippingGatewayBuilder::create()->build();
+        $shippingExport = ShippingExportBuilder::create()->withShippingGateway($shippingGateway)->build();
+        $event->getSubject()->willReturn($shippingExport);
+
+        $this
+            ->shouldThrow(\InvalidArgumentException::class)
+            ->during('exportShipment', [$event]);
+    }
+
+    function it_should_do_nothing_if_shipping_gateway_code_is_not_inpost(
+        ResourceControllerEvent $event,
+        WebClientInterface $webClient
     ): void {
-        $shippingGateway->getCode()->willReturn(ShippingExportEventListener::INPOST_SHIPPING_GATEWAY_CODE);
-        $shippingGateway->getConfigValue('wsdl')->willReturn('wsdl');
+        $shippingGateway = ShippingGatewayBuilder::create()->withCode('not_inpost')->build();
+        $shipment = ShipmentBuilder::create()->build();
+        $shippingExport = ShippingExportBuilder::create()
+            ->withShippingGateway($shippingGateway)
+            ->withShipment($shipment)
+            ->build();
+        $event->getSubject()->willReturn($shippingExport);
 
-        $webClient->setShippingGateway($shippingGateway)->shouldBeCalled();
-        $webClient->createShipment($shipment)->shouldBeCalled();
-        $shippingExport->setExternalId('10')->shouldBeCalled();
-        $webClient->getLabels([10])->shouldBeCalled();
-        $shipment->getId()->shouldBeCalled();
-        $shippingExport->setLabelPath('labels/_.pdf')->shouldBeCalled();
-        $shippingExport->setState(ShippingExportInterface::STATE_EXPORTED)->shouldBeCalled();
+        $webClient->setShippingGateway(Argument::any())->shouldNotBeCalled();
 
-        /** @var \DateTime $date */
-        $date = Argument::type(\DateTime::class);
-        $shippingExport->setExportedAt($date)->shouldBeCalled();
+        $this->exportShipment($event);
+    }
 
-        $exportShipmentEvent->getSubject()->willReturn($shippingExport);
-        $shippingExport->getShippingGateway()->willReturn($shippingGateway);
-        $shippingExport->getShipment()->willReturn($shipment);
+    function it_should_handle_when_create_shipment_throws_exception(
+        ResourceControllerEvent $event,
+        WebClientInterface $webClient,
+        FlashBagInterface $flashBag,
+        LoggerInterface $logger
+    ): void {
+        $order = OrderBuilder::create()->withNumber(self::ORDER_NUMBER)->build();
+        $shippingGateway = ShippingGatewayBuilder::create()->withCode(self::INPOST)->build();
+        $shipment = ShipmentBuilder::create()->withOrder($order)->build();
+        $shippingExport = ShippingExportBuilder::create()
+            ->withShippingGateway($shippingGateway)
+            ->withShipment($shipment)
+            ->build();
+        $event->getSubject()->willReturn($shippingExport);
 
-        $webClient->createShipment($shipment)->willReturn(['id' => 10]);
+        $webClient->setShippingGateway($shippingGateway);
+        $webClient->createShipment($shipment)->willThrow(ClientException::class);
+        $flashBag->add(self::ERROR, self::SHIPPING_EXPORT_ERROR_MESSAGE)->shouldBeCalled();
+        $logger->error(Argument::type('string'))->shouldBeCalled();
 
-        $webClient->getShipmentById(10)->willReturn(['status' => WebClientInterface::CONFIRMED_STATUS, 'id' => 10]);
-        $webClient->getLabels()->willReturn('Label content');
-        $shipment->getOrder()->willReturn($order);
-        $order->getNumber()->willReturn(1);
-        $this->exportShipment($exportShipmentEvent);
+        $this->exportShipment($event);
+    }
+
+    function it_should_handle_when_get_shipment_by_id_throws_exception(
+        ResourceControllerEvent $event,
+        WebClientInterface $webClient,
+        FlashBagInterface $flashBag,
+        LoggerInterface $logger
+    ): void {
+        $order = OrderBuilder::create()->withNumber(self::ORDER_NUMBER)->build();
+        $shippingGateway = ShippingGatewayBuilder::create()->withCode(self::INPOST)->build();
+        $shipment = ShipmentBuilder::create()->withOrder($order)->build();
+        $shippingExport = ShippingExportBuilder::create()
+            ->withShippingGateway($shippingGateway)
+            ->withShipment($shipment)
+            ->build();
+        $event->getSubject()->willReturn($shippingExport);
+
+        $webClient->setShippingGateway($shippingGateway);
+        $webClient->createShipment($shipment)->willReturn(self::EXPECTED_CREATE_SHIPMENT_RESPONSE);
+        $webClient->getShipmentById(self::SHIPMENT_ID)->willThrow(ClientException::class);
+        $flashBag->add(self::ERROR, self::SHIPPING_EXPORT_ERROR_MESSAGE)->shouldBeCalled();
+        $logger->error(Argument::type('string'))->shouldBeCalled();
+
+        $this->exportShipment($event);
+    }
+
+    function it_should_handle_when_provide_shipment_action_throws_exception(
+        ResourceControllerEvent $event,
+        WebClientInterface $webClient,
+        FlashBagInterface $flashBag,
+        LoggerInterface $logger,
+        InPostShippingExportActionProviderInterface $shippingExportActionProvider
+    ): void {
+        $order = OrderBuilder::create()->withNumber(self::ORDER_NUMBER)->build();
+        $shippingGateway = ShippingGatewayBuilder::create()->withCode(self::INPOST)->build();
+        $shipment = ShipmentBuilder::create()->withOrder($order)->build();
+        $shippingExport = ShippingExportBuilder::create()
+            ->withShippingGateway($shippingGateway)
+            ->withShipment($shipment)
+            ->build();
+        $event->getSubject()->willReturn($shippingExport);
+
+        $webClient->setShippingGateway($shippingGateway);
+        $webClient->createShipment($shipment)->willReturn(self::EXPECTED_CREATE_SHIPMENT_RESPONSE);
+        $webClient->getShipmentById(self::SHIPMENT_ID)->willReturn(self::EXPECTED_GET_SHIPMENT_RESPONSE);
+        $shippingExportActionProvider->provide(Argument::type('string'))->willThrow(\Exception::class);
+        $flashBag->add(self::ERROR, self::SHIPPING_EXPORT_ERROR_MESSAGE)->shouldBeCalled();
+        $logger->error(Argument::type('string'))->shouldBeCalled();
+
+        $this->exportShipment($event);
+    }
+
+    function it_should_execute_shipping_export_action(
+        ResourceControllerEvent $event,
+        WebClientInterface $webClient,
+        InPostShippingExportActionProviderInterface $shippingExportActionProvider,
+        InPostShippingExportActionInterface $shippingExportAction
+    ): void {
+        $shippingGateway = ShippingGatewayBuilder::create()->withCode(self::INPOST)->build();
+        $shipment = ShipmentBuilder::create()->build();
+        $shippingExport = ShippingExportBuilder::create()
+            ->withShippingGateway($shippingGateway)
+            ->withShipment($shipment)
+            ->build();
+        $event->getSubject()->willReturn($shippingExport);
+
+        $webClient->setShippingGateway($shippingGateway);
+        $webClient->createShipment($shipment)->willReturn(self::EXPECTED_CREATE_SHIPMENT_RESPONSE);
+        $webClient->getShipmentById(self::SHIPMENT_ID)->willReturn(self::EXPECTED_GET_SHIPMENT_RESPONSE);
+        $shippingExportActionProvider->provide(Argument::type('string'))->willReturn($shippingExportAction);
+        $shippingExportAction->execute($shippingExport)->shouldBeCalled();
+
+        $this->exportShipment($event);
     }
 }

@@ -28,9 +28,16 @@ class OrderBuilder
         $this->order = new Order();
     }
 
-    public function withShipment(ShipmentInterface $shipment): self
+    public function withShipment(ShipmentInterface $shipment):OrderBuilder
     {
         $this->order->addShipment($shipment);
+
+        return $this;
+    }
+
+    public function withNumber(string $number): OrderBuilder
+    {
+        $this->order->setNumber($number);
 
         return $this;
     }

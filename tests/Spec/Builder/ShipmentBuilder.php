@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Tests\BitBag\SyliusInPostPlugin\Spec\Builder;
 
+use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\Shipment;
 use Sylius\Component\Core\Model\ShipmentInterface;
 use Sylius\Component\Core\Model\ShippingMethodInterface;
@@ -28,9 +29,16 @@ class ShipmentBuilder
         $this->shipment = new Shipment();
     }
 
-    public function withShippingMethod(ShippingMethodInterface $shippingMethod): self
+    public function withShippingMethod(ShippingMethodInterface $shippingMethod): ShipmentBuilder
     {
         $this->shipment->setMethod($shippingMethod);
+
+        return $this;
+    }
+
+    public function withOrder(OrderInterface $order): ShipmentBuilder
+    {
+        $this->shipment->setOrder($order);
 
         return $this;
     }
