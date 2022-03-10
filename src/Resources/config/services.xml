@@ -35,6 +35,7 @@
         <service
                 class="BitBag\SyliusInPostPlugin\Controller\AddPointToOrderAction"
                 id="bitbag.sylius_inpost_plugin.controller.add_point_to_order"
+                public="true"
         >
             <argument type="service" id="sylius.repository.order"/>
             <argument type="service" id="bitbag.factory.inpost_point"/>
