@@ -31,15 +31,15 @@ export class GeoWidgetPreview {
         this.wrapper.insertAdjacentHTML(
             'beforeend',
             `
-            <img src="${data.image_url}" class="bb-inpost-point-img"/>
+            <img src="${data?.image_url}" class="bb-inpost-point-img"/>
             <div class="bb-inpost-point-desc" ${DEFAULT_SELECTORS.previewRaw}>
                 <b>
-                    ${data.name}
+                    ${data?.name}
                 </b>
                 <p>
-                    ${data.address.line1}<br>
-                    ${data.address.line2}<br>
-                    <small>${data.location_description}</small>
+                    ${data?.address?.line1}<br>
+                    ${data?.address?.line2}<br>
+                    <small>${data?.location_description}</small>
                 </p>
             </div>
         `
