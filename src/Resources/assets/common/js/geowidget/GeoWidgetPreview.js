@@ -26,6 +26,7 @@ export class GeoWidgetPreview {
         if (!this.wrapper) {
             throw new Error('BitBagInPostPlugin - The specified wrapper node could not be found in the DOM');
         }
+
         if (!data) {
             return;
         }

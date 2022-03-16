@@ -8,7 +8,10 @@ export class InpostPointEvents {
         this.defaultConfig = {
             validateNextBtn: true,
         };
-        this.finalConfig = {...this.defaultConfig, ...config};
+        this.finalConfig = {
+            ...this.defaultConfig,
+            ...config,
+        };
     }
 
     init() {
