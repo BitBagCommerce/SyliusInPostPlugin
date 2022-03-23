@@ -45,5 +45,25 @@
 
             <tag name="controller.service_arguments" />
         </service>
+
+        <service
+                class="BitBag\SyliusInPostPlugin\Controller\QuickReturnController"
+                id="bit_bag.sylius_in_post_plugin.controller.quick_return_controller"
+                public="true"
+        >
+            <argument type="service" id="bit_bag.sylius_in_post_plugin.resolver.organization_id_resolver"/>
+            <tag name="controller.service_arguments"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+        </service>
+
+        <service
+                class="BitBag\SyliusInPostPlugin\Resolver\OrganizationIdResolver"
+                id="bit_bag.sylius_in_post_plugin.resolver.organization_id_resolver"
+                public="true"
+        >
+            <argument type="service" id="bitbag.repository.shipping_gateway"/>
+        </service>
     </services>
 </container>

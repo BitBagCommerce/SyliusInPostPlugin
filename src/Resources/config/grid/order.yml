@@ -1,0 +1,34 @@
+# This file is part of the Sylius package.
+# (c) Paweł Jędrzejewski
+
+sylius_grid:
+  templates:
+      action:
+        shop_quick_return: "@SyliusShop/Grid/Action/show.html.twig"
+  grids:
+    sylius_shop_account_order:
+      actions:
+        item:
+          quick_return:
+            type: shop_quick_return
+            label: sylius.ui.quick_return
+            options:
+              link:
+                route: sylius_shop_account_order_return
+
+          show:
+            type: shop_show
+            label: sylius.ui.show
+            options:
+              link:
+                route: sylius_shop_account_order_show
+                parameters:
+                  number: resource.number
+          pay:
+            type: shop_pay
+            label: sylius.ui.pay
+            options:
+              link:
+                route: sylius_shop_order_show
+                parameters:
+                  tokenValue: resource.tokenValue

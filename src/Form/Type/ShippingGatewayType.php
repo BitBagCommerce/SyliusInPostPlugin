@@ -17,6 +17,8 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 final class ShippingGatewayType extends AbstractType
@@ -97,6 +99,17 @@ final class ShippingGatewayType extends AbstractType
             ->add('is_return', CheckboxType::class, [
                 'label' => 'bitbag_sylius_inpost_plugin.ui.is_return',
             ])
+            ->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event): void {
+                $data = $event->getData();
+                if (isset($data['organization_id'])){
+                    $event
+                        ->getForm()
+                        ->add('is_quick_return', CheckboxType::class, [
+                            'label' => 'bitbag_sylius_inpost_plugin.ui.is_quick_return',
+                        ])
+                    ;
+                }
+            })
             ->add('additional_services', ChoiceType::class, [
                 'label' => 'bitbag_sylius_inpost_plugin.ui.additional_services',
                 'choices' => self::ADDITIONAL_SERVICE_CHOICES,
