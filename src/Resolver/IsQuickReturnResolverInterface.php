@@ -8,9 +8,7 @@
 
 namespace BitBag\SyliusInPostPlugin\Resolver;
 
-interface OrganizationIdResolverInterface
+interface IsQuickReturnResolverInterface
 {
-    public const INPOST_CODE = 'inpost';
-
-    public function getOrganizationId(): string;
+    public function getIsQuickReturn(): bool;
 }

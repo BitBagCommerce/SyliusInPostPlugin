@@ -4,14 +4,14 @@
 sylius_grid:
   templates:
       action:
-        shop_quick_return: "@SyliusShop/Grid/Action/show.html.twig"
+        shop_quick_return: "@SyliusShop/Grid/Action/quickReturn.html.twig"
   grids:
     sylius_shop_account_order:
       actions:
         item:
           quick_return:
             type: shop_quick_return
-            label: sylius.ui.quick_return
+            label: bitbag_sylius_inpost_plugin.ui.quick_return
             options:
               link:
                 route: sylius_shop_account_order_return

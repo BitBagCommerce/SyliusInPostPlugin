@@ -10,10 +10,9 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusInPostPlugin\Resolver;
 
-use BitBag\SyliusShippingExportPlugin\Entity\ShippingGatewayInterface;
 use BitBag\SyliusShippingExportPlugin\Repository\ShippingGatewayRepositoryInterface;
 
-final class OrganizationIdResolver implements OrganizationIdResolverInterface
+final class IsQuickReturnResolver implements IsQuickReturnResolverInterface
 {
     private ShippingGatewayRepositoryInterface $shippingGatewayRepository;
 
@@ -22,15 +21,15 @@ final class OrganizationIdResolver implements OrganizationIdResolverInterface
         $this->shippingGatewayRepository = $shippingGatewayRepository;
     }
 
-    public function getOrganizationId(): string
+    public function getIsQuickReturn(): bool
     {
-        $shippingGateway = $this->shippingGatewayRepository->findOneByCode(self::INPOST_CODE);
+        $shippingGateway = $this->shippingGatewayRepository->findOneByCode(OrganizationIdResolverInterface::INPOST_CODE);
         $config = $shippingGateway->getConfig();
 
         if (null === $config){
             throw new \Exception('Can not found config data');
         }
 
-        return $config['organization_id'] ?? '';
+        return $config['is_quick_return'] ?? false;
     }
 }
