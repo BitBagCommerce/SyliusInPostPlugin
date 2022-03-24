@@ -2,5 +2,5 @@
 
 {% set path = options.link.url|default(path(options.link.route)) %}
 {% if quick_return(data)  %}
-{{ buttons.default(path, action.label, null, 'redo', 'purple' ) }}
+{{ buttons.default(path, action.label, null, 'redo', 'yellow' ) }}
 {% endif %}
