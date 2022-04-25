@@ -8,10 +8,3 @@ bitbag_sylius_inpost_plugin_admin_add_point_to_order:
     methods: [POST]
     defaults:
         _controller: bitbag.sylius_inpost_plugin.controller.add_point_to_order:addPointToOrderAction
-
-sylius_admin_shipping_method_quick_return:
-    path: /account/orders/quick_return/
-    defaults:
-        _controller: bit_bag.sylius_in_post_plugin.controller.quick_return_controller:redirectAction
-
-

@@ -23,7 +23,9 @@ final class IsQuickReturnResolver implements IsQuickReturnResolverInterface
 
     public function getIsQuickReturn(): bool
     {
-        $shippingGateway = $this->shippingGatewayRepository->findOneByCode(OrganizationIdResolverInterface::INPOST_CODE);
+        $shippingGateway = $this->shippingGatewayRepository
+            ->findOneByCode(OrganizationIdResolverInterface::INPOST_CODE);
+
         $config = $shippingGateway->getConfig();
 
         if (null === $config){

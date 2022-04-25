@@ -22,7 +22,7 @@ final class OrganizationIdResolver implements OrganizationIdResolverInterface
         $this->shippingGatewayRepository = $shippingGatewayRepository;
     }
 
-    public function getOrganizationId(): string
+    public function getOrganizationId(): ?string
     {
         $shippingGateway = $this->shippingGatewayRepository->findOneByCode(self::INPOST_CODE);
         $config = $shippingGateway->getConfig();
@@ -31,6 +31,6 @@ final class OrganizationIdResolver implements OrganizationIdResolverInterface
             throw new \Exception('Can not found config data');
         }
 
-        return $config['organization_id'] ?? '';
+        return $config['organization_id'];
     }
 }

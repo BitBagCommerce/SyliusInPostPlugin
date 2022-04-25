@@ -1,6 +1,5 @@
 {% import '@SyliusUi/Macro/buttons.html.twig' as buttons %}
 
-{% set path = options.link.url|default(path(options.link.route)) %}
-{% if quick_return(data)  %}
-{{ buttons.default(path, action.label, null, 'redo', 'yellow' ) }}
+{% if data.point and quick_return() != ""  %}
+    {{ buttons.default(quick_return(), action.label, null, 'redo', 'purple' ) }}
 {% endif %}

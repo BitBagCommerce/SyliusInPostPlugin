@@ -5,7 +5,7 @@
     <services>
         <service
                 class="BitBag\SyliusInPostPlugin\Resolver\OrganizationIdResolver"
-                id="bit_bag.sylius_in_post_plugin.resolver.organization_id_resolver"
+                id="bitbag.sylius_in_post_plugin.resolver.organization_id_resolver"
                 public="true"
         >
             <argument type="service" id="bitbag.repository.shipping_gateway"/>
@@ -13,7 +13,7 @@
 
         <service
                 class="BitBag\SyliusInPostPlugin\Resolver\IsQuickReturnResolver"
-                id="bit_bag.sylius_in_post_plugin.resolver.is_quick_return_resolver"
+                id="bitbag.sylius_in_post_plugin.resolver.is_quick_return_resolver"
                 public="true"
         >
             <argument type="service" id="bitbag.repository.shipping_gateway"/>

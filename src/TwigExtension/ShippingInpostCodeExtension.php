@@ -12,19 +12,25 @@ namespace BitBag\SyliusInPostPlugin\TwigExtension;
 
 use BitBag\SyliusInPostPlugin\Resolver\IsQuickReturnResolverInterface;
 use BitBag\SyliusInPostPlugin\Resolver\OrganizationIdResolverInterface;
-use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Core\Model\ShipmentInterface;
-use Sylius\Component\Core\Model\ShippingMethodInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 final class ShippingInpostCodeExtension extends AbstractExtension
 {
+    public const ULR_TO_INPOST_QUICK_RETURN = "https://www.szybkiezwroty.pl/";
+
     public IsQuickReturnResolverInterface $isQuickReturnResolver;
 
-    public function __construct(IsQuickReturnResolverInterface $isQuickReturnResolver)
-    {
+    private OrganizationIdResolverInterface $organizationIdResolver;
+
+
+    public function __construct(
+        IsQuickReturnResolverInterface $isQuickReturnResolver,
+        OrganizationIdResolverInterface $organizationIdResolver
+    ) {
         $this->isQuickReturnResolver = $isQuickReturnResolver;
+        $this->organizationIdResolver = $organizationIdResolver;
+
     }
 
     public function getFunctions(): array
@@ -34,22 +40,15 @@ final class ShippingInpostCodeExtension extends AbstractExtension
         ];
     }
 
-    public function isInpostShippingCode(OrderInterface $order)
+    public function isInpostShippingCode(): string
     {
-        /** @var ShipmentInterface $shipment */
-        $shipment = $order->getShipments()->first();
-        if ($shipment) {
-            /** @var ShippingMethodInterface $shippingMethod */
-            $shippingMethod = $shipment->getMethod();
-            $shipmentCode = $shippingMethod->getCode();
-            $isQuickReturn = $this->isQuickReturnResolver->getIsQuickReturn();
-            if ($isQuickReturn && (OrganizationIdResolverInterface::INPOST_CODE === $shipmentCode)) {
+        $isQuickReturn = $this->isQuickReturnResolver->getIsQuickReturn();
+        $organizationId = $this->organizationIdResolver->getOrganizationId();
 
-                return true;
-            }
+        if ($isQuickReturn && $organizationId !== "") {
+                return sprintf("%s%s",self::ULR_TO_INPOST_QUICK_RETURN, $organizationId);
         }
 
-        return false;
+        return "";
     }
 }
-
