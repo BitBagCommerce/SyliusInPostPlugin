@@ -4,8 +4,8 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
         <service id="BitBag\SyliusInPostPlugin\TwigExtension\ShippingInpostCodeExtension" public="false">
-            <argument type="service" id="bitbag.sylius_in_post_plugin.resolver.is_quick_return_resolver"/>
-            <argument type="service" id="bitbag.sylius_in_post_plugin.resolver.organization_id_resolver"/>
+            <argument type="service" id="bitbag.sylius_inpost_plugin.resolver.is_quick_return_resolver"/>
+            <argument type="service" id="bitbag.sylius_inpost_plugin.resolver.organization_id_resolver"/>
             <tag name="twig.extension" />
         </service>
     </services>
