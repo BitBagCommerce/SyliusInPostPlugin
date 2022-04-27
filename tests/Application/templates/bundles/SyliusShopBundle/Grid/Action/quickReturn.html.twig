@@ -1,0 +1,5 @@
+{% import '@SyliusUi/Macro/buttons.html.twig' as buttons %}
+
+{% if data.point and quick_return() != ""  %}
+    {{ buttons.default(quick_return(), action.label, null, 'redo', 'purple' ) }}
+{% endif %}

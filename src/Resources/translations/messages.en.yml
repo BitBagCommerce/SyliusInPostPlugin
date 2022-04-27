@@ -14,6 +14,8 @@ bitbag_sylius_inpost_plugin:
         selected_point: Selected point
         no_point_selected: No point selected
         not_blank: This field cannot be blank
+        is_quick_return: Quick Return
+        quick_return: Quick Return
     main_service:
         inpost_locker_standard: Inpost Locker Standard
         inpost_locker_pass_thru: Inpost Locker Pass Thru
