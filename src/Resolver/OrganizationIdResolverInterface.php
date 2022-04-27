@@ -12,5 +12,5 @@ interface OrganizationIdResolverInterface
 {
     public const INPOST_CODE = 'inpost';
 
-    public function getOrganizationId(): ?string;
+    public function getOrganizationId(): string;
 }
