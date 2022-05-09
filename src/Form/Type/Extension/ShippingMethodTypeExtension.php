@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusInPostPlugin\Form\Type\Extension;
 
+use BitBag\SyliusInPostPlugin\Form\Type\ShippingMethodImageType;
 use Sylius\Bundle\ShippingBundle\Form\Type\ShippingMethodType;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\FormBuilderInterface;

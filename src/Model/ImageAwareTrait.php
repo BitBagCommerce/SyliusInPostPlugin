@@ -10,19 +10,19 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusInPostPlugin\Model;
 
-use BitBag\SyliusInPostPlugin\Entity\ShippingMethodImageInterface;
+use Sylius\Component\Core\Model\ImageInterface;
 
-trait ShippingMethodImageTrait
+trait ImageAwareTrait
 {
-    protected ImageInterface $shippingMethodImage;
+    protected ImageInterface $image;
 
-    public function getShippingMethodImage(): ?ImageInterface
+    public function getImage(): ?ImageInterface
     {
-        return $this->shippingMethodImage;
+        return $this->image;
     }
 
-    public function setShippingMethodImage(?ImageInterface $shippingMethodImage): void
+    public function setImage(?ImageInterface $image): void
     {
-        $this->shippingMethodImage = $shippingMethodImage;
+        $this->image = $image;
     }
 }

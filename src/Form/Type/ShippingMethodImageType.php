@@ -12,7 +12,7 @@ namespace BitBag\SyliusInPostPlugin\Form\Type;
 
 use Sylius\Bundle\CoreBundle\Form\Type\ImageType;
 
-final class ShippingMethodImageType extends ImageType
+class ShippingMethodImageType extends ImageType
 {
     public function getBlockPrefix(): string
     {

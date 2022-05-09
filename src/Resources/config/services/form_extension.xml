@@ -17,5 +17,12 @@
             <argument>%sylius.form.type.checkout_select_payment.validation_groups%</argument>
             <tag name="form.type_extension" />
         </service>
+
+        <service
+                class="BitBag\SyliusInPostPlugin\Form\Type\Extension\ShippingMethodTypeExtension"
+                id="bitbag.sylius_inpost_plugin.form.type.extension.shipping_method_type_extension"
+        >
+            <tag name="form.type_extension" extended-type="Sylius\Bundle\ShippingBundle\Form\Type\ShippingMethodType" />
+        </service>
     </services>
 </container>
