@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                                      http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Tests\BitBag\SyliusInPostPlugin\Application\src\Entity\ShippingMethod" table="sylius_shipping_method">
+        <one-to-one field="image" target-entity="BitBag\SyliusInPostPlugin\Entity\ShippingMethodImage" mapped-by="owner">
+            <cascade>
+                <cascade-all />
+            </cascade>
+            <join-column name="image_id" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
+        </one-to-one>
+    </entity>
+</doctrine-mapping>

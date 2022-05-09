@@ -1,0 +1,7 @@
+sylius_resource:
+    resources:
+        bitbag.shipping_method_image:
+            driver: doctrine/orm
+            classes:
+                model: BitBag\SyliusInPostPlugin\Entity\ShippingMethodImage
+                form : BitBag\SyliusInPostPlugin\Form\Type\ShippingMethodImageType
