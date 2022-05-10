@@ -12,7 +12,7 @@ namespace BitBag\SyliusInPostPlugin\Model;
 
 use Sylius\Component\Core\Model\ImageInterface;
 
-trait ImageAwareTrait
+trait ShippingMethodImageTrait
 {
     protected ?ImageInterface $image;
 

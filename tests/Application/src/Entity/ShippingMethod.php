@@ -10,10 +10,11 @@ declare(strict_types=1);
 
 namespace Tests\BitBag\SyliusInPostPlugin\Application\src\Entity;
 
-use BitBag\SyliusInPostPlugin\Model\ImageAwareTrait;
+use BitBag\SyliusInPostPlugin\Model\ShippingMethodImageTrait;
+use Sylius\Component\Core\Model\ImageAwareInterface;
 use Sylius\Component\Core\Model\ShippingMethod as BaseShippingMethod;
 
-class ShippingMethod extends BaseShippingMethod
+class ShippingMethod extends BaseShippingMethod implements ImageAwareInterface
 {
-    use ImageAwareTrait;
+    use ShippingMethodImageTrait;
 }
