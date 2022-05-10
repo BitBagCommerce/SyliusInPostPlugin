@@ -13,7 +13,7 @@ namespace Tests\BitBag\SyliusInPostPlugin\Application\src\Entity;
 use BitBag\SyliusInPostPlugin\Model\ImageAwareTrait;
 use Sylius\Component\Core\Model\ShippingMethod as BaseShippingMethod;
 
-final class ShippingMethod extends BaseShippingMethod
+class ShippingMethod extends BaseShippingMethod
 {
     use ImageAwareTrait;
 }

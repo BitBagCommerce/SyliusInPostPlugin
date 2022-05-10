@@ -14,7 +14,7 @@ use Sylius\Component\Core\Model\ImageInterface;
 
 trait ImageAwareTrait
 {
-    protected ImageInterface $image;
+    protected ?ImageInterface $image;
 
     public function getImage(): ?ImageInterface
     {

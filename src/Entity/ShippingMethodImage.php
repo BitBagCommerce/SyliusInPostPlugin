@@ -13,7 +13,7 @@ namespace BitBag\SyliusInPostPlugin\Entity;
 use Sylius\Component\Core\Model\Image;
 use Sylius\Component\Core\Model\ImageInterface;
 
-final class ShippingMethodImage extends Image implements ImageInterface
+class ShippingMethodImage extends Image implements ImageInterface
 {
 
 }
