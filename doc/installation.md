@@ -64,7 +64,7 @@ class Order extends BaseOrder implements InPostPointsAwareInterface
 
 declare(strict_types=1);
 
-namespace Tests\BitBag\SyliusInPostPlugin\Application\src\Entity;
+namespace App\Entity\Order;
 
 use BitBag\SyliusInPostPlugin\Model\ShippingMethodImageTrait;
 use Sylius\Component\Core\Model\ImageAwareInterface;
@@ -105,13 +105,17 @@ prefer)
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 
-<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping">
-
-    <mapped-superclass name="BitBag\SyliusInPostPlugin\Entity\ShippingMethodImage" table="bitbag_inpost_shipping_method_image">
+<doctrine-mapping
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                            http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd"
+>
+    <entity name="Tests\BitBag\SyliusInPostPlugin\Application\src\Entity\ShippingMethodImage" table="bitbag_inpost_shipping_method_image">
         <one-to-one field="owner" target-entity="Sylius\Component\Shipping\Model\ShippingMethodInterface" inversed-by="image">
             <join-column name="owner_id" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
         </one-to-one>
-    </mapped-superclass>
+    </entity>
     
 </doctrine-mapping>
 ```
@@ -132,6 +136,7 @@ $ cd tests/Application
 $ yarn install
 $ yarn encore dev
 $ bin/console assets:install public -e test
+$ bin/console doctrine:database:create -e test
 $ bin/console doctrine:schema:create -e test
 $ bin/console server:run 127.0.0.1:8080 -d public -e test
 $ open http://localhost:8080
