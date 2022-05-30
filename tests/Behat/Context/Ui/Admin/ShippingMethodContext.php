@@ -9,7 +9,7 @@ class ShippingMethodContext implements Context
 {
     private UpdatePageInterface $updatePage;
     public function __construct(
-        UpdatePageInterface $updatePage,
+        UpdatePageInterface $updatePage
     ) {
         $this->updatePage = $updatePage;
     }
@@ -19,5 +19,4 @@ class ShippingMethodContext implements Context
     {
         $this->updatePage->attachFile($path);
     }
-
 }
