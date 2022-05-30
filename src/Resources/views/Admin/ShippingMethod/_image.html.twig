@@ -1,0 +1,6 @@
+{% if shipping_method.image is not empty and shipping_method.image.path is not empty %}
+    {% set path = app.user.avatar.path%}
+    <p>{{ "bitbag_sylius_inpost_plugin.ui.file" | trans }} : {{ path ?? "empty" }}</p>
+{% else %}
+    <i class="ui shipping"></i>
+{% endif %}

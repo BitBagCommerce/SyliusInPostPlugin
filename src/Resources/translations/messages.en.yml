@@ -6,6 +6,7 @@ bitbag_sylius_inpost_plugin:
         sandbox: Sandbox
         production: Production
         service: Service
+        file: File
         insurance_amount: Insurance amount
         cod_payment_method_code: COD Payment Method Code
         additional_services: Additional Services
