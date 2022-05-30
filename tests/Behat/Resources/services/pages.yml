@@ -5,3 +5,9 @@ services:
         public: false
         arguments:
             - 'bitbag_admin_shipping_gateway_create'
+    bitbag.sylius_inpost_plugin.behat.page.admin.shipping_method.update:
+        class: Tests\BitBag\SyliusInPostPlugin\Behat\Page\Admin\ShippingMethod\UpdatePage
+        parent: sylius.behat.page.admin.shipping_method.update
+        public: false
+        arguments:
+            - 'bitbag_admin_shipping_method_update'

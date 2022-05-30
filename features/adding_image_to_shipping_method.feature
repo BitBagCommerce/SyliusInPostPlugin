@@ -12,5 +12,6 @@ Feature: Adding shipping method image
   @ui
   Scenario: Seeing shipments to export
     When I want to modify a shipping method "InPost"
+    And I upload the "image/shipping_logo.jpg" image as shipping method logo
     And I save my changes
     Then I should be notified that it has been successfully edited

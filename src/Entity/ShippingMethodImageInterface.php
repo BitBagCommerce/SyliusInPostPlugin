@@ -10,9 +10,9 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusInPostPlugin\Entity;
 
-use Sylius\Component\Core\Model\Image;
+use Sylius\Component\Core\Model\ImageInterface;
 
-class ShippingMethodImage extends Image implements ShippingMethodImageInterface
+interface ShippingMethodImageInterface extends ImageInterface
 {
 
 }

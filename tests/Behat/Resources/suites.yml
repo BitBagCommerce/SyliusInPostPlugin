@@ -29,7 +29,7 @@ default:
 
                 - bitbag.sylius_inpost_plugin.behat.context.ui.admin.shipping_gateway
             filters:
-                tags: "@managing_shipping_gateway_inpost && @ui"
+                tags: "@managing_shipping_gateway_inpost&&@ui"
 
         managing_shipping_export_inpost:
             contexts:
@@ -62,7 +62,7 @@ default:
                 - bitbag.behat.context.ui.admin.shipping_export
                 - bitbag.sylius_inpost_plugin.behat.context.ui.admin.shipping_export
             filters:
-                tags: "@managing_shipping_export_inpost && @ui"
+                tags: "@managing_shipping_export_inpost&&@ui"
 
         managing_shipping_image_inpost:
             contexts:
@@ -92,4 +92,4 @@ default:
                 - sylius.behat.context.ui.admin.managing_shipping_methods
                 - bitbag.sylius_inpost_plugin.behat.context.ui.admin.shipping_image
             filters:
-                tags: "@managing_shipping_image_inpost && @ui"
+                tags: "@managing_shipping_image_inpost&&@ui"
