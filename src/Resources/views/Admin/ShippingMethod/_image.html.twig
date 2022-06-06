@@ -1,4 +1,4 @@
-{% if shipping_method.image is not empty and shipping_method.image.path is not empty %}
+{% if shipping_method.image is not null and shipping_method.image.path is not null %}
     {% set path = app.user.avatar.path%}
     <p>{{ "bitbag_sylius_inpost_plugin.ui.file" | trans }} : {{ path ?? "empty" }}</p>
 {% else %}

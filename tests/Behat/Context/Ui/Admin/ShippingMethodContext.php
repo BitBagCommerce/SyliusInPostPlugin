@@ -15,7 +15,9 @@ use Tests\BitBag\SyliusInPostPlugin\Behat\Page\Admin\ShippingMethod\UpdatePageIn
 
 class ShippingMethodContext implements Context
 {
+
     private UpdatePageInterface $updatePage;
+
     public function __construct(
         UpdatePageInterface $updatePage
     ) {
