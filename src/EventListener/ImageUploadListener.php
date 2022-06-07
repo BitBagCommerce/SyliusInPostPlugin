@@ -32,7 +32,7 @@ final class ImageUploadListener
 
         Assert::isInstanceOf($subject, ImageAwareInterface::class);
 
-        if (null !== $subject->getImage()) {
+        if (null === $subject->getImage() || !$subject->getImage()->hasFile()) {
             return;
         }
 

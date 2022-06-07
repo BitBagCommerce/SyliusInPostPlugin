@@ -12,7 +12,7 @@ default:
             screenshot: true
 
         Behat\MinkExtension:
-            files_path: "%paths.base%/tests/Application/Behat/Resources/private/"
+            files_path: "%paths.base%/tests/Behat/Resources/private/"
             base_url: "https://127.0.0.1:8080/"
             default_session: symfony
             javascript_session: chrome_headless

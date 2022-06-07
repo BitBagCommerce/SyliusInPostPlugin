@@ -14,7 +14,7 @@ use Sylius\Component\Core\Model\ImageInterface;
 
 trait ShippingMethodImageTrait
 {
-    protected ?ImageInterface $image;
+    protected ?ImageInterface $image = null;
 
     public function getImage(): ?ImageInterface
     {
