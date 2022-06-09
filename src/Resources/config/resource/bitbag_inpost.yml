@@ -5,3 +5,8 @@ sylius_resource:
             classes:
                 model: BitBag\SyliusInPostPlugin\Entity\InPostPoint
                 interface: BitBag\SyliusInPostPlugin\Entity\InPostPointInterface
+        bitbag.shipping_method_image:
+            driver: doctrine/orm
+            classes:
+                model: BitBag\SyliusInPostPlugin\Entity\ShippingMethodImage
+                form: BitBag\SyliusInPostPlugin\Form\Type\ShippingMethodImageType

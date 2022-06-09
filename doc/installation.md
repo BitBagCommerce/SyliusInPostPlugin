@@ -40,7 +40,7 @@ This plugin was made on top
 of [SyliusShippingExportPlugin](https://github.com/BitBagCommerce/SyliusShippingExportPlugin), so please remember to do
 the same for it's configuration.
 
-Add trait and interface to your Order entity class:
+Add trait and interface to your Order and ShippingMethod entity classes:
 
 ```php
 <?php
@@ -56,6 +56,23 @@ use BitBag\SyliusInPostPlugin\Model\OrderPointTrait;
 class Order extends BaseOrder implements InPostPointsAwareInterface
 {
     use OrderPointTrait;
+}
+```
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Entity\Order;
+
+use BitBag\SyliusInPostPlugin\Model\ShippingMethodImageTrait;
+use Sylius\Component\Core\Model\ImageAwareInterface;
+use Sylius\Component\Core\Model\ShippingMethod as BaseShippingMethod;
+
+class ShippingMethod extends BaseShippingMethod implements ImageAwareInterface
+{
+    use ShippingMethodImageTrait;
 }
 ```
 
@@ -85,7 +102,23 @@ prefer)
     </entity>
 </doctrine-mapping>
 ```
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
 
+<doctrine-mapping
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                            http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd"
+>
+    <entity name="Tests\BitBag\SyliusInPostPlugin\Application\src\Entity\ShippingMethodImage" table="bitbag_inpost_shipping_method_image">
+        <one-to-one field="owner" target-entity="Sylius\Component\Shipping\Model\ShippingMethodInterface" inversed-by="image">
+            <join-column name="owner_id" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
+        </one-to-one>
+    </entity>
+    
+</doctrine-mapping>
+```
 Finish the installation by updating the database schema:
 
 ```
@@ -103,6 +136,7 @@ $ cd tests/Application
 $ yarn install
 $ yarn encore dev
 $ bin/console assets:install public -e test
+$ bin/console doctrine:database:create -e test
 $ bin/console doctrine:schema:create -e test
 $ bin/console server:run 127.0.0.1:8080 -d public -e test
 $ open http://localhost:8080

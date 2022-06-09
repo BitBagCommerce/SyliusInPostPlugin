@@ -19,3 +19,9 @@ sylius_order:
         order:
             classes:
                 model: Tests\BitBag\SyliusInPostPlugin\Application\src\Entity\Order
+
+sylius_shipping:
+    resources:
+        shipping_method:
+            classes:
+                model: Tests\BitBag\SyliusInPostPlugin\Application\src\Entity\ShippingMethod

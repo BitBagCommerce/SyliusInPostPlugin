@@ -23,3 +23,10 @@ services:
         arguments:
             - '@bitbag.behat.page.admin.shipping_export.index'
             - '@bitbag.sylius_inpost_plugin.behat.mocker.inpost_api_mocker'
+            -
+    bitbag.sylius_inpost_plugin.behat.context.ui.admin.shipping_image:
+        class: Tests\BitBag\SyliusInPostPlugin\Behat\Context\Ui\Admin\ShippingMethodContext
+        public: true
+        arguments:
+            - '@bitbag.sylius_inpost_plugin.behat.page.admin.shipping_method.update'
+
