@@ -28,7 +28,7 @@ final class IsQuickReturnResolver implements IsQuickReturnResolverInterface
 
         $config = $shippingGateway->getConfig();
 
-        if (null === $config){
+        if (null === $config) {
             throw new \Exception('Can not found config data');
         }
 

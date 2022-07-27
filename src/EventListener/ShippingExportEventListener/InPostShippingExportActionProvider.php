@@ -16,9 +16,7 @@ final class InPostShippingExportActionProvider implements InPostShippingExportAc
 {
     private const NO_ACTION_FOUND = 'No action found for status code "%s"';
 
-    /**
-     * @var object[]
-     */
+    /** @var object[] */
     public array $actions;
 
     public function __construct(iterable $actions)

@@ -64,7 +64,7 @@ final class ShippingExportEventListener
         $shipment = $shippingExport->getShipment();
         Assert::notNull($shipment);
 
-        if ($shippingGateway->getCode() !== self::INPOST_SHIPPING_GATEWAY_CODE) {
+        if (self::INPOST_SHIPPING_GATEWAY_CODE !== $shippingGateway->getCode()) {
             return;
         }
 
@@ -76,17 +76,19 @@ final class ShippingExportEventListener
             } catch (ClientException $exception) {
                 $this->flashBag->add('error', 'bitbag.ui.shipping_export_error');
                 $this->logError($exception, $shipment);
+
                 return;
             }
             $externalId = $createShipmentResponse[self::ID_KEY];
-            $shippingExport->setExternalId(strval($externalId));
+            $shippingExport->setExternalId((string) $externalId);
         }
 
         try {
-            $shipmentData = $this->webClient->getShipmentById(intval($shippingExport->getExternalId()));
+            $shipmentData = $this->webClient->getShipmentById((int) ($shippingExport->getExternalId()));
         } catch (ClientException $exception) {
             $this->flashBag->add('error', 'bitbag.ui.shipping_export_error');
             $this->logError($exception, $shipment);
+
             return;
         }
         Assert::notNull($shipmentData);
@@ -94,11 +96,13 @@ final class ShippingExportEventListener
         Assert::keyExists($shipmentData, self::STATUS_KEY);
 
         $status = $shipmentData[self::STATUS_KEY];
+
         try {
             $action = $this->shippingExportActionProvider->provide($status);
         } catch (\Exception $exception) {
             $this->flashBag->add('error', 'bitbag.ui.shipping_export_error');
             $this->logError($exception, $shipment);
+
             return;
         }
 

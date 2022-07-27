@@ -30,7 +30,7 @@ final class ShippingMethodTypeExtension extends AbstractTypeExtension
     public static function getExtendedTypes(): iterable
     {
         return [
-            ShippingMethodType::class
+            ShippingMethodType::class,
         ];
     }
 }

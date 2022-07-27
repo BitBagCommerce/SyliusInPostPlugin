@@ -31,7 +31,6 @@ class HasAllowedPaymentMethodInPostOrderValidator extends ConstraintValidator
 
     /**
      * @param mixed $value
-     * @param Constraint $constraint
      */
     public function validate($value, Constraint $constraint): void
     {
@@ -55,7 +54,7 @@ class HasAllowedPaymentMethodInPostOrderValidator extends ConstraintValidator
 
     private function isSelectedCashOnDeliveryPaymentMethod(OrderInterface $order): bool
     {
-        return $order->getPayments()->exists(function ( $index, PaymentInterface $payment): bool {
+        return $order->getPayments()->exists(function ($index, PaymentInterface $payment): bool {
             if (null === $payment->getMethod()) {
                 return false;
             }

@@ -85,5 +85,10 @@ interface WebClientInterface
      *
      * @throws GuzzleException
      */
-    public function request(string $method, string $url, array $data = [], bool $returnJson = true);
+    public function request(
+        string $method,
+        string $url,
+        array $data = [],
+        bool $returnJson = true
+    );
 }

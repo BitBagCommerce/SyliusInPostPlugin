@@ -14,5 +14,4 @@ use Sylius\Component\Core\Model\Image;
 
 class ShippingMethodImage extends Image implements ShippingMethodImageInterface
 {
-
 }
