@@ -193,8 +193,7 @@ final class WebClient implements WebClientInterface
         string $url,
         array $data = [],
         bool $returnJson = true
-    )
-    {
+    ) {
         $options = [
             'json' => $data,
             'headers' => $this->getAuthorizedHeaderWithContentType(),
