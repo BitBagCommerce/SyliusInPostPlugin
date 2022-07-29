@@ -26,7 +26,6 @@ class ShippingMethodImageType extends ImageType
         ;
     }
 
-
     public function getBlockPrefix(): string
     {
         return 'bitbag_inpost_shipping_method_image';

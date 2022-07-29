@@ -101,7 +101,7 @@ final class ShippingGatewayType extends AbstractType
             ])
             ->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event): void {
                 $data = $event->getData();
-                if (isset($data['organization_id'])){
+                if (isset($data['organization_id'])) {
                     $event
                         ->getForm()
                         ->add('is_quick_return', CheckboxType::class, [

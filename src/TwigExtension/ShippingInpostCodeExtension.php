@@ -17,12 +17,11 @@ use Twig\TwigFunction;
 
 final class ShippingInpostCodeExtension extends AbstractExtension
 {
-    public const ULR_TO_INPOST_QUICK_RETURN = "https://www.szybkiezwroty.pl/";
+    public const ULR_TO_INPOST_QUICK_RETURN = 'https://www.szybkiezwroty.pl/';
 
     public IsQuickReturnResolverInterface $isQuickReturnResolver;
 
     private OrganizationIdResolverInterface $organizationIdResolver;
-
 
     public function __construct(
         IsQuickReturnResolverInterface $isQuickReturnResolver,
@@ -30,7 +29,6 @@ final class ShippingInpostCodeExtension extends AbstractExtension
     ) {
         $this->isQuickReturnResolver = $isQuickReturnResolver;
         $this->organizationIdResolver = $organizationIdResolver;
-
     }
 
     public function getFunctions(): array
@@ -45,10 +43,10 @@ final class ShippingInpostCodeExtension extends AbstractExtension
         $isQuickReturn = $this->isQuickReturnResolver->getIsQuickReturn();
         $organizationId = $this->organizationIdResolver->getOrganizationId();
 
-        if ($isQuickReturn && $organizationId !== "") {
-                return sprintf("%s%s",self::ULR_TO_INPOST_QUICK_RETURN, $organizationId);
+        if ($isQuickReturn && '' !== $organizationId) {
+            return sprintf('%s%s', self::ULR_TO_INPOST_QUICK_RETURN, $organizationId);
         }
 
-        return "";
+        return '';
     }
 }

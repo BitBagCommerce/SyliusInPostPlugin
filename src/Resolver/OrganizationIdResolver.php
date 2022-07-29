@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusInPostPlugin\Resolver;
 
-use BitBag\SyliusShippingExportPlugin\Entity\ShippingGatewayInterface;
 use BitBag\SyliusShippingExportPlugin\Repository\ShippingGatewayRepositoryInterface;
 
 final class OrganizationIdResolver implements OrganizationIdResolverInterface
@@ -27,7 +26,7 @@ final class OrganizationIdResolver implements OrganizationIdResolverInterface
         $shippingGateway = $this->shippingGatewayRepository->findOneByCode(self::INPOST_CODE);
         $config = $shippingGateway->getConfig();
 
-        if (null === $config){
+        if (null === $config) {
             throw new \Exception('Can not found config data');
         }
 

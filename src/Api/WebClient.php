@@ -58,7 +58,7 @@ final class WebClient implements WebClientInterface
         try {
             return $this->request('GET', $url);
         } catch (\Exception $exception) {
-            if ($attempts < 3) {
+            if (3 > $attempts) {
                 sleep(1);
 
                 return $this->getPointByName($name, ($attempts + 1));
@@ -188,8 +188,12 @@ final class WebClient implements WebClientInterface
      *
      * @throws GuzzleException
      */
-    public function request(string $method, string $url, array $data = [], bool $returnJson = true)
-    {
+    public function request(
+        string $method,
+        string $url,
+        array $data = [],
+        bool $returnJson = true
+    ) {
         $options = [
             'json' => $data,
             'headers' => $this->getAuthorizedHeaderWithContentType(),
@@ -336,7 +340,7 @@ final class WebClient implements WebClientInterface
             $comments = '';
         }
 
-        if (strlen($comments) >= 100) {
+        if (100 <= strlen($comments)) {
             $comments = substr($comments, 0, 97) . '...';
         }
 
