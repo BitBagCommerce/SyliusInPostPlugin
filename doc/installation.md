@@ -64,7 +64,7 @@ class Order extends BaseOrder implements InPostPointsAwareInterface
 
 declare(strict_types=1);
 
-namespace App\Entity\Order;
+namespace App\Entity\Shipping;
 
 use BitBag\SyliusInPostPlugin\Model\ShippingMethodImageTrait;
 use Sylius\Component\Core\Model\ImageAwareInterface;
