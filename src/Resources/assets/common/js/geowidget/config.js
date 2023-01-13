@@ -5,6 +5,7 @@ const DEFAULT_SELECTORS = {
     wrapper: '[data-bb-event="preview-inpost-point"]',
     preview: '[data-bb-inpost-preview]',
     previewRaw: 'data-bb-inpost-preview',
+    testPointPatter: 'data-test-point-name="%point_name%"'
 };
 
 const DEFAULT_EASYPACK_CONFIG = {

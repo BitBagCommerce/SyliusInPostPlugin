@@ -36,7 +36,7 @@ export class GeoWidgetPreview {
             'beforeend',
             `
             <img src="${data.image_url}" class="bb-inpost-point-img"/>
-            <div class="bb-inpost-point-desc" ${DEFAULT_SELECTORS.previewRaw}>
+            <div class="bb-inpost-point-desc" ${DEFAULT_SELECTORS.previewRaw} ${DEFAULT_SELECTORS.testPointPatter.replace('%point_name%', data.name)}>
                 <b>
                     ${data.name}
                 </b>

@@ -98,6 +98,11 @@ final class AddPointToOrderAction
         }
 
         $point->setName($name);
+        $point->setHref($pointData['href']);
+        $point->setImageUrl($pointData['image_url']);
+        $point->setAddressLine1($pointData['address']['line1']);
+        $point->setAddressLine2($pointData['address']['line2']);
+        $point->setLocationDescription($pointData['location_description']);
 
         $order->setPoint($point);
 

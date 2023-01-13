@@ -1,13 +1,33 @@
 {% if order %}
     <div
         id="{{ wrapperId|default() ?: "order_#{ order.id }_point_details"}}"
-        class="bb-inpost-point-wrapper"
+        class="bb-inpost-point-wrapper" data-bb-target="inpost-geowidget-preview"
         {% if order.point.name|default(false) %}
             data-bb-event="preview-inpost-point"
             data-bb-point="{{ order.point.name }}"
         {% endif %}
     >
-        {% if not order.point %}
+        {% if order.point %}
+            {% if order.point.imageUrl is not null %}
+               <img src="{{ order.point.imageUrl }}" class="bb-inpost-point-img" />
+            {% endif %}
+            <div class="bb-inpost-point-desc" data-bb-inpost-preview="" {{ sylius_test_html_attribute('point-name ', "%s"|format(order.point.name)) }}>
+                <b>
+                    {{ order.point.name }}
+                </b>
+                <p>
+                    {% if order.point.addressLine1 is not null %}
+                        {{order.point.addressLine1 }}<br/>
+                    {% endif %}
+                    {% if order.point.addressLine2 is not null %}
+                        {{order.point.addressLine2 }}<br/>
+                    {% endif %}
+                    {% if order.point.locationDescription is not null %}
+                        <small>{{order.point.locationDescription }}<small>
+                    {% endif %}
+                </p>
+            </div>
+        {% else %}
             <b>{{ 'bitbag_sylius_inpost_plugin.ui.no_point_selected'|trans }}</b>
         {% endif %}
     </div>

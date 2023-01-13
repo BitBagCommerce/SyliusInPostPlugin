@@ -1,3 +1,7 @@
+parameters:
+    sylius.behat.page.shop.checkout.address.class: 'Tests\BitBag\SyliusInPostPlugin\Behat\Page\Shop\Checkout\AddressPage'
+    sylius.behat.page.shop.checkout.complete.class: 'Tests\BitBag\SyliusInPostPlugin\Behat\Page\Shop\Checkout\CompletePage'
+
 imports:
     - { resource: "services/**/*.yml" }
     - { resource: "../../../vendor/bitbag/shipping-export-plugin/tests/Behat/Resources/services.yml" }

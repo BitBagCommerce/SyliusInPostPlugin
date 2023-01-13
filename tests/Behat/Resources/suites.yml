@@ -1,5 +1,27 @@
 default:
     suites:
+        adding_point_to_cart:
+            contexts:
+                - sylius.behat.context.hook.doctrine_orm
+
+                - sylius.behat.context.transform.product
+
+                - sylius.behat.context.setup.channel
+                - sylius.behat.context.setup.payment
+                - sylius.behat.context.setup.product
+                - sylius.behat.context.setup.shop_security
+                - sylius.behat.context.setup.shipping
+
+                - sylius.behat.context.ui.shop.cart
+                - sylius.behat.context.ui.shop.checkout.addressing
+                - sylius.behat.context.ui.shop.checkout.complete
+                - sylius.behat.context.ui.shop.checkout.payment
+                - sylius.behat.context.ui.shop.checkout.shipping
+
+                - bitbag.sylius_inpost_plugin.behat.context.ui.shop.point
+            filters:
+                tags: "@adding_point_to_cart&&@ui"
+
         managing_shipping_gateway_inpost:
             contexts:
                 - sylius.behat.context.hook.doctrine_orm

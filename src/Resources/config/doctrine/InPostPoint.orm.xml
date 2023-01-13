@@ -13,6 +13,16 @@
 
         <field name="name" column="name" type="string" />
 
+        <field name="href" column="href" type="string" />
+
+        <field name="imageUrl" column="image_url" type="string" nullable="true" />
+
+        <field name="addressLine1" column="address_line1" type="string" nullable="true" />
+
+        <field name="addressLine2" column="address_line2" type="string" nullable="true" />
+
+        <field name="locationDescription" column="location_description" type="string" nullable="true" />
+
     </mapped-superclass>
 
 </doctrine-mapping>

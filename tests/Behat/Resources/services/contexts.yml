@@ -30,3 +30,10 @@ services:
         arguments:
             - '@bitbag.sylius_inpost_plugin.behat.page.admin.shipping_method.update'
 
+    bitbag.sylius_inpost_plugin.behat.context.ui.shop.point:
+        class: Tests\BitBag\SyliusInPostPlugin\Behat\Context\Ui\Shop\PointContext
+        public: true
+        arguments:
+            - '@test.client'
+            - '@session'
+            - '@sylius.behat.page.shop.checkout.complete'
