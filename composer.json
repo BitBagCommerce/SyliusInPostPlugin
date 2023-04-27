@@ -45,7 +45,6 @@
         "symfony/webpack-encore-bundle": "^1.14",
         "league/flysystem-bundle": "2.4.0",
         "sylius/mailer-bundle":  "^1.8 || ^2.0@beta",
-        "vimeo/psalm": "4.7.1",
         "twig/twig": "^2.10.0"
     },
     "conflict": {
