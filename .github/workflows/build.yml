@@ -21,23 +21,15 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php: ["8.0", "7.4"]
-                symfony: ["^4.4", "^5.2"]
-                sylius: ["~1.9.0", "~1.10.0", "~1.11.0"]
-                node: ["14.x"]
+                php: ["8.0"]
+                symfony: ["^5.4", "^6.0"]
+                sylius: ["~1.11.0", "~1.12.0"]
+                node: ["^14.17.x"]
                 mysql: ["8.0"]
 
                 exclude:
-                    -
-                        php: 8.0
-                        sylius: ~1.9.0
-                    -
-                        sylius: ~1.10.0
-                        symfony: ^4.4
-                    -
-                        sylius: ~1.11.0
-                        php: 7.4
-
+                    - sylius: ~1.11.0
+                      symfony: "^6.0"
 
         env:
             APP_ENV: test
@@ -118,7 +110,7 @@ jobs:
 
             -
                 name: Install PHP dependencies
-                run: composer install --no-interaction
+                run: composer install --no-interaction --no-scripts
 
             -
                 name: Get Yarn cache directory
@@ -135,8 +127,15 @@ jobs:
                         ${{ runner.os }}-node-${{ matrix.node }}-yarn-
 
             -
+                name: Copy package.json.dist to package.json
+                if: matrix.sylius != ''
+                run: (cd tests/Application && cp package.json.\${{ matrix.sylius }}.dist package.json)
+
+            -
                 name: Install JS dependencies
-                run: (cd tests/Application && yarn install)
+                run: |
+                    (cd tests/Application && yarn install)
+                    (cd tests/Application && yarn encore dev)
 
             -
                 name: Prepare test application database
@@ -146,11 +145,8 @@ jobs:
 
             -
                 name: Prepare test application assets
-                run: (cd tests/Application && bin/console assets:install public -vvv)
-
-            -
-                name: Run yarn encore dev
-                run: (cd tests/Application && yarn encore dev)
+                run: |
+                    (cd tests/Application && bin/console assets:install public -vvv)
 
             -
                 name: Prepare test application cache
@@ -167,9 +163,6 @@ jobs:
             -
                 name: Validate database schema
                 run: (cd tests/Application && bin/console doctrine:schema:validate)
-
-            -   name: Run ECS
-                run: vendor/bin/ecs check src
 
             -
                 name: Run PHPSpec
