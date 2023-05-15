@@ -1,10 +1,10 @@
 bitbag_sylius_inpost_plugin_shop_add_point_to_order:
     path: /point
     defaults:
-        _controller: bitbag.sylius_inpost_plugin.controller.add_point_to_order:addPointToCartAction
+        _controller: bitbag.sylius_inpost_plugin.controller.add_point_to_order::addPointToCartAction
 
 bitbag_sylius_inpost_plugin_admin_add_point_to_order:
     path: /admin/point
     methods: [POST]
     defaults:
-        _controller: bitbag.sylius_inpost_plugin.controller.add_point_to_order:addPointToOrderAction
+        _controller: bitbag.sylius_inpost_plugin.controller.add_point_to_order::addPointToOrderAction

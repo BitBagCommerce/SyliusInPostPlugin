@@ -1,6 +1,6 @@
 imports:
-    - vendor/sylius/sylius/src/Sylius/Behat/Resources/config/suites.yml
     - tests/Behat/Resources/suites.yml
+    - vendor/sylius/sylius/src/Sylius/Behat/Resources/config/suites.yml
 
 default:
     extensions:
@@ -12,7 +12,7 @@ default:
             screenshot: true
 
         Behat\MinkExtension:
-            files_path: "%paths.base%/tests/Behat/Resources/private/"
+            files_path: "%paths.base%/vendor/sylius/sylius/src/Sylius/Behat/Resources/fixtures/"
             base_url: "https://127.0.0.1:8080/"
             default_session: symfony
             javascript_session: chrome_headless
@@ -38,6 +38,8 @@ default:
                                     - "no-sandbox"
                             extra_capabilities:
                                 unexpectedAlertBehaviour: accept
+                                goog:chromeOptions:
+                                    w3c: false
                 firefox:
                     selenium2:
                         browser: firefox
@@ -46,7 +48,10 @@ default:
         FriendsOfBehat\SymfonyExtension:
             bootstrap: tests/Application/config/bootstrap.php
             kernel:
+                debug: true
                 class: Tests\BitBag\SyliusInPostPlugin\Application\Kernel
+                path: tests/Application/Kernel.php
+                environment: test
 
         FriendsOfBehat\VariadicExtension: ~
 
