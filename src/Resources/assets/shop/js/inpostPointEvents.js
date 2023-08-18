@@ -32,7 +32,7 @@ export class InpostPointEvents {
                     );
                 });
 
-                if (!validateNextBtn) {
+                if (!ValidateNextBtn) {
                     return;
                 }
 
