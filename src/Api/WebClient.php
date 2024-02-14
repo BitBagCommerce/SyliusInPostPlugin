@@ -35,9 +35,12 @@ final class WebClient implements WebClientInterface
 
     private ShippingGatewayInterface $shippingGateway;
 
-    public function __construct(Client $client)
+    private string $labelType = 'normal';
+
+    public function __construct(Client $client, string $labelType)
     {
         $this->apiClient = $client;
+        $this->labelType = $labelType;
     }
 
     public function setShippingGateway(ShippingGatewayInterface $shippingGateway): WebClientInterface
@@ -120,6 +123,7 @@ final class WebClient implements WebClientInterface
 
         $data = [
             'format' => 'pdf',
+            'type' => $this->labelType,
             'shipment_ids' => $shipmentIds,
         ];
 
