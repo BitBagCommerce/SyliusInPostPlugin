@@ -35,9 +35,15 @@ final class WebClient implements WebClientInterface
 
     private ShippingGatewayInterface $shippingGateway;
 
-    public function __construct(Client $client)
+    private string $labelType = 'normal';
+
+    private string $parcelTemplate = 'large';
+
+    public function __construct(Client $client, string $labelType, string $parcelTemplate)
     {
         $this->apiClient = $client;
+        $this->labelType = $labelType;
+        $this->parcelTemplate = $parcelTemplate;
     }
 
     public function setShippingGateway(ShippingGatewayInterface $shippingGateway): WebClientInterface
@@ -120,6 +126,7 @@ final class WebClient implements WebClientInterface
 
         $data = [
             'format' => 'pdf',
+            'type' => $this->labelType,
             'shipment_ids' => $shipmentIds,
         ];
 
@@ -303,7 +310,7 @@ final class WebClient implements WebClientInterface
                 'unit' => 'kg',
             ],
             'dimensions' => [],
-            'template' => 'large',
+            'template' => $this->parcelTemplate,
             'tracking_number' => null,
             'is_non_standard' => false,
         ];
