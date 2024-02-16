@@ -40,6 +40,7 @@
         >
             <argument type="service" id="sylius.http_client"/>
             <argument>%bitbag.inpost.label_type%</argument>
+            <argument>%bitbag.inpost.parcel_template%</argument>
         </service>
 
         <service
