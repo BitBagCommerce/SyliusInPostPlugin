@@ -74,7 +74,7 @@ final class ShippingExportEventListener
             try {
                 $createShipmentResponse = $this->webClient->createShipment($shipment);
             } catch (ClientException $exception) {
-                $this->requestStack->getSession()->getFlashBag()->add('error', 'bitbag.ui.shipping_export_error');
+                $this->requestStack->getSession()->getBag('flashes')->add('error', 'bitbag.ui.shipping_export_error');
                 $this->logError($exception, $shipment);
 
                 return;
@@ -86,7 +86,7 @@ final class ShippingExportEventListener
         try {
             $shipmentData = $this->webClient->getShipmentById((int) ($shippingExport->getExternalId()));
         } catch (ClientException $exception) {
-            $this->requestStack->getSession()->getFlashBag()->add('error', 'bitbag.ui.shipping_export_error');
+            $this->requestStack->getSession()->getBag('flashes')->add('error', 'bitbag.ui.shipping_export_error');
             $this->logError($exception, $shipment);
 
             return;
@@ -100,7 +100,7 @@ final class ShippingExportEventListener
         try {
             $action = $this->shippingExportActionProvider->provide($status);
         } catch (\Exception $exception) {
-            $this->requestStack->getSession()->getFlashBag()->add('error', 'bitbag.ui.shipping_export_error');
+            $this->requestStack->getSession()->getBag('flashes')->add('error', 'bitbag.ui.shipping_export_error');
             $this->logError($exception, $shipment);
 
             return;

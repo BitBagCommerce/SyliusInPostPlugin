@@ -37,7 +37,7 @@ final class InPostShippingExportDefaultAction implements InPostShippingExportAct
 
         $this->shippingExportRepository->add($shippingExport);
 
-        $this->requestStack->getSession()->getFlashBag()->add(self::INFO, self::TRANSLATION_KEY);
+        $this->requestStack->getSession()->getBag('flashes')->add(self::INFO, self::TRANSLATION_KEY);
     }
 
     public function supports(string $statusCode): bool

@@ -18,18 +18,18 @@ use PhpSpec\ObjectBehavior;
 
 final class WebClientSpec extends ObjectBehavior
 {
-    const ORGANIZATION_ID = '123456';
+    public const ORGANIZATION_ID = '123456';
 
-    const API_ENDPOINT = 'https://api-shipx-pl.easypack24.net/v1';
+    public const API_ENDPOINT = 'https://api-shipx-pl.easypack24.net/v1';
 
-    const POINT_NAME = 'AAA666';
+    public const POINT_NAME = 'AAA666';
 
-    function let(Client $client): void
+    public function let(Client $client): void
     {
         $this->beConstructedWith($client);
     }
 
-    function it_is_initializable(): void
+    public function it_is_initializable(): void
     {
         $this->shouldHaveType(WebClient::class);
         $this->shouldImplement(WebClientInterface::class);

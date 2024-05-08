@@ -14,7 +14,6 @@ use BitBag\SyliusInPostPlugin\Checker\ShippingMethodCheckerInterface;
 use BitBag\SyliusInPostPlugin\Model\InPostPointsAwareInterface;
 use BitBag\SyliusInPostPlugin\Validator\Constraint\HasPhoneNumberInPostOrder;
 use BitBag\SyliusInPostPlugin\Validator\HasPhoneNumberInPostOrderValidator;
-use Doctrine\Common\Collections\ArrayCollection;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use stdClass;
@@ -23,22 +22,20 @@ use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
 use Tests\BitBag\SyliusInPostPlugin\Spec\Builder\AddressBuilder;
-use Tests\BitBag\SyliusInPostPlugin\Spec\ObjectMother\AddressObjectMother;
-use Tests\BitBag\SyliusInPostPlugin\Spec\ObjectMother\ShipmentObjectMother;
 
 class HasPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
 {
-    function let(ShippingMethodCheckerInterface $shippingMethodChecker): void
+    public function let(ShippingMethodCheckerInterface $shippingMethodChecker): void
     {
         $this->beConstructedWith($shippingMethodChecker);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType(HasPhoneNumberInPostOrderValidator::class);
     }
 
-    function it_should_do_nothing_if_value_is_not_instance_of_order_interface(
+    public function it_should_do_nothing_if_value_is_not_instance_of_order_interface(
         ExecutionContextInterface $context,
         Constraint $constraint
     ): void {
@@ -49,7 +46,7 @@ class HasPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
         $this->validate($value, $constraint);
     }
 
-    function it_should_do_nothing_if_value_is_not_implementing_inpost_points_aware_interface(
+    public function it_should_do_nothing_if_value_is_not_implementing_inpost_points_aware_interface(
         ExecutionContextInterface $context,
         Constraint $constraint,
         OrderInterface $value
@@ -60,7 +57,7 @@ class HasPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
         $this->validate($value, $constraint);
     }
 
-    function it_should_do_nothing_if_selected_shipping_method_is_not_inpost(
+    public function it_should_do_nothing_if_selected_shipping_method_is_not_inpost(
         ExecutionContextInterface $context,
         Constraint $constraint,
         OrderInterface $value,
@@ -74,7 +71,7 @@ class HasPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
         $this->validate($value, $constraint);
     }
 
-    function it_should_do_nothing_if_phone_number_is_set(
+    public function it_should_do_nothing_if_phone_number_is_set(
         ExecutionContextInterface $context,
         Constraint $constraint,
         OrderInterface $value,
@@ -91,7 +88,7 @@ class HasPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
         $this->validate($value, $constraint);
     }
 
-    function it_should_add_violation_if_phone_number_is_not_set(
+    public function it_should_add_violation_if_phone_number_is_not_set(
         ExecutionContextInterface $context,
         Constraint $constraint,
         OrderInterface $value,

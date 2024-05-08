@@ -22,13 +22,13 @@ class ShippingMethodCheckerSpec extends ObjectBehavior
 {
     public const NOT_INPOST = 'not_inpost';
 
-    function it_is_initializable(): void
+    public function it_is_initializable(): void
     {
         $this->shouldHaveType(ShippingMethodChecker::class);
         $this->shouldBeAnInstanceOf(ShippingMethodCheckerInterface::class);
     }
 
-    function it_should_return_true_if_shipping_method_is_inpost(): void
+    public function it_should_return_true_if_shipping_method_is_inpost(): void
     {
         $shippingMethod = ShippingMethodBuilder::create()
             ->withCode(ShippingExportEventListener::INPOST_SHIPPING_GATEWAY_CODE)
@@ -39,7 +39,7 @@ class ShippingMethodCheckerSpec extends ObjectBehavior
         $this->isInPost($order)->shouldReturn(true);
     }
 
-    function it_should_return_true_if_shipping_method_is_inpost_point(): void
+    public function it_should_return_true_if_shipping_method_is_inpost_point(): void
     {
         $shippingMethod = ShippingMethodBuilder::create()
             ->withCode(ShippingExportEventListener::INPOST_POINT_SHIPPING_GATEWAY_CODE)
@@ -50,7 +50,7 @@ class ShippingMethodCheckerSpec extends ObjectBehavior
         $this->isInPost($order)->shouldReturn(true);
     }
 
-    function it_should_return_false_if_shipping_method_is_not_inpost(): void
+    public function it_should_return_false_if_shipping_method_is_not_inpost(): void
     {
         $shippingMethod = ShippingMethodBuilder::create()
             ->withCode(self::NOT_INPOST)

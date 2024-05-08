@@ -72,7 +72,7 @@ final class InPostShippingExportConfirmedAction implements InPostShippingExportA
         $shippingExport->setExportedAt(new \DateTime());
 
         $this->shippingExportRepository->add($shippingExport);
-        $this->requestStack->getSession()->getFlashBag()->add(self::SUCCESS, self::TRANSLATION_KEY);
+        $this->requestStack->getSession()->getBag('flashes')->add(self::SUCCESS, self::TRANSLATION_KEY);
     }
 
     private function validateShippingExport(ShippingExportInterface $shippingExport): void

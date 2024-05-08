@@ -20,20 +20,20 @@ final class InPostShippingExportActionProviderSpec extends ObjectBehavior
 {
     private const FOO = 'foo';
 
-    function let(
+    public function let(
         InPostShippingExportActionInterface $action1,
         InPostShippingExportActionInterface $action2
     ): void {
         $this->beConstructedWith([$action1, $action2]);
     }
 
-    function it_is_initializable(): void
+    public function it_is_initializable(): void
     {
         $this->shouldHaveType(InPostShippingExportActionProvider::class);
         $this->shouldBeAnInstanceOf(InPostShippingExportActionProviderInterface::class);
     }
 
-    function it_should_throw_exception_if_no_action_supports_passed_status_code(
+    public function it_should_throw_exception_if_no_action_supports_passed_status_code(
         InPostShippingExportActionInterface $action1,
         InPostShippingExportActionInterface $action2
     ): void {
@@ -43,7 +43,7 @@ final class InPostShippingExportActionProviderSpec extends ObjectBehavior
         $this->shouldThrow(\InvalidArgumentException::class)->during('provide', [self::FOO]);
     }
 
-    function it_should_return_first_supported_action(
+    public function it_should_return_first_supported_action(
         InPostShippingExportActionInterface $action1,
         InPostShippingExportActionInterface $action2
     ): void {
