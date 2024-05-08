@@ -19,7 +19,7 @@
         >
             <argument type="service" id="bitbag.sylius_inpost_plugin.api.web_client"/>
             <argument type="service" id="bitbag.sylius_inpost_plugin.provider.inpost_shipping_export_action"/>
-            <argument type="service" id="session.flash_bag"/>
+            <argument type="service" id="request_stack"/>
             <argument type="service" id="logger"/>
 
             <tag name="kernel.event_listener" event="bitbag.shipping_export.export_shipment" method="exportShipment"/>

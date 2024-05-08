@@ -16,7 +16,7 @@
             <argument type="service" id="bitbag.repository.shipping_export" />
             <argument type="service" id="bitbag.sylius_inpost_plugin.api.web_client"/>
             <argument type="service" id="filesystem"/>
-            <argument type="service" id="session.flash_bag" />
+            <argument type="service" id="request_stack" />
             <argument key="$shippingLabelsPath">%bitbag.shipping_labels_path%</argument>
 
             <tag name="bitbag.inpost_shipping_export_action" />
@@ -27,7 +27,7 @@
                 class="BitBag\SyliusInPostPlugin\EventListener\ShippingExportEventListener\InPostShippingExportDefaultAction"
         >
             <argument type="service" id="bitbag.repository.shipping_export" />
-            <argument type="service" id="session.flash_bag" />
+            <argument type="service" id="request_stack" />
 
             <tag name="bitbag.inpost_shipping_export_action" priority="-1024" />
         </service>

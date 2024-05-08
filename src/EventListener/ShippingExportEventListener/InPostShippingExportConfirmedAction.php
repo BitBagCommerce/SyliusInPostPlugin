@@ -17,7 +17,7 @@ use GuzzleHttp\Exception\ClientException;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\ShipmentInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Webmozart\Assert\Assert;
 
 final class InPostShippingExportConfirmedAction implements InPostShippingExportActionInterface
@@ -36,7 +36,7 @@ final class InPostShippingExportConfirmedAction implements InPostShippingExportA
 
     private Filesystem $filesystem;
 
-    private FlashBagInterface $flashBag;
+    private RequestStack $requestStack;
 
     private string $shippingLabelsPath;
 
@@ -44,13 +44,13 @@ final class InPostShippingExportConfirmedAction implements InPostShippingExportA
         ShippingExportRepositoryInterface $shippingExportRepository,
         WebClientInterface $webClient,
         Filesystem $filesystem,
-        FlashBagInterface $flashBag,
+        RequestStack $requestStack,
         string $shippingLabelsPath
     ) {
         $this->shippingExportRepository = $shippingExportRepository;
         $this->webClient = $webClient;
         $this->filesystem = $filesystem;
-        $this->flashBag = $flashBag;
+        $this->requestStack = $requestStack;
         $this->shippingLabelsPath = $shippingLabelsPath;
     }
 
@@ -72,7 +72,7 @@ final class InPostShippingExportConfirmedAction implements InPostShippingExportA
         $shippingExport->setExportedAt(new \DateTime());
 
         $this->shippingExportRepository->add($shippingExport);
-        $this->flashBag->add(self::SUCCESS, self::TRANSLATION_KEY);
+        $this->requestStack->getSession()->getFlashBag()->add(self::SUCCESS, self::TRANSLATION_KEY);
     }
 
     private function validateShippingExport(ShippingExportInterface $shippingExport): void
