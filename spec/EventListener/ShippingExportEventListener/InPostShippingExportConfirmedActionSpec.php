@@ -117,7 +117,7 @@ class InPostShippingExportConfirmedActionSpec extends ObjectBehavior
         RequestStack $requestStack,
         SessionInterface $session,
         FlashBagInterface $flashBag
-        ): void {
+    ): void {
         $order = OrderBuilder::create()->withNumber(self::ORDER_NUMBER)->build();
         $shipment->getOrder()->willReturn($order);
         $shipment->getId()->willReturn(self::SHIPMENT_ID);
@@ -144,7 +144,7 @@ class InPostShippingExportConfirmedActionSpec extends ObjectBehavior
         RequestStack $requestStack,
         SessionInterface $session,
         FlashBagInterface $flashBag
-        ): void {
+    ): void {
         $webClient->getLabels([self::FOO])->willReturn(self::SHIPPING_LABEL_CONTENT);
         $order = OrderBuilder::create()->withNumber(self::ORDER_NUMBER)->build();
         $shipment->getOrder()->willReturn($order);

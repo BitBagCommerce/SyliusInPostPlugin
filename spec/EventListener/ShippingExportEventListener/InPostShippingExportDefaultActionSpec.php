@@ -40,7 +40,7 @@ class InPostShippingExportDefaultActionSpec extends ObjectBehavior
         RequestStack $requestStack,
         SessionInterface $session,
         FlashBagInterface $flashBag
-        ): void {
+    ): void {
         $shippingExport->setState(ShippingExportInterface::STATE_PENDING)->shouldBeCalled();
         $shippingExport->setExportedAt(Argument::type(\DateTime::class))->shouldBeCalled();
 
@@ -56,7 +56,7 @@ class InPostShippingExportDefaultActionSpec extends ObjectBehavior
         RequestStack $requestStack,
         SessionInterface $session,
         FlashBagInterface $flashBag
-        ): void {
+    ): void {
         $shippingExportRepository->add($shippingExport)->shouldBeCalled();
 
         $requestStack->getSession()->willReturn($session);
