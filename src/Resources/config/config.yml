@@ -1,3 +1,5 @@
+parameters:
+    bitbag.inpost.label_type: 'normal'
 imports:
     - { resource: "@BitBagSyliusInPostPlugin/Resources/config/services.xml" }
     - { resource: "@BitBagSyliusInPostPlugin/Resources/config/resource/bitbag_inpost.yml" }
