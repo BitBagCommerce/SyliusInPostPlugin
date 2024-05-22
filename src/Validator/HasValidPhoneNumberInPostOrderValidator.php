@@ -30,11 +30,11 @@ final class HasValidPhoneNumberInPostOrderValidator extends ConstraintValidator
     public function validate($value, Constraint $constraint): void
     {
         if (!$value instanceof OrderInterface) {
-            throw new \Exception("Value must be instance of OrderInterface");
+            throw new \Exception('Value must be instance of OrderInterface');
         }
 
         if (!$value instanceof InPostPointsAwareInterface) {
-            throw new \Exception("Value must be instance of InPostPointsAwareInterface");
+            throw new \Exception('Value must be instance of InPostPointsAwareInterface');
         }
 
         $isInPostShipment = $this->shippingMethodChecker->isInPost($value);
