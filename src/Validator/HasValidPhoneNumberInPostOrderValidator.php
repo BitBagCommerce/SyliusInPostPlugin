@@ -17,7 +17,7 @@ use Sylius\Component\Core\Model\OrderInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
-class HasValidPhoneNumberInPostOrderValidator extends ConstraintValidator
+final class HasValidPhoneNumberInPostOrderValidator extends ConstraintValidator
 {
     private ShippingMethodCheckerInterface $shippingMethodChecker;
 
@@ -26,17 +26,15 @@ class HasValidPhoneNumberInPostOrderValidator extends ConstraintValidator
         $this->shippingMethodChecker = $shippingMethodChecker;
     }
 
-    /**
-     * @param mixed $value
-     */
+    /* @param mixed $value */
     public function validate($value, Constraint $constraint): void
     {
         if (!$value instanceof OrderInterface) {
-            return;
+            throw new \Exception("Value must be instance of OrderInterface");
         }
 
         if (!$value instanceof InPostPointsAwareInterface) {
-            return;
+            throw new \Exception("Value must be instance of InPostPointsAwareInterface");
         }
 
         $isInPostShipment = $this->shippingMethodChecker->isInPost($value);

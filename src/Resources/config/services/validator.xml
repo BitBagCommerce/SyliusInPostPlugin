@@ -28,7 +28,7 @@
 
         <service
                 class="BitBag\SyliusInPostPlugin\Validator\HasValidPhoneNumberInPostOrderValidator"
-                id="bitbag.sylius_in_post_plugin.validator.has_valid_phone_number_inpost_order"
+                id="bitbag.sylius_inpost_plugin.validator.has_valid_phone_number_inpost_order"
         >
             <argument type="service" id="bitbag.sylius_inpost_plugin.checker.shipping_method_checker" />
 

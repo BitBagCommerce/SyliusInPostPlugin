@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * This file was created by developers working at BitBag
+ * Do you need more information about us and what we do? Visit our https://bitbag.io website!
+ * We are hiring developers from all over the world. Join us and start your new, exciting adventure and become part of us: https://bitbag.io/career
+ */
+
 declare(strict_types=1);
 
 namespace spec\BitBag\SyliusInPostPlugin\Validator;
@@ -17,7 +23,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
 use Tests\BitBag\SyliusInPostPlugin\Spec\Builder\AddressBuilder;
 
-class HasValidPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
+final class HasValidPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
 {
     public function let(ShippingMethodCheckerInterface $shippingMethodChecker): void
     {
@@ -29,7 +35,7 @@ class HasValidPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
         $this->shouldHaveType(HasValidPhoneNumberInPostOrderValidator::class);
     }
 
-    public function it_should_do_nothing_if_value_is_not_instance_of_order_interface(
+    public function it_should_throw_exception_if_value_is_not_instance_of_order_interface(
         ExecutionContextInterface $context,
         Constraint $constraint
     ): void {
@@ -37,10 +43,11 @@ class HasValidPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
         $value = new stdClass();
 
         $this->initialize($context);
-        $this->validate($value, $constraint);
+        $this->shouldThrow(new \Exception('Value must be instance of OrderInterface'))
+        ->during('validate', [$value, $constraint]);
     }
 
-    public function it_should_do_nothing_if_value_is_not_implementing_inpost_points_aware_interface(
+    public function it_should_throw_exception_if_value_is_not_implementing_inpost_points_aware_interface(
         ExecutionContextInterface $context,
         Constraint $constraint,
         OrderInterface $value
@@ -48,7 +55,8 @@ class HasValidPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
         $context->buildViolation(Argument::type('string'))->shouldNotBeCalled();
 
         $this->initialize($context);
-        $this->validate($value, $constraint);
+        $this->shouldThrow(new \Exception('Value must be instance of InPostPointsAwareInterface'))
+            ->during('validate', [$value, $constraint]);
     }
 
     public function it_should_do_nothing_if_selected_shipping_method_is_not_inpost(
@@ -87,7 +95,6 @@ class HasValidPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
         OrderInterface $value,
         ConstraintViolationBuilderInterface $violationBuilder,
         ShippingMethodCheckerInterface $shippingMethodChecker,
-        HasValidPhoneNumberInPostOrder $hasValidPhoneNumberInPostOrder,
         ): void {
         $addressBuilder = AddressBuilder::create()->withPhoneNumber('123')->build();
         $value->implement(InPostPointsAwareInterface::class);
@@ -96,7 +103,7 @@ class HasValidPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
 
         $context->buildViolation(HasValidPhoneNumberInPostOrder::PHONE_NUMBER_IS_TOO_SHORT_MESSAGE)
             ->willReturn($violationBuilder);
-        $violationBuilder->setParameter('{{ limit }}', HasValidPhoneNumberInPostOrder::POLISH_PHONE_NUMBER_DEFAULT_LENGTH)
+        $violationBuilder->setParameter('{{ limit }}', (string) HasValidPhoneNumberInPostOrder::POLISH_PHONE_NUMBER_DEFAULT_LENGTH)
             ->willReturn($violationBuilder);
         $violationBuilder->atPath('shippingAddress.phoneNumber')
             ->willReturn($violationBuilder);
@@ -113,7 +120,6 @@ class HasValidPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
         OrderInterface $value,
         ConstraintViolationBuilderInterface $violationBuilder,
         ShippingMethodCheckerInterface $shippingMethodChecker,
-        HasValidPhoneNumberInPostOrder $hasValidPhoneNumberInPostOrder,
         ): void {
         $addressBuilder = AddressBuilder::create()->withPhoneNumber('1234567890')->build();
         $value->implement(InPostPointsAwareInterface::class);
@@ -122,7 +128,7 @@ class HasValidPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
 
         $context->buildViolation(HasValidPhoneNumberInPostOrder::PHONE_NUMBER_IS_TOO_LONG_MESSAGE)
             ->willReturn($violationBuilder);
-        $violationBuilder->setParameter('{{ limit }}', HasValidPhoneNumberInPostOrder::POLISH_PHONE_NUMBER_DEFAULT_LENGTH)
+        $violationBuilder->setParameter('{{ limit }}', (string) HasValidPhoneNumberInPostOrder::POLISH_PHONE_NUMBER_DEFAULT_LENGTH)
             ->willReturn($violationBuilder);
         $violationBuilder->atPath('shippingAddress.phoneNumber')
             ->willReturn($violationBuilder);
@@ -139,7 +145,6 @@ class HasValidPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
         OrderInterface $value,
         ConstraintViolationBuilderInterface $violationBuilder,
         ShippingMethodCheckerInterface $shippingMethodChecker,
-        HasValidPhoneNumberInPostOrder $hasValidPhoneNumberInPostOrder,
         ): void {
         $addressBuilder = AddressBuilder::create()->withPhoneNumber('123456789')->build();
         $value->implement(InPostPointsAwareInterface::class);

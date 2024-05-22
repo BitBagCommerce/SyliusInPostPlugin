@@ -12,7 +12,7 @@ namespace BitBag\SyliusInPostPlugin\Validator\Constraint;
 
 use Symfony\Component\Validator\Constraint;
 
-class HasValidPhoneNumberInPostOrder extends Constraint
+final class HasValidPhoneNumberInPostOrder extends Constraint
 {
     public const PHONE_NUMBER_IS_TOO_SHORT_MESSAGE = 'bitbag_sylius_inpost_plugin.order.phone_number.min';
 
