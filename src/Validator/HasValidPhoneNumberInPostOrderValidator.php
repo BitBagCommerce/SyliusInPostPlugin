@@ -16,6 +16,7 @@ use BitBag\SyliusInPostPlugin\Validator\Constraint\HasValidPhoneNumberInPostOrde
 use Sylius\Component\Core\Model\OrderInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
+use Webmozart\Assert\Assert;
 
 final class HasValidPhoneNumberInPostOrderValidator extends ConstraintValidator
 {
@@ -29,13 +30,9 @@ final class HasValidPhoneNumberInPostOrderValidator extends ConstraintValidator
     /* @param mixed $value */
     public function validate($value, Constraint $constraint): void
     {
-        if (!$value instanceof OrderInterface) {
-            throw new \Exception('Value must be instance of OrderInterface');
-        }
+        Assert::isInstanceOf($value, OrderInterface::class);
 
-        if (!$value instanceof InPostPointsAwareInterface) {
-            throw new \Exception('Value must be instance of InPostPointsAwareInterface');
-        }
+        Assert::isInstanceOf($value, InPostPointsAwareInterface::class);
 
         $isInPostShipment = $this->shippingMethodChecker->isInPost($value);
         if (false === $isInPostShipment) {

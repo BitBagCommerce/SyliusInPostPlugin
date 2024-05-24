@@ -43,7 +43,7 @@ final class HasValidPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
         $value = new stdClass();
 
         $this->initialize($context);
-        $this->shouldThrow(new \Exception('Value must be instance of OrderInterface'))
+        $this->shouldThrow(\Exception::class)
         ->during('validate', [$value, $constraint]);
     }
 
@@ -55,7 +55,7 @@ final class HasValidPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
         $context->buildViolation(Argument::type('string'))->shouldNotBeCalled();
 
         $this->initialize($context);
-        $this->shouldThrow(new \Exception('Value must be instance of InPostPointsAwareInterface'))
+        $this->shouldThrow(\Exception::class)
             ->during('validate', [$value, $constraint]);
     }
 
