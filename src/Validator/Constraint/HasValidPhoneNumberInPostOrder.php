@@ -14,11 +14,18 @@ use Symfony\Component\Validator\Constraint;
 
 final class HasValidPhoneNumberInPostOrder extends Constraint
 {
-    public const PHONE_NUMBER_IS_TOO_SHORT_MESSAGE = 'bitbag_sylius_inpost_plugin.order.phone_number.min';
-
-    public const PHONE_NUMBER_IS_TOO_LONG_MESSAGE = 'bitbag_sylius_inpost_plugin.order.phone_number.max';
+    public const PHONE_NUMBER_LENGTH_INCORRECT = 'bitbag_sylius_inpost_plugin.order.phone_number.incorrect_length';
 
     public const POLISH_PHONE_NUMBER_DEFAULT_LENGTH = 9;
+
+    public const POSSIBLE_POLISH_PHONE_PREFIXES = [
+        '+0048',
+        '0048',
+        '+48.',
+        '+48',
+        '48.',
+        '48',
+    ];
 
     public function validatedBy(): string
     {

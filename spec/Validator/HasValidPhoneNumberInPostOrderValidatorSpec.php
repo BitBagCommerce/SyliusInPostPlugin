@@ -89,7 +89,7 @@ final class HasValidPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
         $this->validate($value, $constraint);
     }
 
-    public function it_should_add_violation_if_phone_number_is_too_short(
+    public function it_should_add_violation_if_phone_number_is_too_short_without_polish_prefix(
         ExecutionContextInterface $context,
         Constraint $constraint,
         OrderInterface $value,
@@ -101,9 +101,7 @@ final class HasValidPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
         $value->getShippingAddress()->willReturn($addressBuilder);
         $shippingMethodChecker->isInPost(Argument::type(OrderInterface::class))->willReturn(true);
 
-        $context->buildViolation(HasValidPhoneNumberInPostOrder::PHONE_NUMBER_IS_TOO_SHORT_MESSAGE)
-            ->willReturn($violationBuilder);
-        $violationBuilder->setParameter('{{ limit }}', (string) HasValidPhoneNumberInPostOrder::POLISH_PHONE_NUMBER_DEFAULT_LENGTH)
+        $context->buildViolation(HasValidPhoneNumberInPostOrder::PHONE_NUMBER_LENGTH_INCORRECT)
             ->willReturn($violationBuilder);
         $violationBuilder->atPath('shippingAddress.phoneNumber')
             ->willReturn($violationBuilder);
@@ -114,7 +112,53 @@ final class HasValidPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
         $this->validate($value, $constraint);
     }
 
-    public function it_should_add_violation_if_phone_number_is_too_long(
+    public function it_should_add_violation_if_phone_number_is_too_short_with_polish_prefix(
+        ExecutionContextInterface $context,
+        Constraint $constraint,
+        OrderInterface $value,
+        ConstraintViolationBuilderInterface $violationBuilder,
+        ShippingMethodCheckerInterface $shippingMethodChecker,
+    ): void {
+        $addressBuilder = AddressBuilder::create()->withPhoneNumber('+48.123')->build();
+        $value->implement(InPostPointsAwareInterface::class);
+        $value->getShippingAddress()->willReturn($addressBuilder);
+        $shippingMethodChecker->isInPost(Argument::type(OrderInterface::class))->willReturn(true);
+
+        $context->buildViolation(HasValidPhoneNumberInPostOrder::PHONE_NUMBER_LENGTH_INCORRECT)
+            ->willReturn($violationBuilder);
+        $violationBuilder->atPath('shippingAddress.phoneNumber')
+            ->willReturn($violationBuilder);
+
+        $violationBuilder->addViolation()->shouldBeCalled();
+
+        $this->initialize($context);
+        $this->validate($value, $constraint);
+    }
+
+    public function it_should_add_violation_if_phone_number_is_too_short_with_polish_long_prefix(
+        ExecutionContextInterface $context,
+        Constraint $constraint,
+        OrderInterface $value,
+        ConstraintViolationBuilderInterface $violationBuilder,
+        ShippingMethodCheckerInterface $shippingMethodChecker,
+    ): void {
+        $addressBuilder = AddressBuilder::create()->withPhoneNumber('+0048 123')->build();
+        $value->implement(InPostPointsAwareInterface::class);
+        $value->getShippingAddress()->willReturn($addressBuilder);
+        $shippingMethodChecker->isInPost(Argument::type(OrderInterface::class))->willReturn(true);
+
+        $context->buildViolation(HasValidPhoneNumberInPostOrder::PHONE_NUMBER_LENGTH_INCORRECT)
+            ->willReturn($violationBuilder);
+        $violationBuilder->atPath('shippingAddress.phoneNumber')
+            ->willReturn($violationBuilder);
+
+        $violationBuilder->addViolation()->shouldBeCalled();
+
+        $this->initialize($context);
+        $this->validate($value, $constraint);
+    }
+
+    public function it_should_add_violation_if_phone_number_is_too_long_without_polish_prefix(
         ExecutionContextInterface $context,
         Constraint $constraint,
         OrderInterface $value,
@@ -126,9 +170,7 @@ final class HasValidPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
         $value->getShippingAddress()->willReturn($addressBuilder);
         $shippingMethodChecker->isInPost(Argument::type(OrderInterface::class))->willReturn(true);
 
-        $context->buildViolation(HasValidPhoneNumberInPostOrder::PHONE_NUMBER_IS_TOO_LONG_MESSAGE)
-            ->willReturn($violationBuilder);
-        $violationBuilder->setParameter('{{ limit }}', (string) HasValidPhoneNumberInPostOrder::POLISH_PHONE_NUMBER_DEFAULT_LENGTH)
+        $context->buildViolation(HasValidPhoneNumberInPostOrder::PHONE_NUMBER_LENGTH_INCORRECT)
             ->willReturn($violationBuilder);
         $violationBuilder->atPath('shippingAddress.phoneNumber')
             ->willReturn($violationBuilder);
@@ -139,14 +181,150 @@ final class HasValidPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
         $this->validate($value, $constraint);
     }
 
-    public function it_should_do_nothing_if_phone_number_is_valid(
+    public function it_should_add_violation_if_phone_number_is_too_long_with_polish_prefix(
         ExecutionContextInterface $context,
         Constraint $constraint,
         OrderInterface $value,
         ConstraintViolationBuilderInterface $violationBuilder,
         ShippingMethodCheckerInterface $shippingMethodChecker,
-        ): void {
+    ): void {
+        $addressBuilder = AddressBuilder::create()->withPhoneNumber('+48 1234567890')->build();
+        $value->implement(InPostPointsAwareInterface::class);
+        $value->getShippingAddress()->willReturn($addressBuilder);
+        $shippingMethodChecker->isInPost(Argument::type(OrderInterface::class))->willReturn(true);
+
+        $context->buildViolation(HasValidPhoneNumberInPostOrder::PHONE_NUMBER_LENGTH_INCORRECT)
+            ->willReturn($violationBuilder);
+        $violationBuilder->atPath('shippingAddress.phoneNumber')
+            ->willReturn($violationBuilder);
+
+        $violationBuilder->addViolation()->shouldBeCalled();
+
+        $this->initialize($context);
+        $this->validate($value, $constraint);
+    }
+
+    public function it_should_add_violation_if_phone_number_is_too_long_with_polish_long_prefix(
+        ExecutionContextInterface $context,
+        Constraint $constraint,
+        OrderInterface $value,
+        ConstraintViolationBuilderInterface $violationBuilder,
+        ShippingMethodCheckerInterface $shippingMethodChecker,
+    ): void {
+        $addressBuilder = AddressBuilder::create()->withPhoneNumber('+0048 1234567890')->build();
+        $value->implement(InPostPointsAwareInterface::class);
+        $value->getShippingAddress()->willReturn($addressBuilder);
+        $shippingMethodChecker->isInPost(Argument::type(OrderInterface::class))->willReturn(true);
+
+        $context->buildViolation(HasValidPhoneNumberInPostOrder::PHONE_NUMBER_LENGTH_INCORRECT)
+            ->willReturn($violationBuilder);
+        $violationBuilder->atPath('shippingAddress.phoneNumber')
+            ->willReturn($violationBuilder);
+
+        $violationBuilder->addViolation()->shouldBeCalled();
+
+        $this->initialize($context);
+        $this->validate($value, $constraint);
+    }
+
+    public function it_should_do_nothing_if_phone_number_is_valid_without_polish_prefix(
+        ExecutionContextInterface $context,
+        Constraint $constraint,
+        OrderInterface $value,
+        ConstraintViolationBuilderInterface $violationBuilder,
+        ShippingMethodCheckerInterface $shippingMethodChecker,
+    ): void {
         $addressBuilder = AddressBuilder::create()->withPhoneNumber('123456789')->build();
+        $value->implement(InPostPointsAwareInterface::class);
+        $value->getShippingAddress()->willReturn($addressBuilder);
+        $shippingMethodChecker->isInPost(Argument::type(OrderInterface::class))->willReturn(true);
+
+        $context->buildViolation(Argument::type('string'))->shouldNotBeCalled();
+
+        $this->initialize($context);
+        $this->validate($value, $constraint);
+    }
+
+    public function it_should_do_nothing_if_phone_number_is_valid_with_polish_long_prefix(
+        ExecutionContextInterface $context,
+        Constraint $constraint,
+        OrderInterface $value,
+        ConstraintViolationBuilderInterface $violationBuilder,
+        ShippingMethodCheckerInterface $shippingMethodChecker,
+    ): void {
+        $addressBuilder = AddressBuilder::create()->withPhoneNumber('+0048 123456789')->build();
+        $value->implement(InPostPointsAwareInterface::class);
+        $value->getShippingAddress()->willReturn($addressBuilder);
+        $shippingMethodChecker->isInPost(Argument::type(OrderInterface::class))->willReturn(true);
+
+        $context->buildViolation(Argument::type('string'))->shouldNotBeCalled();
+
+        $this->initialize($context);
+        $this->validate($value, $constraint);
+    }
+
+    public function it_should_do_nothing_if_phone_number_is_valid_with_polish_long_prefix_without_plus(
+        ExecutionContextInterface $context,
+        Constraint $constraint,
+        OrderInterface $value,
+        ConstraintViolationBuilderInterface $violationBuilder,
+        ShippingMethodCheckerInterface $shippingMethodChecker,
+    ): void {
+        $addressBuilder = AddressBuilder::create()->withPhoneNumber('0048 123456789')->build();
+        $value->implement(InPostPointsAwareInterface::class);
+        $value->getShippingAddress()->willReturn($addressBuilder);
+        $shippingMethodChecker->isInPost(Argument::type(OrderInterface::class))->willReturn(true);
+
+        $context->buildViolation(Argument::type('string'))->shouldNotBeCalled();
+
+        $this->initialize($context);
+        $this->validate($value, $constraint);
+    }
+
+    public function it_should_do_nothing_if_phone_number_is_valid_with_polish_prefix_without_plus(
+        ExecutionContextInterface $context,
+        Constraint $constraint,
+        OrderInterface $value,
+        ConstraintViolationBuilderInterface $violationBuilder,
+        ShippingMethodCheckerInterface $shippingMethodChecker,
+    ): void {
+        $addressBuilder = AddressBuilder::create()->withPhoneNumber('48 123456789')->build();
+        $value->implement(InPostPointsAwareInterface::class);
+        $value->getShippingAddress()->willReturn($addressBuilder);
+        $shippingMethodChecker->isInPost(Argument::type(OrderInterface::class))->willReturn(true);
+
+        $context->buildViolation(Argument::type('string'))->shouldNotBeCalled();
+
+        $this->initialize($context);
+        $this->validate($value, $constraint);
+    }
+
+    public function it_should_do_nothing_if_phone_number_is_valid_with_polish_prefix_without_plus_with_dot(
+        ExecutionContextInterface $context,
+        Constraint $constraint,
+        OrderInterface $value,
+        ConstraintViolationBuilderInterface $violationBuilder,
+        ShippingMethodCheckerInterface $shippingMethodChecker,
+    ): void {
+        $addressBuilder = AddressBuilder::create()->withPhoneNumber('48.123456789')->build();
+        $value->implement(InPostPointsAwareInterface::class);
+        $value->getShippingAddress()->willReturn($addressBuilder);
+        $shippingMethodChecker->isInPost(Argument::type(OrderInterface::class))->willReturn(true);
+
+        $context->buildViolation(Argument::type('string'))->shouldNotBeCalled();
+
+        $this->initialize($context);
+        $this->validate($value, $constraint);
+    }
+
+    public function it_should_do_nothing_if_phone_number_is_valid_with_polish_prefix_with_plus_and_dot(
+        ExecutionContextInterface $context,
+        Constraint $constraint,
+        OrderInterface $value,
+        ConstraintViolationBuilderInterface $violationBuilder,
+        ShippingMethodCheckerInterface $shippingMethodChecker,
+    ): void {
+        $addressBuilder = AddressBuilder::create()->withPhoneNumber('+48.123456789')->build();
         $value->implement(InPostPointsAwareInterface::class);
         $value->getShippingAddress()->willReturn($addressBuilder);
         $shippingMethodChecker->isInPost(Argument::type(OrderInterface::class))->willReturn(true);

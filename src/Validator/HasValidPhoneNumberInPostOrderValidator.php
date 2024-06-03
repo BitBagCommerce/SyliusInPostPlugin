@@ -44,21 +44,32 @@ final class HasValidPhoneNumberInPostOrderValidator extends ConstraintValidator
             return;
         }
 
-        $length = strlen($phone);
-        if (HasValidPhoneNumberInPostOrder::POLISH_PHONE_NUMBER_DEFAULT_LENGTH > $length) {
-            $this->addPhoneNumberViolation(HasValidPhoneNumberInPostOrder::PHONE_NUMBER_IS_TOO_SHORT_MESSAGE);
-        }
+        $formatedPhone = $this->formatPhoneNumber($phone);
 
-        if (HasValidPhoneNumberInPostOrder::POLISH_PHONE_NUMBER_DEFAULT_LENGTH < $length) {
-            $this->addPhoneNumberViolation(HasValidPhoneNumberInPostOrder::PHONE_NUMBER_IS_TOO_LONG_MESSAGE);
+        $length = strlen($formatedPhone);
+
+        if (HasValidPhoneNumberInPostOrder::POLISH_PHONE_NUMBER_DEFAULT_LENGTH !== $length) {
+            $this->addPhoneNumberViolation(HasValidPhoneNumberInPostOrder::PHONE_NUMBER_LENGTH_INCORRECT);
         }
     }
 
     private function addPhoneNumberViolation(string $message): void
     {
         $violationBuilder = $this->context->buildViolation($message);
-        $violationBuilder->setParameter('{{ limit }}', (string) HasValidPhoneNumberInPostOrder::POLISH_PHONE_NUMBER_DEFAULT_LENGTH);
         $violationBuilder->atPath('shippingAddress.phoneNumber')
             ->addViolation();
+    }
+
+    private function formatPhoneNumber($phone): string
+    {
+        $phone = preg_replace('/\s+/', '', $phone);
+
+        if (9 < strlen($phone)) {
+            $escaped_prefixes = array_map('preg_quote', HasValidPhoneNumberInPostOrder::POSSIBLE_POLISH_PHONE_PREFIXES);
+            $pattern = '/^(' . implode('|', $escaped_prefixes) . ')/';
+            $phone = preg_replace($pattern, '', $phone);
+        }
+
+        return (string) $phone;
     }
 }
