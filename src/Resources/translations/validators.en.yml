@@ -3,4 +3,4 @@ bitbag_sylius_inpost_plugin:
         phone_number_is_required: 'Phone number is required in order to use InPost shipping method.'
         not_allowed_payment_method: 'Cash on delivery is not allowed to use with InPost shipping method.'
         phone_number:
-            incorrect_length: "Incorrect phone number for Polish shipping methods"
+            incorrect_length: "Incorrect phone number, phone number must be 9 digits."
