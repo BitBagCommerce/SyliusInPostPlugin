@@ -60,7 +60,7 @@ final class HasValidPhoneNumberInPostOrderValidator extends ConstraintValidator
             ->addViolation();
     }
 
-    private function formatPhoneNumber($phone): string
+    private function formatPhoneNumber(string $phone): string
     {
         $phone = preg_replace('/\s+/', '', $phone);
 
