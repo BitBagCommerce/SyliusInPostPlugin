@@ -16,9 +16,9 @@ final class HasValidPhoneNumberInPostOrder extends Constraint
 {
     public const PHONE_NUMBER_LENGTH_INCORRECT = 'bitbag_sylius_inpost_plugin.order.phone_number.incorrect_length';
 
-    public const POLISH_PHONE_NUMBER_DEFAULT_LENGTH = 9;
+    public const PHONE_NUMBER_DEFAULT_LENGTH = 9;
 
-    public const POSSIBLE_POLISH_PHONE_PREFIXES = [
+    public const POSSIBLE_PHONE_PREFIXES = [
         '+0048',
         '0048',
         '+48.',

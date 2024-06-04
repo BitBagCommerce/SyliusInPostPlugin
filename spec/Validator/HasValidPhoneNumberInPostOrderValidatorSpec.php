@@ -89,7 +89,7 @@ final class HasValidPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
         $this->validate($value, $constraint);
     }
 
-    public function it_should_add_violation_if_phone_number_is_too_short_without_polish_prefix(
+    public function it_should_add_violation_if_phone_number_is_too_short_without_prefix(
         ExecutionContextInterface $context,
         Constraint $constraint,
         OrderInterface $value,
@@ -112,7 +112,7 @@ final class HasValidPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
         $this->validate($value, $constraint);
     }
 
-    public function it_should_add_violation_if_phone_number_is_too_short_with_polish_prefix(
+    public function it_should_add_violation_if_phone_number_is_too_short_with_prefix(
         ExecutionContextInterface $context,
         Constraint $constraint,
         OrderInterface $value,
@@ -135,7 +135,7 @@ final class HasValidPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
         $this->validate($value, $constraint);
     }
 
-    public function it_should_add_violation_if_phone_number_is_too_short_with_polish_long_prefix(
+    public function it_should_add_violation_if_phone_number_is_too_short_with_long_prefix(
         ExecutionContextInterface $context,
         Constraint $constraint,
         OrderInterface $value,
@@ -158,7 +158,7 @@ final class HasValidPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
         $this->validate($value, $constraint);
     }
 
-    public function it_should_add_violation_if_phone_number_is_too_long_without_polish_prefix(
+    public function it_should_add_violation_if_phone_number_is_too_long_without_prefix(
         ExecutionContextInterface $context,
         Constraint $constraint,
         OrderInterface $value,
@@ -181,7 +181,7 @@ final class HasValidPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
         $this->validate($value, $constraint);
     }
 
-    public function it_should_add_violation_if_phone_number_is_too_long_with_polish_prefix(
+    public function it_should_add_violation_if_phone_number_is_too_long_with_prefix(
         ExecutionContextInterface $context,
         Constraint $constraint,
         OrderInterface $value,
@@ -204,7 +204,7 @@ final class HasValidPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
         $this->validate($value, $constraint);
     }
 
-    public function it_should_add_violation_if_phone_number_is_too_long_with_polish_long_prefix(
+    public function it_should_add_violation_if_phone_number_is_too_long_with_long_prefix(
         ExecutionContextInterface $context,
         Constraint $constraint,
         OrderInterface $value,
@@ -227,7 +227,7 @@ final class HasValidPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
         $this->validate($value, $constraint);
     }
 
-    public function it_should_do_nothing_if_phone_number_is_valid_without_polish_prefix(
+    public function it_should_do_nothing_if_phone_number_is_valid_without_prefix(
         ExecutionContextInterface $context,
         Constraint $constraint,
         OrderInterface $value,
@@ -245,7 +245,7 @@ final class HasValidPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
         $this->validate($value, $constraint);
     }
 
-    public function it_should_do_nothing_if_phone_number_is_valid_with_polish_long_prefix(
+    public function it_should_do_nothing_if_phone_number_is_valid_with_long_prefix(
         ExecutionContextInterface $context,
         Constraint $constraint,
         OrderInterface $value,
@@ -263,7 +263,7 @@ final class HasValidPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
         $this->validate($value, $constraint);
     }
 
-    public function it_should_do_nothing_if_phone_number_is_valid_with_polish_long_prefix_without_plus(
+    public function it_should_do_nothing_if_phone_number_is_valid_with_long_prefix_without_plus(
         ExecutionContextInterface $context,
         Constraint $constraint,
         OrderInterface $value,
@@ -281,7 +281,7 @@ final class HasValidPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
         $this->validate($value, $constraint);
     }
 
-    public function it_should_do_nothing_if_phone_number_is_valid_with_polish_prefix_without_plus(
+    public function it_should_do_nothing_if_phone_number_is_valid_with_prefix_without_plus(
         ExecutionContextInterface $context,
         Constraint $constraint,
         OrderInterface $value,
@@ -299,7 +299,7 @@ final class HasValidPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
         $this->validate($value, $constraint);
     }
 
-    public function it_should_do_nothing_if_phone_number_is_valid_with_polish_prefix_without_plus_with_dot(
+    public function it_should_do_nothing_if_phone_number_is_valid_with_prefix_without_plus_with_dot(
         ExecutionContextInterface $context,
         Constraint $constraint,
         OrderInterface $value,
@@ -317,7 +317,7 @@ final class HasValidPhoneNumberInPostOrderValidatorSpec extends ObjectBehavior
         $this->validate($value, $constraint);
     }
 
-    public function it_should_do_nothing_if_phone_number_is_valid_with_polish_prefix_with_plus_and_dot(
+    public function it_should_do_nothing_if_phone_number_is_valid_with_prefix_with_plus_and_dot(
         ExecutionContextInterface $context,
         Constraint $constraint,
         OrderInterface $value,

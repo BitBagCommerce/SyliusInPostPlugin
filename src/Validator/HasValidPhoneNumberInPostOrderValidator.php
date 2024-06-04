@@ -48,7 +48,7 @@ final class HasValidPhoneNumberInPostOrderValidator extends ConstraintValidator
 
         $length = strlen($formatedPhone);
 
-        if (HasValidPhoneNumberInPostOrder::POLISH_PHONE_NUMBER_DEFAULT_LENGTH !== $length) {
+        if (HasValidPhoneNumberInPostOrder::PHONE_NUMBER_DEFAULT_LENGTH !== $length) {
             $this->addPhoneNumberViolation(HasValidPhoneNumberInPostOrder::PHONE_NUMBER_LENGTH_INCORRECT);
         }
     }
@@ -65,7 +65,7 @@ final class HasValidPhoneNumberInPostOrderValidator extends ConstraintValidator
         $phone = preg_replace('/\s+/', '', $phone);
 
         if (9 < strlen($phone)) {
-            $escaped_prefixes = array_map('preg_quote', HasValidPhoneNumberInPostOrder::POSSIBLE_POLISH_PHONE_PREFIXES);
+            $escaped_prefixes = array_map('preg_quote', HasValidPhoneNumberInPostOrder::POSSIBLE_PHONE_PREFIXES);
             $pattern = '/^(' . implode('|', $escaped_prefixes) . ')/';
             $phone = preg_replace($pattern, '', $phone);
         }
