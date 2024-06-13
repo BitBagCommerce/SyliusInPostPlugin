@@ -39,7 +39,11 @@ final class WebClient implements WebClientInterface
 
     private string $parcelTemplate = 'large';
 
-    public function __construct(Client $client, string $labelType, string $parcelTemplate)
+    public function __construct(
+        Client $client,
+        string $labelType,
+        string $parcelTemplate
+    )
     {
         $this->apiClient = $client;
         $this->labelType = $labelType;
