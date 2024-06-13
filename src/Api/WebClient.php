@@ -43,8 +43,7 @@ final class WebClient implements WebClientInterface
         Client $client,
         string $labelType,
         string $parcelTemplate
-    )
-    {
+    ) {
         $this->apiClient = $client;
         $this->labelType = $labelType;
         $this->parcelTemplate = $parcelTemplate;
