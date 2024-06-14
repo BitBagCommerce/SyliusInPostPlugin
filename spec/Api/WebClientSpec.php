@@ -24,9 +24,13 @@ final class WebClientSpec extends ObjectBehavior
 
     const POINT_NAME = 'AAA666';
 
+    const LABEL_TYPE = 'normal';
+
+    const PARCEL_TEMPLATE = 'large';
+
     function let(Client $client): void
     {
-        $this->beConstructedWith($client);
+        $this->beConstructedWith($client, self::LABEL_TYPE, self::PARCEL_TEMPLATE);
     }
 
     function it_is_initializable(): void
