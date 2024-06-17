@@ -25,25 +25,23 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
 use Tests\BitBag\SyliusInPostPlugin\Spec\Builder\PaymentBuilder;
 use Tests\BitBag\SyliusInPostPlugin\Spec\Builder\PaymentMethodBuilder;
-use Tests\BitBag\SyliusInPostPlugin\Spec\ObjectMother\PaymentObjectMother;
-use Tests\BitBag\SyliusInPostPlugin\Spec\ObjectMother\ShipmentObjectMother;
 
 class HasAllowedPaymentMethodInPostOrderValidatorSpec extends ObjectBehavior
 {
     public const FOO = 'foo';
 
-    function let(ShippingMethodCheckerInterface $shippingMethodChecker): void
+    public function let(ShippingMethodCheckerInterface $shippingMethodChecker): void
     {
         $this->beConstructedWith($shippingMethodChecker);
     }
 
-    function it_is_initializable(): void
+    public function it_is_initializable(): void
     {
         $this->shouldHaveType(HasAllowedPaymentMethodInPostOrderValidator::class);
         $this->shouldBeAnInstanceOf(ConstraintValidator::class);
     }
 
-    function it_should_do_nothing_if_value_is_not_instance_of_order_interface(
+    public function it_should_do_nothing_if_value_is_not_instance_of_order_interface(
         ExecutionContextInterface $context,
         Constraint $constraint
     ): void {
@@ -54,7 +52,7 @@ class HasAllowedPaymentMethodInPostOrderValidatorSpec extends ObjectBehavior
         $this->validate($value, $constraint);
     }
 
-    function it_should_do_nothing_if_value_is_not_implementing_inpost_points_aware_interface(
+    public function it_should_do_nothing_if_value_is_not_implementing_inpost_points_aware_interface(
         ExecutionContextInterface $context,
         Constraint $constraint,
         OrderInterface $value
@@ -65,7 +63,7 @@ class HasAllowedPaymentMethodInPostOrderValidatorSpec extends ObjectBehavior
         $this->validate($value, $constraint);
     }
 
-    function it_should_do_nothing_if_selected_shipping_method_is_not_inpost(
+    public function it_should_do_nothing_if_selected_shipping_method_is_not_inpost(
         ExecutionContextInterface $context,
         Constraint $constraint,
         OrderInterface $value,
@@ -79,14 +77,13 @@ class HasAllowedPaymentMethodInPostOrderValidatorSpec extends ObjectBehavior
         $this->validate($value, $constraint);
     }
 
-    function it_should_add_violation_if_selected_shipping_method_is_inpost_and_payment_method_is_cash_on_deliver(
+    public function it_should_add_violation_if_selected_shipping_method_is_inpost_and_payment_method_is_cash_on_deliver(
         ExecutionContextInterface $context,
         Constraint $constraint,
         OrderInterface $value,
         ConstraintViolationBuilderInterface $violationBuilder,
         ShippingMethodCheckerInterface $shippingMethodChecker
-    ): void
-    {
+    ): void {
         $paymentMethod = PaymentMethodBuilder::create()->withCode('cash_on_delivery')->build();
         $payment = PaymentBuilder::create()->withPaymentMethod($paymentMethod)->build();
 

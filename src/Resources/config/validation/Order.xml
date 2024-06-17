@@ -14,5 +14,11 @@
                 <value>bitbag_select_shipping</value>
             </option>
         </constraint>
+        <constraint name="BitBag\SyliusInPostPlugin\Validator\Constraint\HasValidPhoneNumberInPostOrder">
+            <option name="groups">
+                <value>sylius_checkout_complete</value>
+                <value>bitbag_select_shipping</value>
+            </option>
+        </constraint>
     </class>
 </constraint-mapping>

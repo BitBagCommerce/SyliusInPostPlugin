@@ -18,7 +18,7 @@ use GuzzleHttp\Exception\ClientException;
 use Psr\Log\LoggerInterface;
 use Sylius\Bundle\ResourceBundle\Event\ResourceControllerEvent;
 use Sylius\Component\Core\Model\ShipmentInterface;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Webmozart\Assert\Assert;
 
 final class ShippingExportEventListener
@@ -35,19 +35,19 @@ final class ShippingExportEventListener
 
     private InPostShippingExportActionProviderInterface $shippingExportActionProvider;
 
-    private FlashBagInterface $flashBag;
+    private RequestStack $requestStack;
 
     private LoggerInterface $logger;
 
     public function __construct(
         WebClientInterface $webClient,
         InPostShippingExportActionProviderInterface $shippingExportActionProvider,
-        FlashBagInterface $flashBag,
+        RequestStack $requestStack,
         LoggerInterface $logger
     ) {
         $this->webClient = $webClient;
         $this->shippingExportActionProvider = $shippingExportActionProvider;
-        $this->flashBag = $flashBag;
+        $this->requestStack = $requestStack;
         $this->logger = $logger;
     }
 
@@ -74,7 +74,7 @@ final class ShippingExportEventListener
             try {
                 $createShipmentResponse = $this->webClient->createShipment($shipment);
             } catch (ClientException $exception) {
-                $this->flashBag->add('error', 'bitbag.ui.shipping_export_error');
+                $this->requestStack->getSession()->getBag('flashes')->add('error', 'bitbag.ui.shipping_export_error');
                 $this->logError($exception, $shipment);
 
                 return;
@@ -86,7 +86,7 @@ final class ShippingExportEventListener
         try {
             $shipmentData = $this->webClient->getShipmentById((int) ($shippingExport->getExternalId()));
         } catch (ClientException $exception) {
-            $this->flashBag->add('error', 'bitbag.ui.shipping_export_error');
+            $this->requestStack->getSession()->getBag('flashes')->add('error', 'bitbag.ui.shipping_export_error');
             $this->logError($exception, $shipment);
 
             return;
@@ -100,7 +100,7 @@ final class ShippingExportEventListener
         try {
             $action = $this->shippingExportActionProvider->provide($status);
         } catch (\Exception $exception) {
-            $this->flashBag->add('error', 'bitbag.ui.shipping_export_error');
+            $this->requestStack->getSession()->getBag('flashes')->add('error', 'bitbag.ui.shipping_export_error');
             $this->logError($exception, $shipment);
 
             return;
