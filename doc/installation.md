@@ -128,6 +128,80 @@ $ bin/console assets:install --symlink
 $ bin/console sylius:theme:assets:install --symlink
 ```
 
+### Webpack configuration
+#### Installing Webpack package
+
+1. Before Webpack installation, please create the `config/packages/webpack_encore.yaml` file with a content of:
+
+    ```yaml
+    webpack_encore:
+        output_path: '%kernel.project_dir%/public/build/default'
+        builds:
+            shop: '%kernel.project_dir%/public/build/shop'
+            admin: '%kernel.project_dir%/public/build/admin'
+            inpost_shop: '%kernel.project_dir%/public/build/bitbag/inpost/shop'
+            inpost_admin: '%kernel.project_dir%/public/build/bitbag/inpost/admin'
+    ```
+
+2. To install Webpack in your application, please run the command below:
+
+    ```bash
+    $ composer require "symfony/webpack-encore-bundle"
+    ```
+
+3. After installation, please add the line below into `config/bundles.php` file:
+
+    ```php
+    return [
+        ...
+        Symfony\WebpackEncoreBundle\WebpackEncoreBundle::class => ['all' => true],
+    ];
+    ```
+#### Configuring Webpack
+
+By a standard, the `webpack.config.js` file should be available in your repository. If not, please use [the Sylius-Standard one](https://github.com/Sylius/Sylius-Standard/blob/1.12/webpack.config.js).
+
+1. Please setup your `webpack.config.js` file to require the plugin's webpack configuration. To do so, please put the line below somewhere on top of your `webpack.config.js` file:
+
+    ```javascript
+    const [bitbagInPostShop, bitbagInPostAdmin] = require('./vendor/bitbag/inpost-plugin/webpack.config.js');
+    ```
+
+2. As next step, please add the imported consts into final module exports:
+
+    ```javascripts
+    module.exports = [shopConfig, adminConfig, appShopConfig, appAdminConfig, bitbagInPostShop, bitbagInPostAdmin];
+    ```
+
+3. Next thing is to add the asset configuration into `config/packages/framework.yaml`:
+
+    ```yaml
+    framework:
+        assets:
+            packages:
+                admin:
+                    json_manifest_path: '%kernel.project_dir%/public/build/admin/manifest.json'
+                shop:
+                    json_manifest_path: '%kernel.project_dir%/public/build/shop/manifest.json'
+                app.admin:
+                    json_manifest_path: '%kernel.project_dir%/public/build/app/admin/manifest.json'
+                app.shop:
+                    json_manifest_path: '%kernel.project_dir%/public/build/app/shop/manifest.json'
+                inpost_shop:
+                    json_manifest_path: '%kernel.project_dir%/public/build/bitbag/inpost/shop/manifest.json'
+                inpost_admin:
+                    json_manifest_path: '%kernel.project_dir%/public/build/bitbag/inpost/admin/manifest.json'
+    ```
+4. Additionally, please add the `"@symfony/webpack-encore": "^1.5.0",` dependency into your `package.json` file.
+
+5. Now you can run the commands:
+
+    ```bash
+    $ yarn install
+    $ yarn encore dev # or prod, depends on your environment
+    ```
+
+
 ## Testing & running the plugin
 
 ```bash
