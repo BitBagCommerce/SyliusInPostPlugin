@@ -18,7 +18,7 @@ class OrderBuilder
 {
     private OrderInterface $order;
 
-    public static function create(): OrderBuilder
+    public static function create(): self
     {
         return new self();
     }
@@ -28,14 +28,14 @@ class OrderBuilder
         $this->order = new Order();
     }
 
-    public function withShipment(ShipmentInterface $shipment):OrderBuilder
+    public function withShipment(ShipmentInterface $shipment): self
     {
         $this->order->addShipment($shipment);
 
         return $this;
     }
 
-    public function withNumber(string $number): OrderBuilder
+    public function withNumber(string $number): self
     {
         $this->order->setNumber($number);
 

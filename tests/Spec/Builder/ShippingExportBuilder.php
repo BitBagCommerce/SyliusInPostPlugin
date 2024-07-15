@@ -19,7 +19,7 @@ class ShippingExportBuilder
 {
     private ShippingExportInterface $shippingExport;
 
-    public static function create(): ShippingExportBuilder
+    public static function create(): self
     {
         return new self();
     }
@@ -29,21 +29,21 @@ class ShippingExportBuilder
         $this->shippingExport = new ShippingExport();
     }
 
-    public function withShipment(ShipmentInterface $shipment): ShippingExportBuilder
+    public function withShipment(ShipmentInterface $shipment): self
     {
         $this->shippingExport->setShipment($shipment);
 
         return $this;
     }
 
-    public function withExternalId(string $id): ShippingExportBuilder
+    public function withExternalId(string $id): self
     {
         $this->shippingExport->setExternalId($id);
 
         return $this;
     }
 
-    public function withShippingGateway(ShippingGatewayInterface $shippingGateway): ShippingExportBuilder
+    public function withShippingGateway(ShippingGatewayInterface $shippingGateway): self
     {
         $this->shippingExport->setShippingGateway($shippingGateway);
 

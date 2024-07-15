@@ -10,17 +10,14 @@ declare(strict_types=1);
 
 namespace Tests\BitBag\SyliusInPostPlugin\Spec\Builder;
 
-use Sylius\Component\Core\Model\Order;
-use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentMethod;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
-use Sylius\Component\Core\Model\ShipmentInterface;
 
 class PaymentMethodBuilder
 {
     private PaymentMethodInterface $paymentMethod;
 
-    public static function create(): PaymentMethodBuilder
+    public static function create(): self
     {
         return new self();
     }
@@ -30,7 +27,7 @@ class PaymentMethodBuilder
         $this->paymentMethod = new PaymentMethod();
     }
 
-    public function withCode(string $code): PaymentMethodBuilder
+    public function withCode(string $code): self
     {
         $this->paymentMethod->setCode($code);
 

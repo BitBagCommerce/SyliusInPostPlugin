@@ -17,7 +17,7 @@ class AddressBuilder
 {
     private AddressInterface $address;
 
-    public static function create(): AddressBuilder
+    public static function create(): self
     {
         return new self();
     }
@@ -27,14 +27,14 @@ class AddressBuilder
         $this->address = new Address();
     }
 
-    public function withPhoneNumber(string $phoneNumber): AddressBuilder
+    public function withPhoneNumber(string $phoneNumber): self
     {
         $this->address->setPhoneNumber($phoneNumber);
 
         return $this;
     }
 
-    public function build():AddressInterface
+    public function build(): AddressInterface
     {
         return $this->address;
     }

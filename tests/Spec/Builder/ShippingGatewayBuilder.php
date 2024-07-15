@@ -17,7 +17,7 @@ class ShippingGatewayBuilder
 {
     private ShippingGatewayInterface $shippingGateway;
 
-    public static function create(): ShippingGatewayBuilder
+    public static function create(): self
     {
         return new self();
     }
@@ -27,14 +27,14 @@ class ShippingGatewayBuilder
         $this->shippingGateway = new ShippingGateway();
     }
 
-    public function withCode(string $code): ShippingGatewayBuilder
+    public function withCode(string $code): self
     {
         $this->shippingGateway->setCode($code);
 
         return $this;
     }
 
-    public function build():ShippingGatewayInterface
+    public function build(): ShippingGatewayInterface
     {
         return $this->shippingGateway;
     }

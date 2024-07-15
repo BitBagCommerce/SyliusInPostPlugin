@@ -19,7 +19,7 @@ class ShipmentBuilder
 {
     private ShipmentInterface $shipment;
 
-    public static function create(): ShipmentBuilder
+    public static function create(): self
     {
         return new self();
     }
@@ -29,14 +29,14 @@ class ShipmentBuilder
         $this->shipment = new Shipment();
     }
 
-    public function withShippingMethod(ShippingMethodInterface $shippingMethod): ShipmentBuilder
+    public function withShippingMethod(ShippingMethodInterface $shippingMethod): self
     {
         $this->shipment->setMethod($shippingMethod);
 
         return $this;
     }
 
-    public function withOrder(OrderInterface $order): ShipmentBuilder
+    public function withOrder(OrderInterface $order): self
     {
         $this->shipment->setOrder($order);
 

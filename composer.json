@@ -46,7 +46,8 @@
         "twig/twig": "^2.10.0"
     },
     "conflict": {
-        "behat/mink-selenium2-driver": ">=1.7.0"
+        "behat/mink-selenium2-driver": ">=1.7.0",
+        "symplify/easy-coding-standard": ">10.2.10"
     },
     "config": {
         "sort-packages": true,

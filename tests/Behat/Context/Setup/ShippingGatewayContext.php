@@ -22,7 +22,6 @@ use Sylius\Component\Core\Model\ShipmentInterface;
 use Sylius\Component\Product\Resolver\ProductVariantResolverInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Sylius\Component\Shipping\Model\ShipmentUnitInterface;
-use Webmozart\Assert\Assert;
 
 final class ShippingGatewayContext implements Context
 {
