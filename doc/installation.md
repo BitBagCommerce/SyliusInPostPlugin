@@ -37,8 +37,34 @@ bitbag_sylius_inpost_plugin:
 ```
 
 This plugin was made on top
-of [SyliusShippingExportPlugin](https://github.com/BitBagCommerce/SyliusShippingExportPlugin), so please remember to do
-the same for it's configuration.
+of [SyliusShippingExportPlugin](https://github.com/BitBagCommerce/SyliusShippingExportPlugin).
+Typically, Symfony Flex, if you agree, automatically adds the configuration files:
+bitbag_shipping_export_plugin.yaml to the config/packages and config/routes directories.
+It also adding the appropriate entry to config/bundles.php.
+If it doesn't, so please remember to do the same as above for SyliusShippingExportPlugin configuration.
+
+### Extend entities with parameters
+
+You can implement this using xml-mapping or attributes. Instructions for both settings are described below.
+
+#### For doctrine XML-MAPPING:
+If you are using doctrine xml-mapping, you have probably already removed the entries
+for the entity in config/_sylius.yaml and all entity extensions are in src/Entity.
+Add the following entries to config/_sylius.yaml:
+```
+sylius_order:
+    resources:
+        order:
+            classes:
+                model: App\Entity\Order
+
+sylius_shipping:
+    resources:
+        shipping_method:
+            classes:
+                model: App\Entity\ShippingMethod
+
+```
 
 Add trait and interface to your Order and ShippingMethod entity classes:
 
@@ -47,7 +73,7 @@ Add trait and interface to your Order and ShippingMethod entity classes:
 
 declare(strict_types=1);
 
-namespace App\Entity\Order;
+namespace App\Entity;
 
 use BitBag\SyliusInPostPlugin\Model\InPostPointsAwareInterface;
 use Sylius\Component\Core\Model\Order as BaseOrder;
@@ -64,7 +90,7 @@ class Order extends BaseOrder implements InPostPointsAwareInterface
 
 declare(strict_types=1);
 
-namespace App\Entity\Shipping;
+namespace App\Entity;
 
 use BitBag\SyliusInPostPlugin\Model\ShippingMethodImageTrait;
 use Sylius\Component\Core\Model\ImageAwareInterface;
@@ -75,9 +101,19 @@ class ShippingMethod extends BaseShippingMethod implements ImageAwareInterface
     use ShippingMethodImageTrait;
 }
 ```
-
-Define new Entity mapping inside your src/Resources/config/doctrine directory. (You can do it with annotations if you
-prefer)
+Remember to mark it appropriately in the config/doctrine.yaml configuration file.
+```
+doctrine:
+    ...
+    orm:
+        ...
+        mappings:
+            App:
+                ...
+                type: xml
+                dir: '%kernel.project_dir%/src/Resources/config/doctrine'
+```
+Define new Entity mapping inside your src/Resources/config/doctrine directory.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -88,13 +124,13 @@ prefer)
         xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                             http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd"
 >
-    <entity name="Tests\BitBag\SyliusInPostPlugin\Application\src\Entity\Order" table="sylius_order">
+    <entity name="App\Entity\Order" table="sylius_order">
 
         <one-to-one field="point" target-entity="BitBag\SyliusInPostPlugin\Entity\InPostPoint">
             <cascade>
-                <cascade-persist/>
-                <cascade-remove/>
-                <cascade-refresh/>
+                <cascade-persist />
+                <cascade-remove />
+                <cascade-refresh />
             </cascade>
             <join-column name="point_id" referenced-column-name="id" nullable="true"/>
         </one-to-one>
@@ -105,19 +141,113 @@ prefer)
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 
-<doctrine-mapping
-        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
-                            http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd"
->
-    <entity name="Tests\BitBag\SyliusInPostPlugin\Application\src\Entity\ShippingMethodImage" table="bitbag_inpost_shipping_method_image">
-        <one-to-one field="owner" target-entity="Sylius\Component\Shipping\Model\ShippingMethodInterface" inversed-by="image">
-            <join-column name="owner_id" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                                      http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Entity\ShippingMethod" table="sylius_shipping_method">
+        <one-to-one field="image" target-entity="BitBag\SyliusInPostPlugin\Entity\ShippingMethodImage" mapped-by="owner">
+            <cascade>
+                <cascade-all />
+            </cascade>
+            <join-column name="image_id" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
         </one-to-one>
     </entity>
-    
 </doctrine-mapping>
+```
+#### You can do it with attributes if you prefer. Remember to mark it appropriately in the config/doctrine.yaml configuration file.
+```
+doctrine:
+    ...
+    orm:
+        ...
+        mappings:
+            App:
+                ...
+                type: attribute
+
+```
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Entity\Order;
+
+use BitBag\SyliusInPostPlugin\Entity\InPostPoint;
+use BitBag\SyliusInPostPlugin\Entity\InPostPointInterface;
+use BitBag\SyliusInPostPlugin\Model\InPostPointsAwareInterface;
+use Doctrine\ORM\Mapping as ORM;
+use Sylius\Component\Core\Model\Order as BaseOrder;
+use Sylius\Component\Order\Model\OrderInterface;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="sylius_order")
+ */
+#[ORM\Entity]
+#[ORM\Table(name: 'sylius_order')]
+class Order extends BaseOrder implements InPostPointsAwareInterface
+{
+    #[ORM\OneToOne(targetEntity: InPostPoint::class, cascade: ['persist', 'remove', 'refresh'])]
+    #[ORM\JoinColumn(name: 'point_id', referencedColumnName: 'id', nullable: true)]
+    protected ?InPostPointInterface $point = null;
+
+    public function getPoint(): ?InPostPointInterface
+    {
+        return $this->point;
+    }
+
+    public function setPoint(?InPostPointInterface $point): void
+    {
+        $this->point = $point;
+    }
+}
+
+```
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Entity\Shipping;
+
+use BitBag\SyliusInPostPlugin\Entity\ShippingMethodImage;
+use Doctrine\ORM\Mapping as ORM;
+use Sylius\Component\Core\Model\ImageAwareInterface;
+use Sylius\Component\Core\Model\ImageInterface;
+use Sylius\Component\Core\Model\ShippingMethod as BaseShippingMethod;
+use Sylius\Component\Shipping\Model\ShippingMethodInterface;
+use Sylius\Component\Shipping\Model\ShippingMethodTranslationInterface;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="sylius_shipping_method")
+ */
+#[ORM\Entity]
+#[ORM\Table(name: 'sylius_shipping_method')]
+class ShippingMethod extends BaseShippingMethod implements ImageAwareInterface
+{
+    #[ORM\OneToOne(mappedBy: 'owner', targetEntity: ShippingMethodImage::class, cascade: ['all'])]
+    protected ?ImageInterface $image = null;
+
+    public function getImage(): ?ImageInterface
+    {
+        return $this->image;
+    }
+
+    public function setImage(?ImageInterface $image): void
+    {
+        $this->image = $image;
+    }
+    protected function createTranslation(): ShippingMethodTranslationInterface
+    {
+        return new ShippingMethodTranslation();
+    }
+}
+
 ```
 Finish the installation by updating the database schema:
 
@@ -126,6 +256,19 @@ $ bin/console doctrine:migrations:diff
 $ bin/console doctrine:migrations:migrate
 $ bin/console assets:install --symlink
 $ bin/console sylius:theme:assets:install --symlink
+```
+### TWIG configuration
+#### Adding files to the template
+Copy the files below to the appropriate directories in your template.
+
+```
+vendor/bitbag/inpost-plugin/tests/Application/templates/bundles/SyliusAdminBundle/Order/Show/_addresses.html.twig
+vendor/bitbag/inpost-plugin/tests/Application/templates/bundles/SyliusAdminBundle/ShippingMethod/_form.html.twig
+```
+```
+vendor/bitbag/inpost-plugin/tests/Application/templates/bundles/SyliusShopBundle/Checkout/SelectShipping/_choice.html.twig
+vendor/bitbag/inpost-plugin/tests/Application/templates/bundles/SyliusShopBundle/Common/Order/_addresses.html.twig
+vendor/bitbag/inpost-plugin/tests/Application/templates/bundles/SyliusShopBundle/Grid/Action/quickReturn.html.twig
 ```
 
 ### Webpack configuration
@@ -137,12 +280,12 @@ $ bin/console sylius:theme:assets:install --symlink
     webpack_encore:
         output_path: '%kernel.project_dir%/public/build/default'
         builds:
-            shop: '%kernel.project_dir%/public/build/shop'
             admin: '%kernel.project_dir%/public/build/admin'
+            shop: '%kernel.project_dir%/public/build/shop'
             app.admin: '%kernel.project_dir%/public/build/app/admin'
             app.shop: '%kernel.project_dir%/public/build/app/shop'
-            inpost_shop: '%kernel.project_dir%/public/build/bitbag/inpost/shop'
             inpost_admin: '%kernel.project_dir%/public/build/bitbag/inpost/admin'
+            inpost_shop: '%kernel.project_dir%/public/build/bitbag/inpost/shop'
     ```
 
 2. To install Webpack in your application, please run the command below:
@@ -175,7 +318,7 @@ By a standard, the `webpack.config.js` file should be available in your reposito
     module.exports = [shopConfig, adminConfig, appShopConfig, appAdminConfig, bitbagInPostShop, bitbagInPostAdmin];
     ```
 
-3. Next thing is to add the asset configuration into `config/packages/framework.yaml`:
+3. Next thing is to add the asset configuration into `config/packages/assets.yaml`:
 
     ```yaml
     framework:
