@@ -47,7 +47,8 @@
     },
     "conflict": {
         "behat/mink-selenium2-driver": ">=1.7.0",
-        "symplify/easy-coding-standard": ">10.2.10"
+        "symplify/easy-coding-standard": ">10.2.10",
+        "doctrine/persistence": "<3.0"
     },
     "config": {
         "sort-packages": true,
