@@ -139,6 +139,8 @@ $ bin/console sylius:theme:assets:install --symlink
         builds:
             shop: '%kernel.project_dir%/public/build/shop'
             admin: '%kernel.project_dir%/public/build/admin'
+            app.admin: '%kernel.project_dir%/public/build/app/admin'
+            app.shop: '%kernel.project_dir%/public/build/app/shop'
             inpost_shop: '%kernel.project_dir%/public/build/bitbag/inpost/shop'
             inpost_admin: '%kernel.project_dir%/public/build/bitbag/inpost/admin'
     ```
