@@ -20,3 +20,6 @@ is issue caused by circular reference between `pagerfantaDefault.css` and it's l
 #### Workaround #### 
 
 * Use both commands `assets:install` and `sylius:theme:assets:install` without `--symlink` option
+
+### Sandbox - Select inPost point ###
+* When you place an order in the test environment, make sure that you select a parcel collection point from the map of the Sandbox. You can find the map of available collection points in the test environment at https://sandbox-manager.paczkomaty.pl. Selecting a point that doesn't exist on the test map may result in errors.

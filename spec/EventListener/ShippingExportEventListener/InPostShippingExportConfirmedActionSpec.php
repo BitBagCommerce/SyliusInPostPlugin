@@ -19,7 +19,9 @@ use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use Sylius\Component\Core\Model\ShipmentInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Tests\BitBag\SyliusInPostPlugin\Spec\Builder\OrderBuilder;
 use Tests\BitBag\SyliusInPostPlugin\Spec\Builder\ShipmentBuilder;
 use Tests\BitBag\SyliusInPostPlugin\Spec\Builder\ShippingExportBuilder;
@@ -39,32 +41,32 @@ class InPostShippingExportConfirmedActionSpec extends ObjectBehavior
 
     private const ORDER_NUMBER = '0000000001';
 
-    function let(
+    public function let(
         ShippingExportRepositoryInterface $shippingExportRepository,
         WebClientInterface $webClient,
         Filesystem $filesystem,
-        FlashBagInterface $flashBag
+        RequestStack $requestStack
     ): void {
-        $this->beConstructedWith($shippingExportRepository, $webClient, $filesystem, $flashBag, self::SHIPPING_LABELS_PATH);
+        $this->beConstructedWith($shippingExportRepository, $webClient, $filesystem, $requestStack, self::SHIPPING_LABELS_PATH);
     }
 
-    function it_is_initializable(): void
+    public function it_is_initializable(): void
     {
         $this->shouldHaveType(InPostShippingExportConfirmedAction::class);
         $this->shouldBeAnInstanceOf(InPostShippingExportActionInterface::class);
     }
 
-    function it_should_support_the_correct_status_code(): void
+    public function it_should_support_the_correct_status_code(): void
     {
         $this->supports(self::CONFIRMED)->shouldReturn(true);
     }
 
-    function it_should_not_support_the_incorrect_status_code(): void
+    public function it_should_not_support_the_incorrect_status_code(): void
     {
         $this->supports(self::FOO)->shouldReturn(false);
     }
 
-    function it_should_throw_exception_if_shipment_external_id_is_null(): void
+    public function it_should_throw_exception_if_shipment_external_id_is_null(): void
     {
         $shippingExport = ShippingExportBuilder::create()->build();
         $this
@@ -72,7 +74,7 @@ class InPostShippingExportConfirmedActionSpec extends ObjectBehavior
             ->during('execute', [$shippingExport]);
     }
 
-    function it_should_throw_exception_if_shipment_is_null(): void
+    public function it_should_throw_exception_if_shipment_is_null(): void
     {
         $shippingExport = ShippingExportBuilder::create()->withExternalId(self::FOO)->build();
 
@@ -81,7 +83,7 @@ class InPostShippingExportConfirmedActionSpec extends ObjectBehavior
             ->during('execute', [$shippingExport]);
     }
 
-    function it_should_throw_exception_if_order_is_null(): void
+    public function it_should_throw_exception_if_order_is_null(): void
     {
         $shipment = ShipmentBuilder::create()->build();
         $shippingExport = ShippingExportBuilder::create()
@@ -94,7 +96,7 @@ class InPostShippingExportConfirmedActionSpec extends ObjectBehavior
             ->during('execute', [$shippingExport]);
     }
 
-    function it_should_throw_exception_if_order_number_is_null(): void
+    public function it_should_throw_exception_if_order_number_is_null(): void
     {
         $order = OrderBuilder::create()->build();
         $shipment = ShipmentBuilder::create()->withOrder($order)->build();
@@ -108,10 +110,13 @@ class InPostShippingExportConfirmedActionSpec extends ObjectBehavior
             ->during('execute', [$shippingExport]);
     }
 
-    function it_should_save_label_under_the_correct_path(
+    public function it_should_save_label_under_the_correct_path(
         WebClientInterface $webClient,
         ShipmentInterface $shipment,
-        Filesystem $filesystem
+        Filesystem $filesystem,
+        RequestStack $requestStack,
+        SessionInterface $session,
+        FlashBagInterface $flashBag
     ): void {
         $order = OrderBuilder::create()->withNumber(self::ORDER_NUMBER)->build();
         $shipment->getOrder()->willReturn($order);
@@ -125,15 +130,20 @@ class InPostShippingExportConfirmedActionSpec extends ObjectBehavior
 
         $expectedPath = sprintf('%s/%s_%s.pdf', self::SHIPPING_LABELS_PATH, self::SHIPMENT_ID, self::ORDER_NUMBER);
         $filesystem->dumpFile($expectedPath, self::SHIPPING_LABEL_CONTENT)->shouldBeCalled();
+        $requestStack->getSession()->willReturn($session);
+        $session->getBag('flashes')->willReturn($flashBag);
 
         $this->execute($shippingExport);
     }
 
-    function it_should_update_shipping_export_entity(
+    public function it_should_update_shipping_export_entity(
         WebClientInterface $webClient,
         ShippingExportRepositoryInterface $shippingExportRepository,
         ShipmentInterface $shipment,
-        ShippingExportInterface $shippingExport
+        ShippingExportInterface $shippingExport,
+        RequestStack $requestStack,
+        SessionInterface $session,
+        FlashBagInterface $flashBag
     ): void {
         $webClient->getLabels([self::FOO])->willReturn(self::SHIPPING_LABEL_CONTENT);
         $order = OrderBuilder::create()->withNumber(self::ORDER_NUMBER)->build();
@@ -146,6 +156,8 @@ class InPostShippingExportConfirmedActionSpec extends ObjectBehavior
         $shippingExport->setState(ShippingExportInterface::STATE_EXPORTED)->shouldBeCalled();
         $shippingExport->setExportedAt(Argument::type(\DateTime::class))->shouldBeCalled();
         $shippingExportRepository->add($shippingExport)->shouldBeCalled();
+        $requestStack->getSession()->willReturn($session);
+        $session->getBag('flashes')->willReturn($flashBag);
 
         $this->execute($shippingExport);
     }

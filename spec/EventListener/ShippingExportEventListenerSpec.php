@@ -19,7 +19,9 @@ use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
 use Sylius\Bundle\ResourceBundle\Event\ResourceControllerEvent;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Tests\BitBag\SyliusInPostPlugin\Spec\Builder\OrderBuilder;
 use Tests\BitBag\SyliusInPostPlugin\Spec\Builder\ShipmentBuilder;
 use Tests\BitBag\SyliusInPostPlugin\Spec\Builder\ShippingExportBuilder;
@@ -46,21 +48,21 @@ final class ShippingExportEventListenerSpec extends ObjectBehavior
         'status' => 'created',
     ];
 
-    function let(
+    public function let(
         WebClientInterface $webClient,
         InPostShippingExportActionProviderInterface $shippingExportActionProvider,
-        FlashBagInterface $flashBag,
+        RequestStack $requestStack,
         LoggerInterface $logger
     ): void {
-        $this->beConstructedWith($webClient, $shippingExportActionProvider, $flashBag, $logger);
+        $this->beConstructedWith($webClient, $shippingExportActionProvider, $requestStack, $logger);
     }
 
-    function it_is_initializable(): void
+    public function it_is_initializable(): void
     {
         $this->shouldHaveType(ShippingExportEventListener::class);
     }
 
-    function it_should_throw_exception_if_subject_is_not_shipping_export_instance(ResourceControllerEvent $event): void
+    public function it_should_throw_exception_if_subject_is_not_shipping_export_instance(ResourceControllerEvent $event): void
     {
         $event->getSubject()->willReturn(new \stdClass());
 
@@ -70,7 +72,7 @@ final class ShippingExportEventListenerSpec extends ObjectBehavior
         ;
     }
 
-    function it_should_throw_exception_if_shipping_gateway_is_null(ResourceControllerEvent $event): void
+    public function it_should_throw_exception_if_shipping_gateway_is_null(ResourceControllerEvent $event): void
     {
         $shippingExport = ShippingExportBuilder::create()->build();
         $event->getSubject()->willReturn($shippingExport);
@@ -80,7 +82,7 @@ final class ShippingExportEventListenerSpec extends ObjectBehavior
             ->during('exportShipment', [$event]);
     }
 
-    function it_should_throw_exception_if_shipment_is_null(ResourceControllerEvent $event): void
+    public function it_should_throw_exception_if_shipment_is_null(ResourceControllerEvent $event): void
     {
         $shippingGateway = ShippingGatewayBuilder::create()->build();
         $shippingExport = ShippingExportBuilder::create()->withShippingGateway($shippingGateway)->build();
@@ -91,7 +93,7 @@ final class ShippingExportEventListenerSpec extends ObjectBehavior
             ->during('exportShipment', [$event]);
     }
 
-    function it_should_do_nothing_if_shipping_gateway_code_is_not_inpost(
+    public function it_should_do_nothing_if_shipping_gateway_code_is_not_inpost(
         ResourceControllerEvent $event,
         WebClientInterface $webClient
     ): void {
@@ -108,12 +110,14 @@ final class ShippingExportEventListenerSpec extends ObjectBehavior
         $this->exportShipment($event);
     }
 
-    function it_should_handle_when_create_shipment_throws_exception(
+    public function it_should_handle_when_create_shipment_throws_exception(
         ResourceControllerEvent $event,
         WebClientInterface $webClient,
         FlashBagInterface $flashBag,
-        LoggerInterface $logger
-    ): void {
+        LoggerInterface $logger,
+        RequestStack $requestStack,
+        SessionInterface $session,
+        ): void {
         $order = OrderBuilder::create()->withNumber(self::ORDER_NUMBER)->build();
         $shippingGateway = ShippingGatewayBuilder::create()->withCode(self::INPOST)->build();
         $shipment = ShipmentBuilder::create()->withOrder($order)->build();
@@ -125,18 +129,22 @@ final class ShippingExportEventListenerSpec extends ObjectBehavior
 
         $webClient->setShippingGateway($shippingGateway);
         $webClient->createShipment($shipment)->willThrow(ClientException::class);
+        $requestStack->getSession()->willReturn($session);
+        $session->getBag('flashes')->willReturn($flashBag);
         $flashBag->add(self::ERROR, self::SHIPPING_EXPORT_ERROR_MESSAGE)->shouldBeCalled();
         $logger->error(Argument::type('string'))->shouldBeCalled();
 
         $this->exportShipment($event);
     }
 
-    function it_should_handle_when_get_shipment_by_id_throws_exception(
+    public function it_should_handle_when_get_shipment_by_id_throws_exception(
         ResourceControllerEvent $event,
         WebClientInterface $webClient,
         FlashBagInterface $flashBag,
-        LoggerInterface $logger
-    ): void {
+        LoggerInterface $logger,
+        RequestStack $requestStack,
+        SessionInterface $session,
+        ): void {
         $order = OrderBuilder::create()->withNumber(self::ORDER_NUMBER)->build();
         $shippingGateway = ShippingGatewayBuilder::create()->withCode(self::INPOST)->build();
         $shipment = ShipmentBuilder::create()->withOrder($order)->build();
@@ -149,19 +157,23 @@ final class ShippingExportEventListenerSpec extends ObjectBehavior
         $webClient->setShippingGateway($shippingGateway);
         $webClient->createShipment($shipment)->willReturn(self::EXPECTED_CREATE_SHIPMENT_RESPONSE);
         $webClient->getShipmentById(self::SHIPMENT_ID)->willThrow(ClientException::class);
+        $requestStack->getSession()->willReturn($session);
+        $session->getBag('flashes')->willReturn($flashBag);
         $flashBag->add(self::ERROR, self::SHIPPING_EXPORT_ERROR_MESSAGE)->shouldBeCalled();
         $logger->error(Argument::type('string'))->shouldBeCalled();
 
         $this->exportShipment($event);
     }
 
-    function it_should_handle_when_provide_shipment_action_throws_exception(
+    public function it_should_handle_when_provide_shipment_action_throws_exception(
         ResourceControllerEvent $event,
         WebClientInterface $webClient,
         FlashBagInterface $flashBag,
         LoggerInterface $logger,
-        InPostShippingExportActionProviderInterface $shippingExportActionProvider
-    ): void {
+        InPostShippingExportActionProviderInterface $shippingExportActionProvider,
+        RequestStack $requestStack,
+        SessionInterface $session,
+        ): void {
         $order = OrderBuilder::create()->withNumber(self::ORDER_NUMBER)->build();
         $shippingGateway = ShippingGatewayBuilder::create()->withCode(self::INPOST)->build();
         $shipment = ShipmentBuilder::create()->withOrder($order)->build();
@@ -175,18 +187,20 @@ final class ShippingExportEventListenerSpec extends ObjectBehavior
         $webClient->createShipment($shipment)->willReturn(self::EXPECTED_CREATE_SHIPMENT_RESPONSE);
         $webClient->getShipmentById(self::SHIPMENT_ID)->willReturn(self::EXPECTED_GET_SHIPMENT_RESPONSE);
         $shippingExportActionProvider->provide(Argument::type('string'))->willThrow(\Exception::class);
+        $requestStack->getSession()->willReturn($session);
+        $session->getBag('flashes')->willReturn($flashBag);
         $flashBag->add(self::ERROR, self::SHIPPING_EXPORT_ERROR_MESSAGE)->shouldBeCalled();
         $logger->error(Argument::type('string'))->shouldBeCalled();
 
         $this->exportShipment($event);
     }
 
-    function it_should_execute_shipping_export_action(
+    public function it_should_execute_shipping_export_action(
         ResourceControllerEvent $event,
         WebClientInterface $webClient,
         InPostShippingExportActionProviderInterface $shippingExportActionProvider,
-        InPostShippingExportActionInterface $shippingExportAction
-    ): void {
+        InPostShippingExportActionInterface $shippingExportAction,
+        ): void {
         $shippingGateway = ShippingGatewayBuilder::create()->withCode(self::INPOST)->build();
         $shipment = ShipmentBuilder::create()->build();
         $shippingExport = ShippingExportBuilder::create()

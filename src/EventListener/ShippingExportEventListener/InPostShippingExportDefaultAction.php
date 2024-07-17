@@ -12,7 +12,7 @@ namespace BitBag\SyliusInPostPlugin\EventListener\ShippingExportEventListener;
 
 use BitBag\SyliusShippingExportPlugin\Entity\ShippingExportInterface;
 use BitBag\SyliusShippingExportPlugin\Repository\ShippingExportRepositoryInterface;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 final class InPostShippingExportDefaultAction implements InPostShippingExportActionInterface
 {
@@ -22,12 +22,12 @@ final class InPostShippingExportDefaultAction implements InPostShippingExportAct
 
     private ShippingExportRepositoryInterface $shippingExportRepository;
 
-    private FlashBagInterface $flashBag;
+    private RequestStack $requestStack;
 
-    public function __construct(ShippingExportRepositoryInterface $shippingExportRepository, FlashBagInterface $flashBag)
+    public function __construct(ShippingExportRepositoryInterface $shippingExportRepository, RequestStack $requestStack)
     {
         $this->shippingExportRepository = $shippingExportRepository;
-        $this->flashBag = $flashBag;
+        $this->requestStack = $requestStack;
     }
 
     public function execute(ShippingExportInterface $shippingExport): void
@@ -37,7 +37,7 @@ final class InPostShippingExportDefaultAction implements InPostShippingExportAct
 
         $this->shippingExportRepository->add($shippingExport);
 
-        $this->flashBag->add(self::INFO, self::TRANSLATION_KEY);
+        $this->requestStack->getSession()->getBag('flashes')->add(self::INFO, self::TRANSLATION_KEY);
     }
 
     public function supports(string $statusCode): bool
