@@ -30,6 +30,11 @@ Before creating shipping gateway for InPost you're going to need 'organization I
 [Api configuration](https://inpost.pl/sites/default/files/pdf/instrukcja-konfiguracji-api-shipx.pdf)
 
 Select 'Shipping gateways' from Sylius Admin Panel and add methods for Courier and Locker (or just one of them).
+
+<div align="center">
+    <img src="./images/inpost_gateways.png"/>
+</div>
+
 - select 'shipping method'
 - enter 'Access token'
 - enter 'Organization ID'
@@ -39,11 +44,19 @@ Select 'Shipping gateways' from Sylius Admin Panel and add methods for Courier a
 - if you have 'cash on delivery' method in you shop - please add it's code
 - if you want select additional services
 
+<div align="center">
+    <img src="./images/inpost_create.png"/>
+</div>
+
 ### Exporting shipping data
 
 Select 'Export shipping data' from Sylius Admin Panel
 
 Now you can export each shipment or all at once
+
+<div align="center">
+    <img src="./images/shipping_export.png"/>
+</div>
 
 ### Printing label
 
