@@ -12,9 +12,9 @@ namespace BitBag\SyliusInPostPlugin\Controller;
 
 use BitBag\SyliusInPostPlugin\Api\WebClientInterface;
 use BitBag\SyliusInPostPlugin\Entity\InPostPointInterface;
+use BitBag\SyliusInPostPlugin\Exception\InPostException;
 use BitBag\SyliusInPostPlugin\Model\InPostPointsAwareInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use GuzzleHttp\Exception\ClientException;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Repository\OrderRepositoryInterface;
 use Sylius\Component\Order\Context\CartContextInterface;
@@ -84,8 +84,8 @@ final class AddPointToOrderAction
 
         try {
             $pointData = $this->client->getPointByName($name);
-        } catch (ClientException $exception) {
-            $data = \GuzzleHttp\json_decode($exception->getMessage(), true);
+        } catch (InPostException $exception) {
+            $data = json_decode($exception->getMessage(), true);
 
             return new JsonResponse($data['message'], Response::HTTP_BAD_REQUEST);
         }

@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace BitBag\SyliusInPostPlugin\Api;
 
 use BitBag\SyliusShippingExportPlugin\Entity\ShippingGatewayInterface;
-use GuzzleHttp\Exception\GuzzleException;
 use Sylius\Component\Core\Model\ShipmentInterface;
 
 interface WebClientInterface
@@ -80,11 +79,6 @@ interface WebClientInterface
 
     public function createShipment(ShipmentInterface $shipment): array;
 
-    /**
-     * @return mixed|string
-     *
-     * @throws GuzzleException
-     */
     public function request(
         string $method,
         string $url,

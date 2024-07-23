@@ -12,9 +12,9 @@ namespace BitBag\SyliusInPostPlugin\EventListener;
 
 use BitBag\SyliusInPostPlugin\Api\WebClientInterface;
 use BitBag\SyliusInPostPlugin\EventListener\ShippingExportEventListener\InPostShippingExportActionProviderInterface;
+use BitBag\SyliusInPostPlugin\Exception\InPostException;
 use BitBag\SyliusShippingExportPlugin\Entity\ShippingExportInterface;
 use BitBag\SyliusShippingExportPlugin\Entity\ShippingGatewayInterface;
-use GuzzleHttp\Exception\ClientException;
 use Psr\Log\LoggerInterface;
 use Sylius\Bundle\ResourceBundle\Event\ResourceControllerEvent;
 use Sylius\Component\Core\Model\ShipmentInterface;
@@ -73,7 +73,7 @@ final class ShippingExportEventListener
         if (null === $shippingExport->getExternalId()) {
             try {
                 $createShipmentResponse = $this->webClient->createShipment($shipment);
-            } catch (ClientException $exception) {
+            } catch (InPostException $exception) {
                 $this->requestStack->getSession()->getBag('flashes')->add('error', 'bitbag.ui.shipping_export_error');
                 $this->logError($exception, $shipment);
 
@@ -85,7 +85,7 @@ final class ShippingExportEventListener
 
         try {
             $shipmentData = $this->webClient->getShipmentById((int) ($shippingExport->getExternalId()));
-        } catch (ClientException $exception) {
+        } catch (InPostException $exception) {
             $this->requestStack->getSession()->getBag('flashes')->add('error', 'bitbag.ui.shipping_export_error');
             $this->logError($exception, $shipment);
 

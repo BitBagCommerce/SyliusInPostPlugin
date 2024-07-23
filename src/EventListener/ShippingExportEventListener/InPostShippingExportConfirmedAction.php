@@ -11,9 +11,9 @@ declare(strict_types=1);
 namespace BitBag\SyliusInPostPlugin\EventListener\ShippingExportEventListener;
 
 use BitBag\SyliusInPostPlugin\Api\WebClientInterface;
+use BitBag\SyliusInPostPlugin\Exception\InPostException;
 use BitBag\SyliusShippingExportPlugin\Entity\ShippingExportInterface;
 use BitBag\SyliusShippingExportPlugin\Repository\ShippingExportRepositoryInterface;
-use GuzzleHttp\Exception\ClientException;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\ShipmentInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -55,7 +55,7 @@ final class InPostShippingExportConfirmedAction implements InPostShippingExportA
     }
 
     /**
-     * @throws ClientException
+     * @throws InPostException
      */
     public function execute(ShippingExportInterface $shippingExport): void
     {
