@@ -6,6 +6,8 @@
         <import resource="./services/**/*.xml"/>
     </imports>
     <services>
+        <service id="sylius.request_factory" class="Symfony\Component\HttpClient\Psr18Client" />
+        <service id="sylius.stream_factory" class="Symfony\Component\HttpClient\Psr18Client"/>
         <service
                 class="BitBag\SyliusInPostPlugin\Form\Type\ShippingGatewayType"
                 id="bitbag.sylius_inpost_plugin.form.type.inpost_shipping_gateway"
@@ -39,8 +41,8 @@
                 id="bitbag.sylius_inpost_plugin.api.web_client"
         >
             <argument type="service" id="sylius.http_client"/>
-            <argument type="service" id="sylius.http_client"/>
-            <argument type="service" id="sylius.http_client"/>
+            <argument type="service" id="sylius.request_factory"/>
+            <argument type="service" id="sylius.stream_factory"/>
             <argument>%bitbag.inpost.label_type%</argument>
         </service>
 
