@@ -6,6 +6,7 @@
         <import resource="./services/**/*.xml"/>
     </imports>
     <services>
+        <service id="sylius.http_client" class="Symfony\Component\HttpClient\Psr18Client" />
         <service id="sylius.request_factory" class="Symfony\Component\HttpClient\Psr18Client" />
         <service id="sylius.stream_factory" class="Symfony\Component\HttpClient\Psr18Client"/>
         <service
