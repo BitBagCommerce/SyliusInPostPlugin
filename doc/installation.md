@@ -180,7 +180,6 @@ use BitBag\SyliusInPostPlugin\Entity\InPostPointInterface;
 use BitBag\SyliusInPostPlugin\Model\InPostPointsAwareInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Sylius\Component\Core\Model\Order as BaseOrder;
-use Sylius\Component\Order\Model\OrderInterface;
 
 /**
  * @ORM\Entity
@@ -219,8 +218,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Sylius\Component\Core\Model\ImageAwareInterface;
 use Sylius\Component\Core\Model\ImageInterface;
 use Sylius\Component\Core\Model\ShippingMethod as BaseShippingMethod;
-use Sylius\Component\Shipping\Model\ShippingMethodInterface;
-use Sylius\Component\Shipping\Model\ShippingMethodTranslationInterface;
 
 /**
  * @ORM\Entity
@@ -242,14 +239,10 @@ class ShippingMethod extends BaseShippingMethod implements ImageAwareInterface
     {
         $this->image = $image;
     }
-    protected function createTranslation(): ShippingMethodTranslationInterface
-    {
-        return new ShippingMethodTranslation();
-    }
 }
 
 ```
-Finish the installation by updating the database schema:
+Finish the installation by updating the database schema (check in advance: [Known Issues](known_issues.md)):
 
 ```
 $ bin/console doctrine:migrations:diff
