@@ -13,7 +13,7 @@ Feature: Managing shipping gateway
         And it has "Organization ID" field set to "123"
         And it has "Environment" field set to "sandbox"
         And it has "Service" field set to "inpost_courier_standard"
-        And the store has a product "Chicken" priced at "$2" in "Web-US" channel
+        And the store has a product "Chicken" priced at "$2.00" in "Web-US" channel
         And customer "user@bitbag.pl" has placed 5 orders on the "Web-US" channel in each buying 5 "Chicken" products
         And the customer set the shipping address "Mike Ross" addressed it to "350 5th Ave", "10118" "New York" in the "United States" to orders
         And those orders were placed with "Inpost" shipping method

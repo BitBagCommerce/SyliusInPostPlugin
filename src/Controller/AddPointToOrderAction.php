@@ -1,10 +1,11 @@
 <?php
 
 /*
- * This file was created by developers working at BitBag
- * Do you need more information about us and what we do? Visit our https://bitbag.io website!
- * We are hiring developers from all over the world. Join us and start your new, exciting adventure and become part of us: https://bitbag.io/career
-*/
+ * This file has been created by developers from BitBag.
+ * Feel free to contact us once you face any issues or want to start
+ * You can find more information about us on https://bitbag.io and write us
+ * an email on hello@bitbag.io.
+ */
 
 declare(strict_types=1);
 
@@ -12,9 +13,9 @@ namespace BitBag\SyliusInPostPlugin\Controller;
 
 use BitBag\SyliusInPostPlugin\Api\WebClientInterface;
 use BitBag\SyliusInPostPlugin\Entity\InPostPointInterface;
+use BitBag\SyliusInPostPlugin\Exception\InPostException;
 use BitBag\SyliusInPostPlugin\Model\InPostPointsAwareInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use GuzzleHttp\Exception\ClientException;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Repository\OrderRepositoryInterface;
 use Sylius\Component\Order\Context\CartContextInterface;
@@ -44,7 +45,7 @@ final class AddPointToOrderAction
         FactoryInterface $inPostPointFactory,
         EntityManagerInterface $entityManager,
         WebClientInterface $client,
-        CartContextInterface $cartContext
+        CartContextInterface $cartContext,
     ) {
         $this->orderRepository = $orderRepository;
         $this->inPostPointFactory = $inPostPointFactory;
@@ -84,8 +85,8 @@ final class AddPointToOrderAction
 
         try {
             $pointData = $this->client->getPointByName($name);
-        } catch (ClientException $exception) {
-            $data = \GuzzleHttp\json_decode($exception->getMessage(), true);
+        } catch (InPostException $exception) {
+            $data = json_decode($exception->getMessage(), true);
 
             return new JsonResponse($data['message'], Response::HTTP_BAD_REQUEST);
         }

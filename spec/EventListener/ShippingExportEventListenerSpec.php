@@ -14,7 +14,7 @@ use BitBag\SyliusInPostPlugin\Api\WebClientInterface;
 use BitBag\SyliusInPostPlugin\EventListener\ShippingExportEventListener;
 use BitBag\SyliusInPostPlugin\EventListener\ShippingExportEventListener\InPostShippingExportActionInterface;
 use BitBag\SyliusInPostPlugin\EventListener\ShippingExportEventListener\InPostShippingExportActionProviderInterface;
-use GuzzleHttp\Exception\ClientException;
+use BitBag\SyliusInPostPlugin\Exception\InvalidInPostResponseException;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
@@ -128,7 +128,7 @@ final class ShippingExportEventListenerSpec extends ObjectBehavior
         $event->getSubject()->willReturn($shippingExport);
 
         $webClient->setShippingGateway($shippingGateway);
-        $webClient->createShipment($shipment)->willThrow(ClientException::class);
+        $webClient->createShipment($shipment)->willThrow(InvalidInPostResponseException::class);
         $requestStack->getSession()->willReturn($session);
         $session->getBag('flashes')->willReturn($flashBag);
         $flashBag->add(self::ERROR, self::SHIPPING_EXPORT_ERROR_MESSAGE)->shouldBeCalled();
@@ -156,7 +156,7 @@ final class ShippingExportEventListenerSpec extends ObjectBehavior
 
         $webClient->setShippingGateway($shippingGateway);
         $webClient->createShipment($shipment)->willReturn(self::EXPECTED_CREATE_SHIPMENT_RESPONSE);
-        $webClient->getShipmentById(self::SHIPMENT_ID)->willThrow(ClientException::class);
+        $webClient->getShipmentById(self::SHIPMENT_ID)->willThrow(InvalidInPostResponseException::class);
         $requestStack->getSession()->willReturn($session);
         $session->getBag('flashes')->willReturn($flashBag);
         $flashBag->add(self::ERROR, self::SHIPPING_EXPORT_ERROR_MESSAGE)->shouldBeCalled();
