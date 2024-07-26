@@ -85,5 +85,5 @@ interface WebClientInterface
         string $url,
         array $data = [],
         bool $returnJson = true,
-    );
+    ): array|string;
 }

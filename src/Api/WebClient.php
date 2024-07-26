@@ -208,7 +208,7 @@ final class WebClient implements WebClientInterface
         string $url,
         array $data = [],
         bool $returnJson = true,
-    ) {
+    ): array|string {
         $header = $this->getAuthorizedHeaderWithContentType();
 
         try {
@@ -220,8 +220,7 @@ final class WebClient implements WebClientInterface
 
             $result = $this->apiClient->sendRequest($request);
             $response = json_decode((string) $result->getBody(), true);
-
-            if (201 < $result->getStatusCode()) {
+            if (200 !== $result->getStatusCode() && 201 !== $result->getStatusCode()) {
                 throw new InvalidInPostResponseException();
             }
         } catch (InvalidInPostResponseException $e) {
