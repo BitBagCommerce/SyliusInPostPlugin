@@ -11,13 +11,14 @@ declare(strict_types=1);
 namespace BitBag\SyliusInPostPlugin\Api;
 
 use BitBag\SyliusInPostPlugin\Entity\InPostPoint;
+use BitBag\SyliusInPostPlugin\Exception\InvalidInPostResponseException;
 use BitBag\SyliusInPostPlugin\Entity\ShippingExportInterface;
 use BitBag\SyliusInPostPlugin\Model\InPostPointsAwareInterface;
 use BitBag\SyliusShippingExportPlugin\Entity\ShippingGatewayInterface;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\GuzzleException;
-use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Client\ClientExceptionInterface;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Sylius\Component\Core\Model\AddressInterface;
 use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Model\OrderInterface;
@@ -26,7 +27,11 @@ use Webmozart\Assert\Assert;
 
 final class WebClient implements WebClientInterface
 {
-    private Client $apiClient;
+    private ClientInterface $apiClient;
+
+    private RequestFactoryInterface $requestFactory;
+
+    private StreamFactoryInterface $streamFactory;
 
     private ?string $organizationId = null;
 
@@ -40,9 +45,15 @@ final class WebClient implements WebClientInterface
 
     private string $labelType = 'normal';
 
-    public function __construct(Client $client, string $labelType)
-    {
+    public function __construct(
+        ClientInterface $client,
+        RequestFactoryInterface $requestFactory,
+        StreamFactoryInterface $streamFactory,
+        string $labelType,
+    ) {
         $this->apiClient = $client;
+        $this->requestFactory = $requestFactory;
+        $this->streamFactory = $streamFactory;
         $this->labelType = $labelType;
     }
 
@@ -195,30 +206,39 @@ final class WebClient implements WebClientInterface
     }
 
     /**
-     * @return mixed
-     *
-     * @throws GuzzleException
+     * @throws InvalidInPostResponseException
+     * @throws ClientExceptionInterface
      */
     public function request(
         string $method,
         string $url,
         array $data = [],
-        bool $returnJson = true
-    ) {
-        $options = [
-            'json' => $data,
-            'headers' => $this->getAuthorizedHeaderWithContentType(),
-        ];
+        bool $returnJson = true,
+    ): array|string {
+        $header = $this->getAuthorizedHeaderWithContentType();
 
         try {
-            $result = $this->apiClient->request($method, $url, $options);
-        } catch (ClientException $exception) {
-            /** @var ?ResponseInterface $result */
-            $result = $exception->getResponse();
+            $request = $this->requestFactory
+                ->createRequest($method, $url)
+                ->withHeader('Content-Type', $header['Content-Type'])
+                ->withHeader('Authorization', $header['Authorization'])
+                ->withBody($this->streamFactory->createStream(json_encode($data)));
 
-            throw new ClientException(
-                null !== $result ? (string) $result->getBody() : 'Request failed for url' . $url,
-                $exception->getRequest()
+            $result = $this->apiClient->sendRequest($request);
+            $response = json_decode((string) $result->getBody(), true);
+            if (200 !== $result->getStatusCode() && 201 !== $result->getStatusCode()) {
+                throw new InvalidInPostResponseException();
+            }
+        } catch (InvalidInPostResponseException $e) {
+            $error_details = $response['details'] ?? '[]';
+
+            throw new InvalidInPostResponseException(
+                sprintf(
+                    '%s %s; details: %s',
+                    $e->getMessage(),
+                    $e->getErrorMessage(),
+                    print_r($error_details, true),
+                ),
             );
         }
 
@@ -226,7 +246,7 @@ final class WebClient implements WebClientInterface
             return (string) $result->getBody();
         }
 
-        return \GuzzleHttp\json_decode((string) $result->getBody(), true);
+        return $response;
     }
 
     private function getAdditionalServices(): array
@@ -342,7 +362,7 @@ final class WebClient implements WebClientInterface
             'Street "%s" is invalid. The street format must be something like %s, where %d is the house number.',
             $street,
             '"Opolska 45"',
-            45
+            45,
         ));
 
         return end($streetParts);
