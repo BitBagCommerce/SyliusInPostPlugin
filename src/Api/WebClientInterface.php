@@ -57,7 +57,6 @@ interface WebClientInterface
 
     public const TEMPLATE_SELECT_EVENT = 'export_shipping_select_parcel_template';
 
-
     public function setShippingGateway(ShippingGatewayInterface $shippingGateway): self;
 
     public function getApiEndpoint(): string;

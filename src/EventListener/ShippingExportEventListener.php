@@ -12,8 +12,8 @@ declare(strict_types=1);
 namespace BitBag\SyliusInPostPlugin\EventListener;
 
 use BitBag\SyliusInPostPlugin\Api\WebClientInterface;
-use BitBag\SyliusInPostPlugin\EventListener\ShippingExportEventListener\InPostShippingExportActionProviderInterface;
 use BitBag\SyliusInPostPlugin\Entity\ShippingExportInterface;
+use BitBag\SyliusInPostPlugin\EventListener\ShippingExportEventListener\InPostShippingExportActionProviderInterface;
 use BitBag\SyliusInPostPlugin\Exception\InPostException;
 use BitBag\SyliusShippingExportPlugin\Entity\ShippingGatewayInterface;
 use Psr\Log\LoggerInterface;
