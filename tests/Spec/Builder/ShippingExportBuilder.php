@@ -11,10 +11,10 @@ declare(strict_types=1);
 
 namespace Tests\BitBag\SyliusInPostPlugin\Spec\Builder;
 
-use BitBag\SyliusShippingExportPlugin\Entity\ShippingExport;
-use BitBag\SyliusShippingExportPlugin\Entity\ShippingExportInterface;
+use BitBag\SyliusInPostPlugin\Entity\ShippingExportInterface;
 use BitBag\SyliusShippingExportPlugin\Entity\ShippingGatewayInterface;
 use Sylius\Component\Core\Model\ShipmentInterface;
+use Tests\BitBag\SyliusInPostPlugin\Application\src\Entity\ShippingExport;
 
 class ShippingExportBuilder
 {

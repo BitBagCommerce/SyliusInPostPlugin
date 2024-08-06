@@ -15,6 +15,7 @@
         >
             <argument type="service" id="bitbag.repository.shipping_export" />
             <argument type="service" id="request_stack" />
+            <argument type="service" id="translator" />
         </service>
     </services>
 </container>
