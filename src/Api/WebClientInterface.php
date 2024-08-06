@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusInPostPlugin\Api;
 
+use BitBag\SyliusInPostPlugin\Entity\ShippingExportInterface;
 use BitBag\SyliusShippingExportPlugin\Entity\ShippingGatewayInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use Sylius\Component\Core\Model\ShipmentInterface;
@@ -54,6 +55,9 @@ interface WebClientInterface
 
     public const ROD_ADDITIONAL_SERVICE = 'rod';
 
+    public const TEMPLATE_SELECT_EVENT = 'export_shipping_select_parcel_template';
+
+
     public function setShippingGateway(ShippingGatewayInterface $shippingGateway): self;
 
     public function getApiEndpoint(): string;
@@ -78,7 +82,7 @@ interface WebClientInterface
 
     public function getAuthorizedHeaderWithContentType(): array;
 
-    public function createShipment(ShipmentInterface $shipment): array;
+    public function createShipment(ShipmentInterface $shipment, ?ShippingExportInterface $shippingExport = null): array;
 
     /**
      * @return mixed|string

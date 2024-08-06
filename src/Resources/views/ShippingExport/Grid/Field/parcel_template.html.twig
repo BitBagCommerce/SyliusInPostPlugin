@@ -1,0 +1,26 @@
+{% set template = data.getParcelTemplate %}
+{% if template is null %}
+    <span class="ui label">
+        {{ 'bitbag_sylius_inpost_plugin.ui.parcel_template.select_template'|trans }}
+    </span>
+    <div class="ui divider"></div>
+{% endif %}
+
+<div class="ui buttons">
+    {% set templates = {'small': 'A', 'medium': 'B', 'large': 'C'} %}
+    {% for key, label in templates %}
+        {% if template == key %}
+            <button class="ui button primary">{{ label }}</button>
+        {% else %}
+            {% if data.getExportedAt != null %}
+                <button class="ui button disabled">{{ label }}</button>
+            {% else %}
+                <form action="{{ path('bitbag_admin_shipping_export_select_parcel_template', {'id' : data.id, 'template': key}) }}"
+                      method="POST">
+                    <input type="hidden" name="_method" value="PUT">
+                    <button class="ui button">{{ label }}</button>
+                </form>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+</div>

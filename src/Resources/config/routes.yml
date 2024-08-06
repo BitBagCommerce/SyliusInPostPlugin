@@ -8,3 +8,9 @@ bitbag_sylius_inpost_plugin_admin_add_point_to_order:
     methods: [POST]
     defaults:
         _controller: bitbag.sylius_inpost_plugin.controller.add_point_to_order::addPointToOrderAction
+    
+bitbag_admin_shipping_export_select_parcel_template:
+    path: /admin/shipping_export/select_parcel_template/{id}/{template}
+    methods: [POST, PUT]
+    defaults:
+        _controller: bitbag.controller.shipping_export::selectParcelTemplate

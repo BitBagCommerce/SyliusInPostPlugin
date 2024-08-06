@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace BitBag\SyliusInPostPlugin\Api;
 
 use BitBag\SyliusInPostPlugin\Entity\InPostPoint;
+use BitBag\SyliusInPostPlugin\Entity\ShippingExportInterface;
 use BitBag\SyliusInPostPlugin\Model\InPostPointsAwareInterface;
 use BitBag\SyliusShippingExportPlugin\Entity\ShippingGatewayInterface;
 use GuzzleHttp\Client;
@@ -34,6 +35,8 @@ final class WebClient implements WebClientInterface
     private ?string $environment = null;
 
     private ShippingGatewayInterface $shippingGateway;
+
+    private ?ShippingExportInterface $shippingExport = null;
 
     private string $labelType = 'normal';
 
@@ -137,8 +140,12 @@ final class WebClient implements WebClientInterface
         return $this->request('GET', $url);
     }
 
-    public function createShipment(ShipmentInterface $shipment): array
-    {
+    public function createShipment(
+        ShipmentInterface $shipment,
+        ?ShippingExportInterface $shippingExport = null
+    ): array {
+        $this->shippingExport = $shippingExport;
+
         /** @var OrderInterface $order */
         $order = $shipment->getOrder();
 
@@ -296,9 +303,14 @@ final class WebClient implements WebClientInterface
         return false;
     }
 
-    private function createParcel(ShipmentInterface $shipment): array
-    {
+    private function createParcel(
+        ShipmentInterface $shipment
+    ): array{
         $weight = $shipment->getShippingWeight();
+        $template = 'large';
+        if (null !== $this->shippingExport) {
+            $template = $this->shippingExport->getParcelTemplate();
+        }
 
         return [
             'id' => $shipment->getId(),
@@ -307,7 +319,7 @@ final class WebClient implements WebClientInterface
                 'unit' => 'kg',
             ],
             'dimensions' => [],
-            'template' => 'large',
+            'template' => $template,
             'tracking_number' => null,
             'is_non_standard' => false,
         ];
