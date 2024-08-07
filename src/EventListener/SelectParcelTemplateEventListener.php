@@ -20,9 +20,19 @@ class SelectParcelTemplateEventListener
 {
     private SelectParcelTemplateActionInterface $action;
 
-    private const PARCEL_TEMPLATE_VALUES = [
+    private const INPOST_LOCKER_PARCEL_TEMPLATES = [
         'small', 'medium', 'large',
     ];
+
+    private const INPOST_COURIER_PARCEL_TEMPLATES = [
+        'small', 'medium', 'large', 'xlarge',
+    ];
+
+    private const INPOST_LOCKER_STANDARD = 'inpost_locker_standard';
+
+    private const INPOST_LOCKER_PASS_THRU = 'inpost_locker_pass_thru';
+
+    private const ERROR_INVALID_PARCEL_TEMPLATE = '"%s" is an invalid parcel template!';
 
     public function __construct(
         SelectParcelTemplateActionInterface $action,
@@ -36,8 +46,17 @@ class SelectParcelTemplateEventListener
         $shippingExport = $exportShipmentEvent->getSubject();
         Assert::isInstanceOf($shippingExport, ShippingExportInterface::class);
 
-        if (!in_array($shippingExport->getParcelTemplate(), self::PARCEL_TEMPLATE_VALUES)) {
-            throw new \Exception(sprintf('"%s" is invalid parcel template!', $shippingExport->getParcelTemplate()));
+        $service = $shippingExport->getShippingGateway()->getConfig()['service'];
+        $parcelTemplate = $shippingExport->getParcelTemplate();
+
+        if (in_array($service, [self::INPOST_LOCKER_STANDARD, self::INPOST_LOCKER_PASS_THRU])) {
+            $validTemplates = self::INPOST_LOCKER_PARCEL_TEMPLATES;
+        } else {
+            $validTemplates = self::INPOST_COURIER_PARCEL_TEMPLATES;
+        }
+
+        if (!in_array($parcelTemplate, $validTemplates, true)) {
+            throw new \Exception(sprintf(self::ERROR_INVALID_PARCEL_TEMPLATE, $parcelTemplate));
         }
 
         $this->action->execute($shippingExport);

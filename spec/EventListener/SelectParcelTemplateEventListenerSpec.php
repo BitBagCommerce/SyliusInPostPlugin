@@ -70,6 +70,7 @@ final class SelectParcelTemplateEventListenerSpec extends ObjectBehavior
     public function it_should_perform_set_parcel_template_action(ResourceControllerEvent $event): void
     {
         $shippingGateway = ShippingGatewayBuilder::create()->withCode(self::INPOST)->build();
+        $shippingGateway->setConfig(['service' => 'inpost_locker_standard']);
         $shipment = ShipmentBuilder::create()->build();
         $shippingExport = ShippingExportBuilder::create()
             ->withShippingGateway($shippingGateway)
