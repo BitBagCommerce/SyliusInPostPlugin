@@ -51,6 +51,13 @@ class ShippingExportBuilder
         return $this;
     }
 
+    public function withParcelTemplate(string $template): self
+    {
+        $this->shippingExport->setParcelTemplate($template);
+
+        return $this;
+    }
+
     public function build(): ShippingExportInterface
     {
         return $this->shippingExport;

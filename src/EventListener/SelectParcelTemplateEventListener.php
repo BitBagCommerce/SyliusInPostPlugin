@@ -20,6 +20,10 @@ class SelectParcelTemplateEventListener
 {
     private SelectParcelTemplateActionInterface $action;
 
+    private const PARCEL_TEMPLATE_VALUES = [
+        'small', 'medium', 'large',
+    ];
+
     public function __construct(
         SelectParcelTemplateActionInterface $action,
     ) {
@@ -31,6 +35,10 @@ class SelectParcelTemplateEventListener
         /** @var ?ShippingExportInterface $shippingExport */
         $shippingExport = $exportShipmentEvent->getSubject();
         Assert::isInstanceOf($shippingExport, ShippingExportInterface::class);
+
+        if (!in_array($shippingExport->getParcelTemplate(), self::PARCEL_TEMPLATE_VALUES)) {
+            throw new \Exception(sprintf('"%s" is invalid parcel template!', $shippingExport->getParcelTemplate()));
+        }
 
         $this->action->execute($shippingExport);
     }
