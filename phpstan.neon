@@ -1,6 +1,11 @@
 parameters:
+    level: 8
+
+    paths:
+        - src
+
     reportUnmatchedIgnoredErrors: false
-    checkMissingIterableValueType: false
+    treatPhpDocTypesAsCertain: false
 
     excludePaths:
         # Makes PHPStan crash
@@ -11,4 +16,5 @@ parameters:
         - 'tests/Application/src/**.php'
 
     ignoreErrors:
-        - '/Parameter #1 \$configuration of method Symfony\\Component\\DependencyInjection\\Extension\\Extension::processConfiguration\(\) expects Symfony\\Component\\Config\\Definition\\ConfigurationInterface, Symfony\\Component\\Config\\Definition\\ConfigurationInterface\|null given\./'
+            - identifier: missingType.iterableValue
+            - identifier: missingType.generics

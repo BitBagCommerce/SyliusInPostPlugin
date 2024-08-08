@@ -17,6 +17,13 @@ bitbag_sylius_inpost_plugin:
         not_blank: This field cannot be blank
         is_quick_return: Quick Return
         quick_return: Quick Return
+        parcel_template:
+            label: Parcel template
+            select_template: Select template
+            template_a: Template A (8 x 38 x 64 cm)
+            template_b: Template B (19 x 38 x 64 cm)
+            template_c: Template C (41 x 38 x 64 cm)
+            select_action_performed: Parcel template has been changed
     main_service:
         inpost_locker_standard: Inpost Locker Standard
         inpost_locker_pass_thru: Inpost Locker Pass Thru

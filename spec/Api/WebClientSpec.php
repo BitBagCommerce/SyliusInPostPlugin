@@ -13,8 +13,10 @@ namespace spec\BitBag\SyliusInPostPlugin\Api;
 use BitBag\SyliusInPostPlugin\Api\WebClient;
 use BitBag\SyliusInPostPlugin\Api\WebClientInterface;
 use BitBag\SyliusShippingExportPlugin\Entity\ShippingGatewayInterface;
-use GuzzleHttp\Client;
+use Psr\Http\Client\ClientInterface;
 use PhpSpec\ObjectBehavior;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 final class WebClientSpec extends ObjectBehavior
 {
@@ -26,9 +28,13 @@ final class WebClientSpec extends ObjectBehavior
 
     public const LABEL_TYPE = "normal";
 
-    public function let(Client $client): void
+    public function let(
+        ClientInterface $client,
+        RequestFactoryInterface $requestFactory,
+        StreamFactoryInterface $streamFactory,
+    ): void
     {
-        $this->beConstructedWith($client,self::LABEL_TYPE);
+        $this->beConstructedWith($client, $requestFactory, $streamFactory, self::LABEL_TYPE);
     }
 
     public function it_is_initializable(): void

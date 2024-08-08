@@ -1,2 +1,9 @@
 imports:
     - { resource: "@BitBagSyliusShippingExportPlugin/Resources/config/config.yml" }
+
+sylius_resource:
+    resources:
+        bitbag.shipping_export:
+            classes:
+                model: Tests\BitBag\SyliusInPostPlugin\Application\src\Entity\ShippingExport
+                controller: BitBag\SyliusInPostPlugin\Controller\ShippingExportController

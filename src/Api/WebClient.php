@@ -1,22 +1,25 @@
 <?php
 
 /*
- * This file was created by developers working at BitBag
- * Do you need more information about us and what we do? Visit our https://bitbag.io website!
- * We are hiring developers from all over the world. Join us and start your new, exciting adventure and become part of us: https://bitbag.io/career
-*/
+ * This file has been created by developers from BitBag.
+ * Feel free to contact us once you face any issues or want to start
+ * You can find more information about us on https://bitbag.io and write us
+ * an email on hello@bitbag.io.
+ */
 
 declare(strict_types=1);
 
 namespace BitBag\SyliusInPostPlugin\Api;
 
 use BitBag\SyliusInPostPlugin\Entity\InPostPoint;
+use BitBag\SyliusInPostPlugin\Entity\ShippingExportInterface;
+use BitBag\SyliusInPostPlugin\Exception\InvalidInPostResponseException;
 use BitBag\SyliusInPostPlugin\Model\InPostPointsAwareInterface;
 use BitBag\SyliusShippingExportPlugin\Entity\ShippingGatewayInterface;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\GuzzleException;
-use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Client\ClientExceptionInterface;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Sylius\Component\Core\Model\AddressInterface;
 use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Model\OrderInterface;
@@ -25,7 +28,11 @@ use Webmozart\Assert\Assert;
 
 final class WebClient implements WebClientInterface
 {
-    private Client $apiClient;
+    private ClientInterface $apiClient;
+
+    private RequestFactoryInterface $requestFactory;
+
+    private StreamFactoryInterface $streamFactory;
 
     private ?string $organizationId = null;
 
@@ -35,11 +42,19 @@ final class WebClient implements WebClientInterface
 
     private ShippingGatewayInterface $shippingGateway;
 
+    private ?ShippingExportInterface $shippingExport = null;
+
     private string $labelType = 'normal';
 
-    public function __construct(Client $client, string $labelType)
-    {
+    public function __construct(
+        ClientInterface $client,
+        RequestFactoryInterface $requestFactory,
+        StreamFactoryInterface $streamFactory,
+        string $labelType,
+    ) {
         $this->apiClient = $client;
+        $this->requestFactory = $requestFactory;
+        $this->streamFactory = $streamFactory;
         $this->labelType = $labelType;
     }
 
@@ -137,8 +152,12 @@ final class WebClient implements WebClientInterface
         return $this->request('GET', $url);
     }
 
-    public function createShipment(ShipmentInterface $shipment): array
-    {
+    public function createShipment(
+        ShipmentInterface $shipment,
+        ?ShippingExportInterface $shippingExport = null,
+    ): array {
+        $this->shippingExport = $shippingExport;
+
         /** @var OrderInterface $order */
         $order = $shipment->getOrder();
 
@@ -188,30 +207,39 @@ final class WebClient implements WebClientInterface
     }
 
     /**
-     * @return mixed
-     *
-     * @throws GuzzleException
+     * @throws InvalidInPostResponseException
+     * @throws ClientExceptionInterface
      */
     public function request(
         string $method,
         string $url,
         array $data = [],
-        bool $returnJson = true
-    ) {
-        $options = [
-            'json' => $data,
-            'headers' => $this->getAuthorizedHeaderWithContentType(),
-        ];
+        bool $returnJson = true,
+    ): array|string {
+        $header = $this->getAuthorizedHeaderWithContentType();
 
         try {
-            $result = $this->apiClient->request($method, $url, $options);
-        } catch (ClientException $exception) {
-            /** @var ?ResponseInterface $result */
-            $result = $exception->getResponse();
+            $request = $this->requestFactory
+                ->createRequest($method, $url)
+                ->withHeader('Content-Type', $header['Content-Type'])
+                ->withHeader('Authorization', $header['Authorization'])
+                ->withBody($this->streamFactory->createStream(json_encode($data)));
 
-            throw new ClientException(
-                null !== $result ? (string) $result->getBody() : 'Request failed for url' . $url,
-                $exception->getRequest()
+            $result = $this->apiClient->sendRequest($request);
+            $response = json_decode((string) $result->getBody(), true);
+            if (200 !== $result->getStatusCode() && 201 !== $result->getStatusCode()) {
+                throw new InvalidInPostResponseException();
+            }
+        } catch (InvalidInPostResponseException $e) {
+            $error_details = $response['details'] ?? '[]';
+
+            throw new InvalidInPostResponseException(
+                sprintf(
+                    '%s %s; details: %s',
+                    $e->getMessage(),
+                    $e->getErrorMessage(),
+                    print_r($error_details, true),
+                ),
             );
         }
 
@@ -219,7 +247,7 @@ final class WebClient implements WebClientInterface
             return (string) $result->getBody();
         }
 
-        return \GuzzleHttp\json_decode((string) $result->getBody(), true);
+        return $response;
     }
 
     private function getAdditionalServices(): array
@@ -296,9 +324,14 @@ final class WebClient implements WebClientInterface
         return false;
     }
 
-    private function createParcel(ShipmentInterface $shipment): array
-    {
+    private function createParcel(
+        ShipmentInterface $shipment,
+    ): array {
         $weight = $shipment->getShippingWeight();
+        $template = 'large';
+        if (null !== $this->shippingExport) {
+            $template = $this->shippingExport->getParcelTemplate();
+        }
 
         return [
             'id' => $shipment->getId(),
@@ -307,7 +340,7 @@ final class WebClient implements WebClientInterface
                 'unit' => 'kg',
             ],
             'dimensions' => [],
-            'template' => 'large',
+            'template' => $template,
             'tracking_number' => null,
             'is_non_standard' => false,
         ];
@@ -330,7 +363,7 @@ final class WebClient implements WebClientInterface
             'Street "%s" is invalid. The street format must be something like %s, where %d is the house number.',
             $street,
             '"Opolska 45"',
-            45
+            45,
         ));
 
         return end($streetParts);
