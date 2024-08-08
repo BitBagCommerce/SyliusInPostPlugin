@@ -73,7 +73,7 @@ final class ShippingExportEventListener
 
         if (null === $shippingExport->getExternalId()) {
             try {
-                $createShipmentResponse = $this->webClient->createShipment($shipment);
+                $createShipmentResponse = $this->webClient->createShipment($shipment, $shippingExport);
             } catch (InPostException $exception) {
                 $this->requestStack->getSession()->getBag('flashes')->add('error', 'bitbag.ui.shipping_export_error');
                 $this->logError($exception, $shipment);

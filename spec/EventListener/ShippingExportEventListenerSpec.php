@@ -128,7 +128,7 @@ final class ShippingExportEventListenerSpec extends ObjectBehavior
         $event->getSubject()->willReturn($shippingExport);
 
         $webClient->setShippingGateway($shippingGateway);
-        $webClient->createShipment($shipment)->willThrow(InvalidInPostResponseException::class);
+        $webClient->createShipment($shipment, $shippingExport)->willThrow(InvalidInPostResponseException::class);
         $requestStack->getSession()->willReturn($session);
         $session->getBag('flashes')->willReturn($flashBag);
         $flashBag->add(self::ERROR, self::SHIPPING_EXPORT_ERROR_MESSAGE)->shouldBeCalled();
@@ -155,7 +155,7 @@ final class ShippingExportEventListenerSpec extends ObjectBehavior
         $event->getSubject()->willReturn($shippingExport);
 
         $webClient->setShippingGateway($shippingGateway);
-        $webClient->createShipment($shipment)->willReturn(self::EXPECTED_CREATE_SHIPMENT_RESPONSE);
+        $webClient->createShipment($shipment, $shippingExport)->willReturn(self::EXPECTED_CREATE_SHIPMENT_RESPONSE);
         $webClient->getShipmentById(self::SHIPMENT_ID)->willThrow(InvalidInPostResponseException::class);
         $requestStack->getSession()->willReturn($session);
         $session->getBag('flashes')->willReturn($flashBag);
@@ -184,7 +184,7 @@ final class ShippingExportEventListenerSpec extends ObjectBehavior
         $event->getSubject()->willReturn($shippingExport);
 
         $webClient->setShippingGateway($shippingGateway);
-        $webClient->createShipment($shipment)->willReturn(self::EXPECTED_CREATE_SHIPMENT_RESPONSE);
+        $webClient->createShipment($shipment, $shippingExport)->willReturn(self::EXPECTED_CREATE_SHIPMENT_RESPONSE);
         $webClient->getShipmentById(self::SHIPMENT_ID)->willReturn(self::EXPECTED_GET_SHIPMENT_RESPONSE);
         $shippingExportActionProvider->provide(Argument::type('string'))->willThrow(\Exception::class);
         $requestStack->getSession()->willReturn($session);
@@ -210,7 +210,7 @@ final class ShippingExportEventListenerSpec extends ObjectBehavior
         $event->getSubject()->willReturn($shippingExport);
 
         $webClient->setShippingGateway($shippingGateway);
-        $webClient->createShipment($shipment)->willReturn(self::EXPECTED_CREATE_SHIPMENT_RESPONSE);
+        $webClient->createShipment($shipment, $shippingExport)->willReturn(self::EXPECTED_CREATE_SHIPMENT_RESPONSE);
         $webClient->getShipmentById(self::SHIPMENT_ID)->willReturn(self::EXPECTED_GET_SHIPMENT_RESPONSE);
         $shippingExportActionProvider->provide(Argument::type('string'))->willReturn($shippingExportAction);
         $shippingExportAction->execute($shippingExport)->shouldBeCalled();
