@@ -43,6 +43,26 @@ bitbag_shipping_export_plugin.yaml to the config/packages and config/routes dire
 It also adding the appropriate entry to config/bundles.php.
 If it doesn't, so please remember to do the same as above for SyliusShippingExportPlugin configuration.
 
+Add after <b>@BitBagSyliusShippingExportPlugin</b> import:
+```yaml
+# config/packages/bitbag_shipping_export_plugin.yaml
+imports:
+    - { resource: "@BitBagSyliusShippingExportPlugin/Resources/config/config.yml" }
+
+sylius_resource:
+    resources:
+        bitbag.shipping_export:
+            classes:
+                model: App\Entity\Shipping\ShippingExport
+                controller: BitBag\SyliusInPostPlugin\Controller\ShippingExportController
+
+```
+Remember that in case of different mapping, the model path may be different.
+Default:
+```yaml
+                model: App\Entity\ShippingExport
+```
+
 ### Extend entities with parameters
 
 You can implement this using xml-mapping or attributes. Instructions for both settings are described below.
@@ -101,6 +121,22 @@ class ShippingMethod extends BaseShippingMethod implements ImageAwareInterface
     use ShippingMethodImageTrait;
 }
 ```
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Entity;
+
+use BitBag\SyliusInPostPlugin\Entity\ShippingExportInterface;
+use BitBag\SyliusInPostPlugin\Model\ParcelTemplateTrait;
+use BitBag\SyliusShippingExportPlugin\Entity\ShippingExport as BaseShippingExport;
+
+class ShippingExport extends BaseShippingExport implements ShippingExportInterface
+{
+    use ParcelTemplateTrait;
+}
+```
 Remember to mark it appropriately in the config/doctrine.yaml configuration file.
 ```
 doctrine:
@@ -118,10 +154,9 @@ Define new Entity mapping inside your src/Resources/config/doctrine directory.
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 
-<doctrine-mapping
-        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                             http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd"
 >
     <entity name="App\Entity\Order" table="sylius_order">
@@ -153,6 +188,19 @@ Define new Entity mapping inside your src/Resources/config/doctrine directory.
             </cascade>
             <join-column name="image_id" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
         </one-to-one>
+    </entity>
+</doctrine-mapping>
+```
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                                      http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    
+    <entity name="App\Entity\ShippingExport" table="bitbag_shipping_export">
+        <field name="parcel_template" nullable="true" />
     </entity>
 </doctrine-mapping>
 ```
@@ -239,8 +287,43 @@ class ShippingMethod extends BaseShippingMethod implements ImageAwareInterface
     {
         $this->image = $image;
     }
+    
+    // other methods
 }
 
+```
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Entity\Shipping;
+
+use BitBag\SyliusInPostPlugin\Entity\ShippingExportInterface;
+use BitBag\SyliusShippingExportPlugin\Entity\ShippingExport as BaseShippingExport;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="bitbag_shipping_export")
+ */
+#[ORM\Entity]
+#[ORM\Table(name: 'bitbag_shipping_export')]
+class ShippingExport extends BaseShippingExport implements ShippingExportInterface
+{
+    #[ORM\Column(type: 'string', nullable: true)]
+    protected ?string $parcel_template = null;
+
+    public function getParcelTemplate(): ?string
+    {
+        return $this->parcel_template;
+    }
+
+    public function setParcelTemplate(?string $parcel_template): void
+    {
+        $this->parcel_template = $parcel_template;
+    }
+}
 ```
 Finish the installation by updating the database schema (check in advance: [Known Issues](known_issues.md)):
 
