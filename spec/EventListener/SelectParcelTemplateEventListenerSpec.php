@@ -64,9 +64,6 @@ final class SelectParcelTemplateEventListenerSpec extends ObjectBehavior
         ;
     }
 
-    /**
-     * @throws \Exception
-     */
     public function it_should_perform_set_parcel_template_action(ResourceControllerEvent $event): void
     {
         $shippingGateway = ShippingGatewayBuilder::create()->withCode(self::INPOST)->build();
