@@ -43,9 +43,93 @@ bitbag_shipping_export_plugin.yaml to the config/packages and config/routes dire
 It also adding the appropriate entry to config/bundles.php.
 If it doesn't, so please remember to do the same as above for SyliusShippingExportPlugin configuration.
 
-Add after <b>@BitBagSyliusShippingExportPlugin</b> import:
+### Create a new controller:
+```php
+// src/Controller/ShippingExportController
+
+<?php
+
+declare(strict_types=1);
+
+namespace App\Controller;
+
+use BitBag\SyliusInPostPlugin\Controller\SelectParcelTemplateTrait;
+use BitBag\SyliusShippingExportPlugin\Event\ExportShipmentEvent;
+use BitBag\SyliusShippingExportPlugin\Repository\ShippingExportRepositoryInterface;
+use Sylius\Bundle\ResourceBundle\Controller\ResourceController;
+use Sylius\Component\Resource\Model\ResourceInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Webmozart\Assert\Assert;
+
+final class ShippingExportController extends ResourceController
+{
+    public const SELECT_PARCEL_TEMPLATE_EVENT = 'export_shipping_select_parcel_template';
+
+    use SelectParcelTemplateTrait;
+
+    public function exportAllNewShipmentsAction(Request $request): RedirectResponse
+    {
+        $configuration = $this->requestConfigurationFactory->create($this->metadata, $request);
+
+        Assert::implementsInterface($this->repository, ShippingExportRepositoryInterface::class);
+        $shippingExports = $this->repository->findAllWithNewOrPendingState();
+
+        if (0 === count($shippingExports)) {
+            /** @var FlashBagInterface $flashBag */
+            $flashBag = $request->getSession()->getBag('flashes');
+            $flashBag->add('error', 'bitbag.ui.no_new_shipments_to_export');
+
+            return $this->redirectToReferer($request);
+        }
+
+        foreach ($shippingExports as $shippingExport) {
+            $this->eventDispatcher->dispatch(
+                ExportShipmentEvent::SHORT_NAME,
+                $configuration,
+                $shippingExport,
+            );
+        }
+
+        return $this->redirectToReferer($request);
+    }
+
+    public function exportSingleShipmentAction(Request $request): RedirectResponse
+    {
+        $configuration = $this->requestConfigurationFactory->create($this->metadata, $request);
+
+        /** @var ResourceInterface|null $shippingExport */
+        $shippingExport = $this->repository->find($request->get('id'));
+        Assert::notNull($shippingExport);
+
+        $this->eventDispatcher->dispatch(
+            ExportShipmentEvent::SHORT_NAME,
+            $configuration,
+            $shippingExport,
+        );
+
+        return $this->redirectToReferer($request);
+    }
+
+    private function redirectToReferer(Request $request): RedirectResponse
+    {
+        $referer = $request->headers->get('referer');
+        if (null !== $referer) {
+            return new RedirectResponse($referer);
+        }
+
+        return $this->redirectToRoute($request->attributes->get('_route'));
+    }
+}
+
+```
+
+Complete the **config/packages/bitbag_shipping_export_plugin.yaml** file with the following data:
+
 ```yaml
 # config/packages/bitbag_shipping_export_plugin.yaml
+
 imports:
     - { resource: "@BitBagSyliusShippingExportPlugin/Resources/config/config.yml" }
 
@@ -54,7 +138,7 @@ sylius_resource:
         bitbag.shipping_export:
             classes:
                 model: App\Entity\Shipping\ShippingExport
-                controller: BitBag\SyliusInPostPlugin\Controller\ShippingExportController
+                controller: App\Controller\ShippingExportController
 
 ```
 Remember that in case of different mapping, the model path may be different.
@@ -325,6 +409,7 @@ class ShippingExport extends BaseShippingExport implements ShippingExportInterfa
     }
 }
 ```
+
 Finish the installation by updating the database schema (check in advance: [Known Issues](known_issues.md)):
 
 ```

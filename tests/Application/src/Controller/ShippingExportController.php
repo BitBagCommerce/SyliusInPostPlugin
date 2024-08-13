@@ -9,8 +9,9 @@
 
 declare(strict_types=1);
 
-namespace BitBag\SyliusInPostPlugin\Controller;
+namespace Tests\BitBag\SyliusInPostPlugin\Application\src\Controller;
 
+use BitBag\SyliusInPostPlugin\Controller\SelectParcelTemplateTrait;
 use BitBag\SyliusShippingExportPlugin\Event\ExportShipmentEvent;
 use BitBag\SyliusShippingExportPlugin\Repository\ShippingExportRepositoryInterface;
 use Sylius\Bundle\ResourceBundle\Controller\ResourceController;
@@ -23,6 +24,8 @@ use Webmozart\Assert\Assert;
 final class ShippingExportController extends ResourceController
 {
     public const SELECT_PARCEL_TEMPLATE_EVENT = 'export_shipping_select_parcel_template';
+
+    use SelectParcelTemplateTrait;
 
     public function exportAllNewShipmentsAction(Request $request): RedirectResponse
     {
@@ -60,24 +63,6 @@ final class ShippingExportController extends ResourceController
 
         $this->eventDispatcher->dispatch(
             ExportShipmentEvent::SHORT_NAME,
-            $configuration,
-            $shippingExport,
-        );
-
-        return $this->redirectToReferer($request);
-    }
-
-    public function selectParcelTemplate(Request $request): RedirectResponse
-    {
-        $configuration = $this->requestConfigurationFactory->create($this->metadata, $request);
-
-        /** @var ResourceInterface|null $shippingExport */
-        $shippingExport = $this->repository->find($request->get('id'));
-        Assert::notNull($shippingExport);
-        $shippingExport->setParcelTemplate($request->get('template'));
-
-        $this->eventDispatcher->dispatch(
-            self::SELECT_PARCEL_TEMPLATE_EVENT,
             $configuration,
             $shippingExport,
         );
