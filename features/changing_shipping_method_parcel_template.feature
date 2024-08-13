@@ -24,5 +24,5 @@ Feature: Changing shipping export parcel template
   Scenario: Seeing shipments to export
     When I go to the shipping export page
     Then I should see 1 shipments with "New" state
-    When I select parcel template
+    Then I select parcel template
     Then I should see that shipping export parcel template is set
