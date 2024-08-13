@@ -42,20 +42,22 @@ final class WebClient implements WebClientInterface
 
     private ShippingGatewayInterface $shippingGateway;
 
-    private ?ShippingExportInterface $shippingExport = null;
+    private string $labelType;
 
-    private string $labelType = 'normal';
+    private string $parcelTemplate;
 
     public function __construct(
         ClientInterface $client,
         RequestFactoryInterface $requestFactory,
         StreamFactoryInterface $streamFactory,
         string $labelType,
+        string $parcelTemplate,
     ) {
         $this->apiClient = $client;
         $this->requestFactory = $requestFactory;
         $this->streamFactory = $streamFactory;
         $this->labelType = $labelType;
+        $this->parcelTemplate = $parcelTemplate;
     }
 
     public function setShippingGateway(ShippingGatewayInterface $shippingGateway): WebClientInterface
@@ -154,10 +156,8 @@ final class WebClient implements WebClientInterface
 
     public function createShipment(
         ShipmentInterface $shipment,
-        ?ShippingExportInterface $shippingExport = null,
+        ShippingExportInterface $shippingExport,
     ): array {
-        $this->shippingExport = $shippingExport;
-
         /** @var OrderInterface $order */
         $order = $shipment->getOrder();
 
@@ -168,7 +168,7 @@ final class WebClient implements WebClientInterface
             'external_customer_id' => $customer->getId(),
             'receiver' => $this->createReceiverDetails($order),
             'custom_attributes' => $this->createCustomAttributes($shipment),
-            'parcels' => [$this->createParcel($shipment)],
+            'parcels' => [$this->createParcel($shipment, $shippingExport)],
             'service' => $this->getShippingGatewayConfig('service'),
             'additional_services' => $this->getAdditionalServices(),
             'reference' => 'Order: ' . $order->getNumber(),
@@ -326,12 +326,10 @@ final class WebClient implements WebClientInterface
 
     private function createParcel(
         ShipmentInterface $shipment,
+        ShippingExportInterface $shippingExport,
     ): array {
         $weight = $shipment->getShippingWeight();
-        $template = 'large';
-        if (null !== $this->shippingExport) {
-            $template = $this->shippingExport->getParcelTemplate();
-        }
+        $template = $shippingExport->getParcelTemplate();
 
         return [
             'id' => $shipment->getId(),
@@ -340,7 +338,7 @@ final class WebClient implements WebClientInterface
                 'unit' => 'kg',
             ],
             'dimensions' => [],
-            'template' => $template,
+            'template' => $template ?? $this->parcelTemplate,
             'tracking_number' => null,
             'is_non_standard' => false,
         ];

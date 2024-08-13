@@ -52,7 +52,8 @@ final class ShippingExportEventListenerSpec extends ObjectBehavior
         WebClientInterface $webClient,
         InPostShippingExportActionProviderInterface $shippingExportActionProvider,
         RequestStack $requestStack,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+
     ): void {
         $this->beConstructedWith($webClient, $shippingExportActionProvider, $requestStack, $logger);
     }

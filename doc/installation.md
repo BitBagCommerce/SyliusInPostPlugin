@@ -423,6 +423,24 @@ By a standard, the `webpack.config.js` file should be available in your reposito
     ```
 
 
+## Default parameters configuration
+In the .env file, the default parcel size and label type can be specified by adding:
+
+````
+BITBAG_INPOST_DEFAULT_PARCEL_TEMPLATE='medium'
+BITBAG_INPOST_DEFAULT_LABEL_TYPE='normal'
+````
+
+Three types of parcel templates are allowed:
+- 'small'
+- 'medium'
+- 'large'
+
+Two types of labels are allowed:
+- 'normal'
+- 'A6'
+
+
 ## Testing & running the plugin
 
 ```bash

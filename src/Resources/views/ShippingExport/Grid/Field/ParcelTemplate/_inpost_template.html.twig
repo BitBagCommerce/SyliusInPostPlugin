@@ -1,10 +1,6 @@
 {% set parcelTemplate = data.getParcelTemplate %}
-
 {% if parcelTemplate is null %}
-    <span class="ui label">
-        {{ 'bitbag_sylius_inpost_plugin.ui.parcel_template.select_template'|trans }}
-    </span>
-    <div class="ui divider"></div>
+    {% set parcelTemplate = bitbag_inpost_parcel_template %}
 {% endif %}
 
 {% set templates = {} %}

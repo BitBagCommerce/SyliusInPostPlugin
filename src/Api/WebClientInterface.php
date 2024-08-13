@@ -79,7 +79,7 @@ interface WebClientInterface
 
     public function getAuthorizedHeaderWithContentType(): array;
 
-    public function createShipment(ShipmentInterface $shipment, ?ShippingExportInterface $shippingExport = null): array;
+    public function createShipment(ShipmentInterface $shipment, ShippingExportInterface $shippingExport): array;
 
     public function request(
         string $method,
