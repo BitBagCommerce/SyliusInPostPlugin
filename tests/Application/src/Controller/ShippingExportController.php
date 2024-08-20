@@ -23,7 +23,7 @@ use Webmozart\Assert\Assert;
 
 final class ShippingExportController extends ResourceController
 {
-    public const SELECT_PARCEL_TEMPLATE_EVENT = 'export_shipping_select_parcel_template';
+    public const SELECT_PARCEL_TEMPLATE_EVENT = 'select_parcel_template';
 
     use SelectParcelTemplateTrait;
 
