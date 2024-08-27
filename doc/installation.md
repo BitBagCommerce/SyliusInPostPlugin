@@ -122,7 +122,6 @@ final class ShippingExportController extends ResourceController
         return $this->redirectToRoute($request->attributes->get('_route'));
     }
 }
-
 ```
 
 Complete the **config/packages/bitbag_shipping_export_plugin.yaml** file with the following data:
@@ -139,7 +138,6 @@ sylius_resource:
             classes:
                 model: App\Entity\Shipping\ShippingExport
                 controller: App\Controller\ShippingExportController
-
 ```
 Remember that in case of different mapping, the model path may be different.
 Default:
@@ -167,7 +165,6 @@ sylius_shipping:
         shipping_method:
             classes:
                 model: App\Entity\ShippingMethod
-
 ```
 
 Add trait and interface to your Order and ShippingMethod entity classes:
@@ -298,7 +295,6 @@ doctrine:
             App:
                 ...
                 type: attribute
-
 ```
 ```php
 <?php
@@ -335,7 +331,6 @@ class Order extends BaseOrder implements InPostPointsAwareInterface
         $this->point = $point;
     }
 }
-
 ```
 
 ```php
@@ -371,10 +366,9 @@ class ShippingMethod extends BaseShippingMethod implements ImageAwareInterface
     {
         $this->image = $image;
     }
-    
+
     // other methods
 }
-
 ```
 ```php
 <?php
@@ -441,10 +435,7 @@ vendor/bitbag/inpost-plugin/tests/Application/templates/bundles/SyliusShopBundle
     webpack_encore:
         output_path: '%kernel.project_dir%/public/build/default'
         builds:
-            admin: '%kernel.project_dir%/public/build/admin'
-            shop: '%kernel.project_dir%/public/build/shop'
-            app.admin: '%kernel.project_dir%/public/build/app/admin'
-            app.shop: '%kernel.project_dir%/public/build/app/shop'
+            ...
             inpost_admin: '%kernel.project_dir%/public/build/bitbag/inpost/admin'
             inpost_shop: '%kernel.project_dir%/public/build/bitbag/inpost/shop'
     ```
@@ -485,14 +476,7 @@ By a standard, the `webpack.config.js` file should be available in your reposito
     framework:
         assets:
             packages:
-                admin:
-                    json_manifest_path: '%kernel.project_dir%/public/build/admin/manifest.json'
-                shop:
-                    json_manifest_path: '%kernel.project_dir%/public/build/shop/manifest.json'
-                app.admin:
-                    json_manifest_path: '%kernel.project_dir%/public/build/app/admin/manifest.json'
-                app.shop:
-                    json_manifest_path: '%kernel.project_dir%/public/build/app/shop/manifest.json'
+                ...
                 inpost_shop:
                     json_manifest_path: '%kernel.project_dir%/public/build/bitbag/inpost/shop/manifest.json'
                 inpost_admin:

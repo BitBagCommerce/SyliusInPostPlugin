@@ -30,7 +30,6 @@ final class WebClientSpec extends ObjectBehavior
 
     public const PARCEL_TEMPLATE = "medium";
 
-
     public function let(
         ClientInterface $client,
         RequestFactoryInterface $requestFactory,
