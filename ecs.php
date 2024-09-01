@@ -1,14 +1,13 @@
 <?php
 
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-use Symplify\EasyCodingStandard\ValueObject\Option;
+declare(strict_types=1);
 
-return static function (ContainerConfigurator $containerConfigurator): void {
-    $containerConfigurator->import('vendor/bitbag/coding-standard/ecs.php');
+use Symplify\EasyCodingStandard\Config\ECSConfig;
 
-    $parameters = $containerConfigurator->parameters();
-    $parameters->set(Option::PATHS, [
-        __DIR__ . '/src',
-        __DIR__ . '/tests',
-    ]);
+return static function (ECSConfig $config): void {
+
+    putenv('ALLOW_BITBAG_OS_HEADER=1');
+
+    $config->import('vendor/bitbag/coding-standard/ecs.php');
+    $config->paths(['src', 'tests']);
 };

@@ -1,10 +1,11 @@
 <?php
 
 /*
- * This file was created by developers working at BitBag
- * Do you need more information about us and what we do? Visit our https://bitbag.io website!
- * We are hiring developers from all over the world. Join us and start your new, exciting adventure and become part of us: https://bitbag.io/career
-*/
+ * This file has been created by developers from BitBag.
+ * Feel free to contact us once you face any issues or want to start
+ * You can find more information about us on https://bitbag.io and write us
+ * an email on hello@bitbag.io.
+ */
 
 declare(strict_types=1);
 
@@ -12,9 +13,9 @@ namespace BitBag\SyliusInPostPlugin\EventListener;
 
 use BitBag\SyliusInPostPlugin\Api\WebClientInterface;
 use BitBag\SyliusInPostPlugin\EventListener\ShippingExportEventListener\InPostShippingExportActionProviderInterface;
+use BitBag\SyliusInPostPlugin\Exception\InPostException;
 use BitBag\SyliusShippingExportPlugin\Entity\ShippingExportInterface;
 use BitBag\SyliusShippingExportPlugin\Entity\ShippingGatewayInterface;
-use GuzzleHttp\Exception\ClientException;
 use Psr\Log\LoggerInterface;
 use Sylius\Bundle\ResourceBundle\Event\ResourceControllerEvent;
 use Sylius\Component\Core\Model\ShipmentInterface;
@@ -43,7 +44,7 @@ final class ShippingExportEventListener
         WebClientInterface $webClient,
         InPostShippingExportActionProviderInterface $shippingExportActionProvider,
         RequestStack $requestStack,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->webClient = $webClient;
         $this->shippingExportActionProvider = $shippingExportActionProvider;
@@ -73,7 +74,7 @@ final class ShippingExportEventListener
         if (null === $shippingExport->getExternalId()) {
             try {
                 $createShipmentResponse = $this->webClient->createShipment($shipment);
-            } catch (ClientException $exception) {
+            } catch (InPostException $exception) {
                 $this->requestStack->getSession()->getBag('flashes')->add('error', 'bitbag.ui.shipping_export_error');
                 $this->logError($exception, $shipment);
 
@@ -85,7 +86,7 @@ final class ShippingExportEventListener
 
         try {
             $shipmentData = $this->webClient->getShipmentById((int) ($shippingExport->getExternalId()));
-        } catch (ClientException $exception) {
+        } catch (InPostException $exception) {
             $this->requestStack->getSession()->getBag('flashes')->add('error', 'bitbag.ui.shipping_export_error');
             $this->logError($exception, $shipment);
 
@@ -118,7 +119,7 @@ final class ShippingExportEventListener
             '%s %s: %s',
             '[InPostPlugin] Error while exporting shipment for order number',
             $order->getNumber(),
-            $exception->getMessage()
+            $exception->getMessage(),
         );
 
         $this->logger->error($message);
