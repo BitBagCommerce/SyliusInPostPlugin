@@ -12,6 +12,14 @@ solution will be added to this section.
 
 - - - -
 
+### Map doesn't load in checkout
+
+The inpost shipping methods have to have "inpost" or "inpost_point" code. The "inpost_point" stands for the package lockers. If you set it up, the map will appear.
+
+### The package locker doesn't store to the order
+
+You probably have misconfigured doctrine. During installation there is a section related to adding association fields to `Order` and `ShippingMethod` endities. Your doctrine configuration type is probably different than the method you used to put them to the entities.
+
 ### Pagerfanta error when executing sylius:theme:assets:install --symlink ###
 
 `Failed to copy "vendor/babdev/pagerfanta-bundle/Resources/public/css/pagerfantaDefault.css" because file does not exist`
