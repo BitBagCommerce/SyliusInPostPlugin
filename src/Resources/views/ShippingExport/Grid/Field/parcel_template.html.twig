@@ -1,0 +1,5 @@
+{% if data.getShippingGateway.getName == 'INPOST_PL' %}
+    {% include '@BitBagSyliusInPostPlugin/ShippingExport/Grid/Field/ParcelTemplate/_inpost_template.html.twig' %}
+{% else %}
+    <i class="minus icon"></i>
+{% endif %}

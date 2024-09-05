@@ -11,3 +11,11 @@ services:
         public: false
         arguments:
             - 'bitbag_admin_shipping_method_update'
+            
+    bitbag.sylius_inpost_plugin.behat.page.admin.shipping_export.index:
+        class: Tests\BitBag\SyliusInPostPlugin\Behat\Page\Admin\ShippingExport\IndexPage
+        parent: bitbag.behat.page.admin.shipping_export.index
+        public: false
+        arguments:
+            - 'bitbag_admin_shipping_export_select_parcel_template'
+

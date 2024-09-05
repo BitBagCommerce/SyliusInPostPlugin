@@ -43,6 +43,108 @@ bitbag_shipping_export_plugin.yaml to the config/packages and config/routes dire
 It also adding the appropriate entry to config/bundles.php.
 If it doesn't, so please remember to do the same as above for SyliusShippingExportPlugin configuration.
 
+### Create a new controller:
+```php
+// src/Controller/ShippingExportController
+
+<?php
+
+declare(strict_types=1);
+
+namespace App\Controller;
+
+use BitBag\SyliusInPostPlugin\Controller\SelectParcelTemplateTrait;
+use BitBag\SyliusShippingExportPlugin\Event\ExportShipmentEvent;
+use BitBag\SyliusShippingExportPlugin\Repository\ShippingExportRepositoryInterface;
+use Sylius\Bundle\ResourceBundle\Controller\ResourceController;
+use Sylius\Component\Resource\Model\ResourceInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Webmozart\Assert\Assert;
+
+final class ShippingExportController extends ResourceController
+{
+    public const SELECT_PARCEL_TEMPLATE_EVENT = 'select_parcel_template';
+
+    use SelectParcelTemplateTrait;
+
+    public function exportAllNewShipmentsAction(Request $request): RedirectResponse
+    {
+        $configuration = $this->requestConfigurationFactory->create($this->metadata, $request);
+
+        Assert::implementsInterface($this->repository, ShippingExportRepositoryInterface::class);
+        $shippingExports = $this->repository->findAllWithNewOrPendingState();
+
+        if (0 === count($shippingExports)) {
+            /** @var FlashBagInterface $flashBag */
+            $flashBag = $request->getSession()->getBag('flashes');
+            $flashBag->add('error', 'bitbag.ui.no_new_shipments_to_export');
+
+            return $this->redirectToReferer($request);
+        }
+
+        foreach ($shippingExports as $shippingExport) {
+            $this->eventDispatcher->dispatch(
+                ExportShipmentEvent::SHORT_NAME,
+                $configuration,
+                $shippingExport,
+            );
+        }
+
+        return $this->redirectToReferer($request);
+    }
+
+    public function exportSingleShipmentAction(Request $request): RedirectResponse
+    {
+        $configuration = $this->requestConfigurationFactory->create($this->metadata, $request);
+
+        /** @var ResourceInterface|null $shippingExport */
+        $shippingExport = $this->repository->find($request->get('id'));
+        Assert::notNull($shippingExport);
+
+        $this->eventDispatcher->dispatch(
+            ExportShipmentEvent::SHORT_NAME,
+            $configuration,
+            $shippingExport,
+        );
+
+        return $this->redirectToReferer($request);
+    }
+
+    private function redirectToReferer(Request $request): RedirectResponse
+    {
+        $referer = $request->headers->get('referer');
+        if (null !== $referer) {
+            return new RedirectResponse($referer);
+        }
+
+        return $this->redirectToRoute($request->attributes->get('_route'));
+    }
+}
+```
+
+Complete the **config/packages/bitbag_shipping_export_plugin.yaml** file with the following data:
+
+```yaml
+# config/packages/bitbag_shipping_export_plugin.yaml
+
+imports:
+    - { resource: "@BitBagSyliusShippingExportPlugin/Resources/config/config.yml" }
+
+sylius_resource:
+    resources:
+        bitbag.shipping_export:
+            classes:
+                model: App\Entity\Shipping\ShippingExport
+                controller: App\Controller\ShippingExportController
+```
+Remember that in case of different mapping, the model path may be different.
+Default:
+```yaml
+                model: App\Entity\ShippingExport
+```
+
 ### Extend entities with parameters
 
 You can implement this using xml-mapping or attributes. Instructions for both settings are described below.
@@ -63,7 +165,6 @@ sylius_shipping:
         shipping_method:
             classes:
                 model: App\Entity\ShippingMethod
-
 ```
 
 Add trait and interface to your Order and ShippingMethod entity classes:
@@ -101,6 +202,22 @@ class ShippingMethod extends BaseShippingMethod implements ImageAwareInterface
     use ShippingMethodImageTrait;
 }
 ```
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Entity;
+
+use BitBag\SyliusInPostPlugin\Entity\ShippingExportInterface;
+use BitBag\SyliusInPostPlugin\Model\ParcelTemplateTrait;
+use BitBag\SyliusShippingExportPlugin\Entity\ShippingExport as BaseShippingExport;
+
+class ShippingExport extends BaseShippingExport implements ShippingExportInterface
+{
+    use ParcelTemplateTrait;
+}
+```
 Remember to mark it appropriately in the config/doctrine.yaml configuration file.
 ```
 doctrine:
@@ -118,10 +235,9 @@ Define new Entity mapping inside your src/Resources/config/doctrine directory.
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 
-<doctrine-mapping
-        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                             http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd"
 >
     <entity name="App\Entity\Order" table="sylius_order">
@@ -156,6 +272,19 @@ Define new Entity mapping inside your src/Resources/config/doctrine directory.
     </entity>
 </doctrine-mapping>
 ```
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                                      http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    
+    <entity name="App\Entity\ShippingExport" table="bitbag_shipping_export">
+        <field name="parcel_template" nullable="true" />
+    </entity>
+</doctrine-mapping>
+```
 #### You can do it with attributes if you prefer. Remember to mark it appropriately in the config/doctrine.yaml configuration file.
 ```
 doctrine:
@@ -166,7 +295,6 @@ doctrine:
             App:
                 ...
                 type: attribute
-
 ```
 ```php
 <?php
@@ -203,7 +331,6 @@ class Order extends BaseOrder implements InPostPointsAwareInterface
         $this->point = $point;
     }
 }
-
 ```
 
 ```php
@@ -239,9 +366,44 @@ class ShippingMethod extends BaseShippingMethod implements ImageAwareInterface
     {
         $this->image = $image;
     }
-}
 
+    // other methods
+}
 ```
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Entity\Shipping;
+
+use BitBag\SyliusInPostPlugin\Entity\ShippingExportInterface;
+use BitBag\SyliusShippingExportPlugin\Entity\ShippingExport as BaseShippingExport;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="bitbag_shipping_export")
+ */
+#[ORM\Entity]
+#[ORM\Table(name: 'bitbag_shipping_export')]
+class ShippingExport extends BaseShippingExport implements ShippingExportInterface
+{
+    #[ORM\Column(type: 'string', nullable: true)]
+    protected ?string $parcel_template = null;
+
+    public function getParcelTemplate(): ?string
+    {
+        return $this->parcel_template;
+    }
+
+    public function setParcelTemplate(?string $parcel_template): void
+    {
+        $this->parcel_template = $parcel_template;
+    }
+}
+```
+
 Finish the installation by updating the database schema (check in advance: [Known Issues](known_issues.md)):
 
 ```
@@ -273,10 +435,7 @@ vendor/bitbag/inpost-plugin/tests/Application/templates/bundles/SyliusShopBundle
     webpack_encore:
         output_path: '%kernel.project_dir%/public/build/default'
         builds:
-            admin: '%kernel.project_dir%/public/build/admin'
-            shop: '%kernel.project_dir%/public/build/shop'
-            app.admin: '%kernel.project_dir%/public/build/app/admin'
-            app.shop: '%kernel.project_dir%/public/build/app/shop'
+            ...
             inpost_admin: '%kernel.project_dir%/public/build/bitbag/inpost/admin'
             inpost_shop: '%kernel.project_dir%/public/build/bitbag/inpost/shop'
     ```
@@ -317,14 +476,7 @@ By a standard, the `webpack.config.js` file should be available in your reposito
     framework:
         assets:
             packages:
-                admin:
-                    json_manifest_path: '%kernel.project_dir%/public/build/admin/manifest.json'
-                shop:
-                    json_manifest_path: '%kernel.project_dir%/public/build/shop/manifest.json'
-                app.admin:
-                    json_manifest_path: '%kernel.project_dir%/public/build/app/admin/manifest.json'
-                app.shop:
-                    json_manifest_path: '%kernel.project_dir%/public/build/app/shop/manifest.json'
+                ...
                 inpost_shop:
                     json_manifest_path: '%kernel.project_dir%/public/build/bitbag/inpost/shop/manifest.json'
                 inpost_admin:
@@ -338,6 +490,24 @@ By a standard, the `webpack.config.js` file should be available in your reposito
     $ yarn install
     $ yarn encore dev # or prod, depends on your environment
     ```
+
+
+## Default parameters configuration
+In the .env file, the default parcel size and label type can be specified by adding:
+
+````
+BITBAG_INPOST_DEFAULT_PARCEL_TEMPLATE='medium'
+BITBAG_INPOST_DEFAULT_LABEL_TYPE='normal'
+````
+
+Three types of parcel templates are allowed:
+- 'small'
+- 'medium'
+- 'large'
+
+Two types of labels are allowed:
+- 'normal'
+- 'A6'
 
 
 ## Testing & running the plugin

@@ -28,13 +28,15 @@ final class WebClientSpec extends ObjectBehavior
 
     public const LABEL_TYPE = "normal";
 
+    public const PARCEL_TEMPLATE = "medium";
+
     public function let(
         ClientInterface $client,
         RequestFactoryInterface $requestFactory,
         StreamFactoryInterface $streamFactory,
     ): void
     {
-        $this->beConstructedWith($client, $requestFactory, $streamFactory, self::LABEL_TYPE);
+        $this->beConstructedWith($client, $requestFactory, $streamFactory, self::LABEL_TYPE, self::PARCEL_TEMPLATE);
     }
 
     public function it_is_initializable(): void

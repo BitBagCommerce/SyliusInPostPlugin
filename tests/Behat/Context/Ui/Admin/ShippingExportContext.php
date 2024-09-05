@@ -13,7 +13,7 @@ namespace Tests\BitBag\SyliusInPostPlugin\Behat\Context\Ui\Admin;
 
 use Behat\Behat\Context\Context;
 use Tests\BitBag\SyliusInPostPlugin\Behat\Mocker\InPostApiMocker;
-use Tests\BitBag\SyliusShippingExportPlugin\Behat\Page\Admin\ShippingExport\IndexPageInterface;
+use Tests\BitBag\SyliusInPostPlugin\Behat\Page\Admin\ShippingExport\IndexPageInterface;
 
 final class ShippingExportContext implements Context
 {
@@ -47,5 +47,21 @@ final class ShippingExportContext implements Context
         $this->inPostApiMocker->performActionInApiSuccessfulScope(function () {
             $this->indexPage->exportFirsShipment();
         });
+    }
+
+    /**
+     * @When I select parcel template
+     */
+    public function iSelectParcelTemplate(): void
+    {
+        $this->indexPage->selectParcelTemplate();
+    }
+
+    /**
+     * @Then I should see that shipping export parcel template is set
+     */
+    public function iCheckParcelTemplate(): void
+    {
+        $this->indexPage->checkParcelTemplate();
     }
 }

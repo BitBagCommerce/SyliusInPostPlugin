@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusInPostPlugin\Api;
 
+use BitBag\SyliusInPostPlugin\Entity\ShippingExportInterface;
 use BitBag\SyliusShippingExportPlugin\Entity\ShippingGatewayInterface;
 use Sylius\Component\Core\Model\ShipmentInterface;
 
@@ -78,7 +79,7 @@ interface WebClientInterface
 
     public function getAuthorizedHeaderWithContentType(): array;
 
-    public function createShipment(ShipmentInterface $shipment): array;
+    public function createShipment(ShipmentInterface $shipment, ShippingExportInterface $shippingExport): array;
 
     public function request(
         string $method,

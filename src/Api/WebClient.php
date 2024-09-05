@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace BitBag\SyliusInPostPlugin\Api;
 
 use BitBag\SyliusInPostPlugin\Entity\InPostPoint;
+use BitBag\SyliusInPostPlugin\Entity\ShippingExportInterface;
 use BitBag\SyliusInPostPlugin\Exception\InvalidInPostResponseException;
 use BitBag\SyliusInPostPlugin\Model\InPostPointsAwareInterface;
 use BitBag\SyliusShippingExportPlugin\Entity\ShippingGatewayInterface;
@@ -41,18 +42,22 @@ final class WebClient implements WebClientInterface
 
     private ShippingGatewayInterface $shippingGateway;
 
-    private string $labelType = 'normal';
+    private string $labelType;
+
+    private string $parcelTemplate;
 
     public function __construct(
         ClientInterface $client,
         RequestFactoryInterface $requestFactory,
         StreamFactoryInterface $streamFactory,
         string $labelType,
+        string $parcelTemplate,
     ) {
         $this->apiClient = $client;
         $this->requestFactory = $requestFactory;
         $this->streamFactory = $streamFactory;
         $this->labelType = $labelType;
+        $this->parcelTemplate = $parcelTemplate;
     }
 
     public function setShippingGateway(ShippingGatewayInterface $shippingGateway): WebClientInterface
@@ -149,8 +154,10 @@ final class WebClient implements WebClientInterface
         return $this->request('GET', $url);
     }
 
-    public function createShipment(ShipmentInterface $shipment): array
-    {
+    public function createShipment(
+        ShipmentInterface $shipment,
+        ShippingExportInterface $shippingExport,
+    ): array {
         /** @var OrderInterface $order */
         $order = $shipment->getOrder();
 
@@ -161,7 +168,7 @@ final class WebClient implements WebClientInterface
             'external_customer_id' => $customer->getId(),
             'receiver' => $this->createReceiverDetails($order),
             'custom_attributes' => $this->createCustomAttributes($shipment),
-            'parcels' => [$this->createParcel($shipment)],
+            'parcels' => [$this->createParcel($shipment, $shippingExport)],
             'service' => $this->getShippingGatewayConfig('service'),
             'additional_services' => $this->getAdditionalServices(),
             'reference' => 'Order: ' . $order->getNumber(),
@@ -317,9 +324,12 @@ final class WebClient implements WebClientInterface
         return false;
     }
 
-    private function createParcel(ShipmentInterface $shipment): array
-    {
+    private function createParcel(
+        ShipmentInterface $shipment,
+        ShippingExportInterface $shippingExport,
+    ): array {
         $weight = $shipment->getShippingWeight();
+        $template = $shippingExport->getParcelTemplate();
 
         return [
             'id' => $shipment->getId(),
@@ -328,7 +338,7 @@ final class WebClient implements WebClientInterface
                 'unit' => 'kg',
             ],
             'dimensions' => [],
-            'template' => 'large',
+            'template' => $template ?? $this->parcelTemplate,
             'tracking_number' => null,
             'is_non_standard' => false,
         ];

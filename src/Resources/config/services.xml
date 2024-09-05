@@ -27,6 +27,13 @@
 
             <tag name="kernel.event_listener" event="bitbag.shipping_export.export_shipment" method="exportShipment"/>
         </service>
+        <service
+                class="BitBag\SyliusInPostPlugin\EventListener\SelectParcelTemplateEventListener"
+                id="bitbag.sylius_inpost_plugin.event_listener.inpost_select_parcel_template"
+        >
+            <argument type="service" id="bitbag.sylius_inpost_plugin.select_parcel_template_action"/>
+            <tag name="kernel.event_listener" event="bitbag.shipping_export.select_parcel_template" method="setParcelTemplate"/>
+        </service>
 
         <service
                 class="BitBag\SyliusInPostPlugin\EventListener\ImageUploadListener"
@@ -45,6 +52,7 @@
             <argument type="service" id="sylius.request_factory"/>
             <argument type="service" id="sylius.stream_factory"/>
             <argument>%bitbag.inpost.label_type%</argument>
+            <argument>%bitbag.inpost.parcel_template%</argument>
         </service>
 
         <service
