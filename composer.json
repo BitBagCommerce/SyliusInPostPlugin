@@ -11,7 +11,7 @@
     "require": {
         "php": "^8.0",
         "bitbag/shipping-export-plugin": "^3.0",
-        "sylius/sylius": "~1.12.0 || ~1.13.0"
+        "sylius/sylius": "~1.12 || ~1.13"
     },
     "require-dev": {
         "behat/behat": "^3.7",
@@ -48,8 +48,7 @@
         "twig/twig": "^2.10.0"
     },
     "conflict": {
-        "behat/mink-selenium2-driver": ">=1.7.0",
-        "doctrine/persistence": "<3.0"
+        "behat/mink-selenium2-driver": ">=1.7.0"
     },
     "config": {
         "sort-packages": true,
