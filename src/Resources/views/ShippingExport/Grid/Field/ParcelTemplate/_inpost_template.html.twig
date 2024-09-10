@@ -1,0 +1,31 @@
+{% set parcelTemplate = data.getParcelTemplate %}
+{% if parcelTemplate is null %}
+    {% set parcelTemplate = bitbag_inpost_parcel_template %}
+{% endif %}
+
+{% set templates = {} %}
+{% if data.getShippingGateway.getConfig.service == 'inpost_locker_standard' %}
+    {% set templates = {'small': 'A', 'medium': 'B', 'large': 'C'} %}
+{% else %}
+    {% set templates = {'small': 'A', 'medium': 'B', 'large': 'C', 'xlarge': 'D'} %}
+{% endif %}
+
+<div class="ui buttons">
+    {% for key, label in templates %}
+        {% if parcelTemplate == key %}
+            <button class="ui button primary" data-shipping-export-selected-template>{{ label }}</button>
+        {% else %}
+            {% if data.getExportedAt != null %}
+                <button class="ui button disabled">{{ label }}</button>
+            {% else %}
+                <form action="{{ path('bitbag_admin_shipping_export_select_parcel_template', {'id' : data.id, 'template': key}) }}"
+                      method="POST">
+                    <input type="hidden" name="_method" value="PUT">
+                    <button class="ui button shipping-export-select-template">
+                        {{ label }}
+                    </button>
+                </form>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+</div>

@@ -12,9 +12,9 @@ declare(strict_types=1);
 namespace BitBag\SyliusInPostPlugin\EventListener;
 
 use BitBag\SyliusInPostPlugin\Api\WebClientInterface;
+use BitBag\SyliusInPostPlugin\Entity\ShippingExportInterface;
 use BitBag\SyliusInPostPlugin\EventListener\ShippingExportEventListener\InPostShippingExportActionProviderInterface;
 use BitBag\SyliusInPostPlugin\Exception\InPostException;
-use BitBag\SyliusShippingExportPlugin\Entity\ShippingExportInterface;
 use BitBag\SyliusShippingExportPlugin\Entity\ShippingGatewayInterface;
 use Psr\Log\LoggerInterface;
 use Sylius\Bundle\ResourceBundle\Event\ResourceControllerEvent;
@@ -73,7 +73,7 @@ final class ShippingExportEventListener
 
         if (null === $shippingExport->getExternalId()) {
             try {
-                $createShipmentResponse = $this->webClient->createShipment($shipment);
+                $createShipmentResponse = $this->webClient->createShipment($shipment, $shippingExport);
             } catch (InPostException $exception) {
                 $this->requestStack->getSession()->getBag('flashes')->add('error', 'bitbag.ui.shipping_export_error');
                 $this->logError($exception, $shipment);
