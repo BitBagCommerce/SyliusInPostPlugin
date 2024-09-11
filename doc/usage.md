@@ -50,9 +50,22 @@ Select 'Shipping gateways' from Sylius Admin Panel and add methods for Courier a
 
 ### Exporting shipping data
 
-Select 'Export shipping data' from Sylius Admin Panel
+- Select 'Export shipping data' from Sylius Admin Panel.
 
-Now you can export each shipment or all at once
+Now you can export each shipment or all at once.
+
+> It is possible to select the shipment size (`parcel template`) by clicking on the appropriate button.
+
+The `.env` file can be used to set the default selection for all new shipments.
+```dotenv
+BITBAG_INPOST_DEFAULT_PARCEL_TEMPLATE='medium'
+```
+#### Three types of parcel templates are allowed:
+
+- 'small'
+- 'medium'
+- 'large'
+
 
 <div align="center">
     <img src="./images/shipping_export.png"/>
@@ -61,3 +74,13 @@ Now you can export each shipment or all at once
 ### Printing label
 
 Once your order got exported you can download shipping label
+
+#### Two types of labels are allowed:
+
+- 'normal'
+- 'A6'
+
+Settings can be changed in the `.env` file:
+```dotenv
+BITBAG_INPOST_DEFAULT_LABEL_TYPE='normal'
+```
