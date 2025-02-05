@@ -17,5 +17,5 @@ interface ShippingExportInterface extends BaseShippingExportInterface
 {
     public function getParcelTemplate(): ?string;
 
-    public function setParcelTemplate(?string $parcel_template): void;
+    public function setParcelTemplate(?string $parcelTemplate): void;
 }
