@@ -112,8 +112,8 @@ class ShippingExport extends BaseShippingExport implements ShippingExportInterfa
 {
     use ParcelTemplateTrait;
 
-    #[ORM\Column(type: 'string', nullable: true)]
-    protected ?string $parcel_template = null;
+    #[ORM\Column(name: 'parcel_template', type: 'string', nullable: true)]
+    protected ?string $parcelTemplate = null;
 }
 
 ```

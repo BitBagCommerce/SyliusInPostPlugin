@@ -13,15 +13,15 @@ namespace BitBag\SyliusInPostPlugin\Model;
 
 trait ParcelTemplateTrait
 {
-    protected ?string $parcel_template = null;
+    protected ?string $parcelTemplate = null;
 
     public function getParcelTemplate(): ?string
     {
-        return $this->parcel_template;
+        return $this->parcelTemplate;
     }
 
-    public function setParcelTemplate(?string $parcel_template): void
+    public function setParcelTemplate(?string $parcelTemplate): void
     {
-        $this->parcel_template = $parcel_template;
+        $this->parcelTemplate = $parcelTemplate;
     }
 }
