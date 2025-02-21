@@ -15,7 +15,6 @@ sylius_grid:
                         options:
                             link:
                                 route: sylius_shop_account_order_return
-                    
                     show:
                         type: shop_show
                         label: sylius.ui.show
@@ -32,7 +31,7 @@ sylius_grid:
                                 route: sylius_shop_order_show
                                 parameters:
                                     tokenValue: resource.tokenValue
-        
+
         bitbag_admin_shipping_export:
             fields:
                 order:
@@ -70,7 +69,7 @@ sylius_grid:
                     sortable: ~
                     options:
                         template: "@BitBagSyliusShippingExportPlugin/ShippingExport/Grid/Field/shippingExportLabel.html.twig"
-                parcel_template:
+                parcelTemplate:
                     type: twig
                     label: bitbag_sylius_inpost_plugin.ui.parcel_template.label
                     path: .
