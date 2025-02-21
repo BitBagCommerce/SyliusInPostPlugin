@@ -4,6 +4,6 @@
                                       http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd"
 >
     <entity name="Tests\BitBag\SyliusInPostPlugin\Application\src\Entity\ShippingExport" table="bitbag_shipping_export">
-        <field name="parcel_template" nullable="true" />
+        <field name="parcelTemplate" nullable="true" />
     </entity>
 </doctrine-mapping>

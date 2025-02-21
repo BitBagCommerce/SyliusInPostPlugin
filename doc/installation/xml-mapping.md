@@ -144,7 +144,7 @@ Define new Entity mapping inside `src/Resources/config/doctrine` directory.
                                       http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
     <entity name="App\Entity\ShippingExport" table="bitbag_shipping_export">
-        <field name="parcel_template" nullable="true" />
+        <field name="parcelTemplate" nullable="true" />
     </entity>
 </doctrine-mapping>
 ```
