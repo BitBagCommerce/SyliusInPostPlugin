@@ -1,0 +1,16 @@
+parameters:
+    bitbag.inpost.label_type: '%env(BITBAG_INPOST_DEFAULT_LABEL_TYPE)%'
+    bitbag.inpost.parcel_template: '%env(BITBAG_INPOST_DEFAULT_PARCEL_TEMPLATE)%'
+    env(BITBAG_INPOST_DEFAULT_LABEL_TYPE): 'normal'
+    env(BITBAG_INPOST_DEFAULT_PARCEL_TEMPLATE): 'large'
+
+imports:
+    - { resource: "@BitBagSyliusInPostPlugin/config/services.xml" }
+    - { resource: "@BitBagSyliusInPostPlugin/config/resource/bitbag_inpost.yml" }
+    - { resource: "@BitBagSyliusInPostPlugin/config/grid/*" }
+
+twig:
+    globals:
+        inpost_client: '@bitbag.sylius_inpost_plugin.api.web_client'
+        bitbag_inpost_parcel_template: '%env(BITBAG_INPOST_DEFAULT_PARCEL_TEMPLATE)%'
+

@@ -1,0 +1,35 @@
+{% from '@SyliusAdmin/shared/helper/address.html.twig' import address %}
+
+{{ encore_entry_script_tags('admin-entry', null, 'admin') }}
+
+{% set order = hookable_metadata.context.resource %}
+
+{% set inpostGatewayCode = constant('BitBag\\SyliusInPostPlugin\\EventListener\\ShippingExportEventListener::INPOST_POINT_SHIPPING_GATEWAY_CODE') %}
+
+{% set gatewayCode = '' %}
+
+{% if order.hasShipments %}
+    {% for shipment in order.shipments %}
+        {% if shipment.method is defined and shipment.method is not null %}
+            {% set gatewayCode = shipment.method.code %}
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+{% if gatewayCode is defined and inpostGatewayCode == gatewayCode %}
+    <div id="admin-inpost-wrapper">
+        <h4 class="ui attached styled header inpost-header">
+            {{ 'sylius.ui.shipping_address'|trans }}
+        </h4>
+        {% include "@BitBagSyliusInPostPlugin/Admin/Order/Show/_InPostGeowidget.html.twig" %}
+    </div>
+{% else %}
+    {% if order.shippingAddress is not null %}
+        <div>
+            <strong>{{ 'sylius.ui.shipping_address'|trans }}:</strong>
+        </div>
+        <div class="mb-3" {{ sylius_test_html_attribute('shipping-address') }}>
+            {{ address(order.shippingAddress) }}
+        </div>
+    {% endif %}
+{% endif %}

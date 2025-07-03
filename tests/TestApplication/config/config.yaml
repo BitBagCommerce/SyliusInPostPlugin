@@ -1,0 +1,41 @@
+imports:
+    - { resource: "services_test.php" }
+    - { resource: "twig_hooks.yaml" }
+    - { resource: "bitbag_sylius_shipping_export_plugin.yaml" }
+    - { resource: "../../../config/config.yml" }
+
+parameters:
+    bitbag.shipping_labels_path: '%kernel.project_dir%/shipping_labels'
+
+twig:
+    paths:
+        '%kernel.project_dir%/../../../tests/TestApplication/templates': ~
+
+doctrine:
+    orm:
+        auto_generate_proxy_classes: '%kernel.debug%'
+        naming_strategy: doctrine.orm.naming_strategy.underscore
+        auto_mapping: true
+        mappings:
+            TestBitBagSyliusInPostPlugin:
+                is_bundle: false
+                type: attribute
+                dir: '%kernel.project_dir%/../../../tests/TestApplication/src/Entity'
+                prefix: 'Tests\BitBag\SyliusInPostPlugin'
+
+sylius_order:
+    resources:
+        order:
+            classes:
+                model: Tests\BitBag\SyliusInPostPlugin\Entity\Order\Order
+sylius_resource:
+    resources:
+        bitbag.shipping_export:
+            classes:
+                model: Tests\BitBag\SyliusInPostPlugin\Entity\Shipping\ShippingExport
+
+sylius_shipping:
+    resources:
+        shipping_method:
+            classes:
+                model: Tests\BitBag\SyliusInPostPlugin\Entity\Shipping\ShippingMethod

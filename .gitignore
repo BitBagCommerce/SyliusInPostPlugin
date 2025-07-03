@@ -5,8 +5,9 @@
 /etc/build/*
 !/etc/build/.gitignore
 
-/tests/Application/yarn.lock
-/tests/Application/shipping_labels
+/tests/TestApplication/shipping_labels
+/tests/TestApplication/.env.local
+/tests/TestApplication/.env.*.local
 
 /.phpunit.result.cache
 /behat.yml

@@ -18,7 +18,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 final class ShippingMethodTypeExtension extends AbstractTypeExtension
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('image', ShippingMethodImageType::class, [

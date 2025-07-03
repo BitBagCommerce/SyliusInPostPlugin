@@ -1,6 +1,0 @@
-bitbag_shipping_export_plugin:
-    resource: "@BitBagSyliusShippingExportPlugin/Resources/config/routing.yml"
-    prefix: /admin
-
-bitbag_inpost_plugin:
-    resource: "@BitBagSyliusInPostPlugin/Resources/config/routes.yml"

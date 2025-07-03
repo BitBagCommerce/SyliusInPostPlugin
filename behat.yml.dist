@@ -49,7 +49,7 @@ default:
             bootstrap: tests/Application/config/bootstrap.php
             kernel:
                 debug: true
-                class: Tests\BitBag\SyliusInPostPlugin\Application\Kernel
+                class: Tests\BitBag\SyliusInPostPlugin\TestApplication\Kernel
                 path: tests/Application/Kernel.php
                 environment: test
 

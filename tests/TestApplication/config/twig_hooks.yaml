@@ -1,0 +1,21 @@
+sylius_twig_hooks:
+    hooks:
+        'sylius_shop.base#javascripts':
+            scripts:
+                template: 'shop/shared/layout/base/scripts.html.twig'
+                priority: 0
+
+        'sylius_admin.base#stylesheets':
+            styles:
+                template: 'admin/shared/layout/base/stylesheets.html.twig'
+                priority: 0
+
+        sylius_admin.order.show.content.sections.customer:
+            shipping_address:
+                template: 'admin/order/show/content/sections/customer/shipping_address.html.twig'
+                priority: 200
+
+        sylius_shop.checkout.select_shipping.content.form.shipments.shipment.choice.details:
+            description:
+                template: 'shop/checkout/select_shipping/content/form/shipments/shipment/choice/details/description.html.twig'
+                priority: 0

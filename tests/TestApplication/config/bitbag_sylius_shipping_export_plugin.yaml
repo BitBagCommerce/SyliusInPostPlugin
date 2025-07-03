@@ -1,0 +1,6 @@
+sylius_resource:
+    resources:
+        bitbag.shipping_export:
+            classes:
+                model: Tests\BitBag\SyliusInPostPlugin\Entity\Shipping\ShippingExport
+                controller: Tests\BitBag\SyliusInPostPlugin\Controller\ShippingExportController

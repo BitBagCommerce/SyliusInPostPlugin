@@ -9,9 +9,10 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^8.0",
-        "bitbag/shipping-export-plugin": "^3.0",
-        "sylius/sylius": "~1.12.0 || ~1.13.0"
+        "php": "^8.2",
+        "bitbag/shipping-export-plugin": "^4.0",
+        "sylius/sylius": "^2.0",
+        "sylius/test-application": "2.0.x-dev"
     },
     "require-dev": {
         "behat/behat": "^3.7",
@@ -42,10 +43,10 @@
         "symfony/dotenv": "^5.4 || ^6.0",
         "symfony/intl": "^5.4 || ^6.0",
         "symfony/web-profiler-bundle": "^5.4 || ^6.0",
-        "symfony/webpack-encore-bundle": "^1.14",
-        "league/flysystem-bundle": "2.4.0",
+        "symfony/webpack-encore-bundle": "^2.1",
+        "league/flysystem-bundle": "^3.4",
         "sylius/mailer-bundle":  "^1.8 || ^2.0@beta",
-        "twig/twig": "^2.10.0"
+        "twig/twig": "^3.14"
     },
     "conflict": {
         "behat/mink-selenium2-driver": ">=1.7.0",
@@ -54,10 +55,13 @@
     "config": {
         "sort-packages": true,
         "allow-plugins": {
-            "symfony/thanks": true,
             "composer/package-versions-deprecated": true,
             "dealerdirect/phpcodesniffer-composer-installer": true,
-            "phpstan/extension-installer": true
+            "php-http/discovery": true,
+            "phpstan/extension-installer": true,
+            "symfony/flex": true,
+            "symfony/runtime": true,
+            "symfony/thanks": true
         }
     },
     "autoload": {
@@ -67,11 +71,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\BitBag\\SyliusInPostPlugin\\": "tests/"
-        },
-        "classmap": [
-            "tests/Application/Kernel.php"
-        ]
+            "Tests\\BitBag\\SyliusInPostPlugin\\": ["tests/", "tests/TestApplication/src/"]
+        }
     },
     "scripts": {
         "post-install-cmd": [
@@ -83,5 +84,18 @@
         "post-create-project-cmd": [
             "php bin/create_node_symlink.php"
         ]
-    }
+    },
+    "extra": {
+        "symfony": {
+            "allow-contrib": false,
+            "require": "^7.1"
+        },
+        "public-dir": "vendor/sylius/test-application/public"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/Sylius/TestApplication"
+        }
+    ]
 }
