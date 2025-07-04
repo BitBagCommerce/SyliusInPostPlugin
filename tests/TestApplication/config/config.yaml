@@ -1,6 +1,5 @@
 imports:
     - { resource: "services_test.php" }
-    - { resource: "twig_hooks.yaml" }
     - { resource: "bitbag_sylius_shipping_export_plugin.yaml" }
     - { resource: "../../../config/config.yml" }
 
@@ -9,7 +8,7 @@ parameters:
 
 twig:
     paths:
-        '%kernel.project_dir%/../../../tests/TestApplication/templates': ~
+        '%kernel.project_dir%/../../../templates': ~
 
 doctrine:
     orm:

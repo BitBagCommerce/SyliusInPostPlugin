@@ -8,6 +8,7 @@ imports:
     - { resource: "@BitBagSyliusInPostPlugin/config/services.xml" }
     - { resource: "@BitBagSyliusInPostPlugin/config/resource/bitbag_inpost.yml" }
     - { resource: "@BitBagSyliusInPostPlugin/config/grid/*" }
+    - { resource: "@BitBagSyliusInPostPlugin/config/twig_hooks.yaml" }
 
 twig:
     globals:
