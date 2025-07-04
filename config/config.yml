@@ -14,4 +14,3 @@ twig:
     globals:
         inpost_client: '@bitbag.sylius_inpost_plugin.api.web_client'
         bitbag_inpost_parcel_template: '%env(BITBAG_INPOST_DEFAULT_PARCEL_TEMPLATE)%'
-

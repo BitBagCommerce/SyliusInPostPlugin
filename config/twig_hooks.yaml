@@ -2,20 +2,20 @@ sylius_twig_hooks:
     hooks:
         'sylius_shop.base#javascripts':
             scripts:
-                template: 'twig_hooks/shop/shared/layout/base/scripts.html.twig'
+                template: '@BitBagSyliusInPostPlugin/twig_hooks/shop/shared/layout/base/scripts.html.twig'
                 priority: 0
 
         'sylius_admin.base#stylesheets':
             styles:
-                template: 'twig_hooks/admin/shared/layout/base/stylesheets.html.twig'
+                template: '@BitBagSyliusInPostPlugin/twig_hooks/admin/shared/layout/base/stylesheets.html.twig'
                 priority: 0
 
         sylius_admin.order.show.content.sections.customer:
             shipping_address:
-                template: 'twig_hooks/admin/order/show/content/sections/customer/shipping_address.html.twig'
+                template: '@BitBagSyliusInPostPlugin/twig_hooks/admin/order/show/content/sections/customer/shipping_address.html.twig'
                 priority: 200
 
         sylius_shop.checkout.select_shipping.content.form.shipments.shipment.choice.details:
             description:
-                template: 'twig_hooks/shop/checkout/select_shipping/content/form/shipments/shipment/choice/details/description.html.twig'
+                template: '@BitBagSyliusInPostPlugin/twig_hooks/shop/checkout/select_shipping/content/form/shipments/shipment/choice/details/description.html.twig'
                 priority: 0

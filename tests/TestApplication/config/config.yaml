@@ -6,10 +6,6 @@ imports:
 parameters:
     bitbag.shipping_labels_path: '%kernel.project_dir%/shipping_labels'
 
-twig:
-    paths:
-        '%kernel.project_dir%/../../../templates': ~
-
 doctrine:
     orm:
         auto_generate_proxy_classes: '%kernel.debug%'
