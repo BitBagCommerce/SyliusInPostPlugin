@@ -58,7 +58,7 @@ Import required config in your `config/packages/_sylius.yaml` file:
 
 imports:
     ...
-    - { resource: "@BitBagSyliusInPostPlugin/Resources/config/config.yml" }
+    - { resource: "@BitBagSyliusInPostPlugin/config/config.yml" }
 ```
 
 Import routing in your `config/routes.yaml` file:
@@ -66,7 +66,7 @@ Import routing in your `config/routes.yaml` file:
 # config/routes.yaml
 
 bitbag_sylius_inpost_plugin:
-    resource: "@BitBagSyliusInPostPlugin/Resources/config/routes.yml"
+    resource: "@BitBagSyliusInPostPlugin/config/routes.yml"
 ```
 
 This plugin was made on top of [SyliusShippingExportPlugin](https://github.com/BitBagCommerce/SyliusShippingExportPlugin).

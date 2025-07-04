@@ -12,7 +12,7 @@ doctrine:
                     App:
                         # ...
                         type: xml
-                        dir: '%kernel.project_dir%/src/Resources/config/doctrine'
+                        dir: '%kernel.project_dir%/config/doctrine'
 ```
 
 Extend entities with parameters and methods using attributes and traits:
@@ -79,11 +79,11 @@ class ShippingExport extends BaseShippingExport implements ShippingExportInterfa
 }
 ```
 
-Define new Entity mapping inside `src/Resources/config/doctrine` directory.
+Define new Entity mapping inside `config/doctrine` directory.
 
 - **Order entity:**
 
-`src/Resources/config/doctrine/Order.orm.xml`
+`config/doctrine/Order.orm.xml`
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -110,7 +110,7 @@ Define new Entity mapping inside `src/Resources/config/doctrine` directory.
 
 - **Shipping method entity:**
 
-`src/Resources/config/doctrine/ShippingMethod.orm.xml`
+`config/doctrine/ShippingMethod.orm.xml`
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -133,7 +133,7 @@ Define new Entity mapping inside `src/Resources/config/doctrine` directory.
 
 - **Shipping export entity:**
 
-`src/Resources/config/doctrine/ShippingExport.orm.xml`
+`config/doctrine/ShippingExport.orm.xml`
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
