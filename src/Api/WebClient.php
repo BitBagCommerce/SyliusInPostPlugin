@@ -222,8 +222,11 @@ final class WebClient implements WebClientInterface
             $request = $this->requestFactory
                 ->createRequest($method, $url)
                 ->withHeader('Content-Type', $header['Content-Type'])
-                ->withHeader('Authorization', $header['Authorization'])
-                ->withBody($this->streamFactory->createStream(json_encode($data)));
+                ->withHeader('Authorization', $header['Authorization']);
+
+            if ([] !== $data) {
+                $request = $request->withBody($this->streamFactory->createStream(json_encode($data)));
+            }
 
             $result = $this->apiClient->sendRequest($request);
             $response = json_decode((string) $result->getBody(), true);
