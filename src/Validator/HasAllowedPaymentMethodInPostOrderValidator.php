@@ -15,7 +15,6 @@ use BitBag\SyliusInPostPlugin\Checker\ShippingMethodCheckerInterface;
 use BitBag\SyliusInPostPlugin\Model\InPostPointsAwareInterface;
 use BitBag\SyliusInPostPlugin\Validator\Constraint\HasAllowedPaymentMethodInPostOrder;
 use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Payment\Model\PaymentInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -48,7 +47,6 @@ class HasAllowedPaymentMethodInPostOrderValidator extends ConstraintValidator
             return;
         }
 
-        /** @var PaymentInterface $payment */
         foreach ($value->getPayments() as $index => $payment) {
             if (self::CASH_ON_DELIVERY === $payment->getMethod()?->getCode()) {
                 $this->addPaymentMethodViolation($index);
@@ -58,7 +56,6 @@ class HasAllowedPaymentMethodInPostOrderValidator extends ConstraintValidator
 
     private function addPaymentMethodViolation(int|string $index): void
     {
-        // The shop renders errors per payment method field, so the violation has to point at that field.
         $this->context->buildViolation(HasAllowedPaymentMethodInPostOrder::NOT_ALLOWED_PAYMENT_METHOD_MESSAGE)
             ->atPath(sprintf('payments[%s].method', $index))
             ->addViolation();

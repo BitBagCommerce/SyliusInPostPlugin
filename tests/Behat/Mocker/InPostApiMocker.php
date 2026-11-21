@@ -11,10 +11,6 @@ declare(strict_types=1);
 
 namespace Tests\BitBag\SyliusInPostPlugin\Behat\Mocker;
 
-/**
- * Sylius 2 no longer ships the Behat service mocker. No scenario exports shipments to the InPost API,
- * so the action runs as is; add a test double for bitbag.sylius_inpost_plugin.api.web_client when one does.
- */
 final class InPostApiMocker
 {
     public function performActionInApiSuccessfulScope(callable $action): void

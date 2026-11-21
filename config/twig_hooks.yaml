@@ -30,8 +30,6 @@ sylius_twig_hooks:
                 template: '@BitBagSyliusInPostPlugin/twig_hooks/admin/shipping_method/form/image.html.twig'
                 priority: -100
 
-        # Pass the submitted form to the checkout components, so InPost validation errors
-        # (phone number on the shipping step, cash on delivery on the payment step) are displayed.
         'sylius_shop.checkout.select_shipping.content':
             form:
                 component: 'sylius_shop:checkout:shipping:form'
