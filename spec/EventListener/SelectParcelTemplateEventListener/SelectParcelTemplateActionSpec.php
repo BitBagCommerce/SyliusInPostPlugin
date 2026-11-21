@@ -33,9 +33,11 @@ class SelectParcelTemplateActionSpec extends ObjectBehavior
         ShippingExportRepositoryInterface $shippingExportRepository,
         RequestStack $requestStack,
         SessionInterface $session,
-        FlashBagInterface $flashBag
+        FlashBagInterface $flashBag,
+        TranslatorInterface $translator,
     ): void {
         $shippingExportRepository->add($shippingExport)->shouldBeCalled();
+        $translator->trans("bitbag_sylius_inpost_plugin.ui.parcel_template.select_action_performed")->willReturn("Parcel template has been changed.");
 
         $requestStack->getSession()->willReturn($session);
         $session->getBag('flashes')->willReturn($flashBag);

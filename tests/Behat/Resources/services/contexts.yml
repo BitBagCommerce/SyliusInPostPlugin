@@ -5,13 +5,13 @@ services:
         arguments:
             - '@bitbag.sylius_inpost_plugin.behat.page.admin.shipping_gateway.create'
             - '@sylius.behat.current_page_resolver'
-            - '@sylius.behat.notification_checker'
+            - '@sylius.behat.notification_checker.admin'
 
     bitbag.sylius_inpost_plugin.behat.context.setup.shipping_gateway:
         class: Tests\BitBag\SyliusInPostPlugin\Behat\Context\Setup\ShippingGatewayContext
         public: true
         arguments:
-            - '@sylius.product_variant_resolver.default'
+            - '@sylius.resolver.product_variant'
             - '@sylius.repository.order'
             - '@sylius.repository.shipment'
             - '@doctrine.orm.entity_manager'

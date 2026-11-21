@@ -48,26 +48,19 @@ class HasAllowedPaymentMethodInPostOrderValidator extends ConstraintValidator
             return;
         }
 
-        if (true === $this->isSelectedCashOnDeliveryPaymentMethod($value)) {
-            $this->addPaymentMethodViolation();
+        /** @var PaymentInterface $payment */
+        foreach ($value->getPayments() as $index => $payment) {
+            if (self::CASH_ON_DELIVERY === $payment->getMethod()?->getCode()) {
+                $this->addPaymentMethodViolation($index);
+            }
         }
     }
 
-    private function isSelectedCashOnDeliveryPaymentMethod(OrderInterface $order): bool
+    private function addPaymentMethodViolation(int|string $index): void
     {
-        return $order->getPayments()->exists(function ($index, PaymentInterface $payment): bool {
-            if (null === $payment->getMethod()) {
-                return false;
-            }
-
-            return self::CASH_ON_DELIVERY === $payment->getMethod()->getCode();
-        });
-    }
-
-    private function addPaymentMethodViolation(): void
-    {
+        // The shop renders errors per payment method field, so the violation has to point at that field.
         $this->context->buildViolation(HasAllowedPaymentMethodInPostOrder::NOT_ALLOWED_PAYMENT_METHOD_MESSAGE)
-            ->atPath('payments.method')
+            ->atPath(sprintf('payments[%s].method', $index))
             ->addViolation();
     }
 }

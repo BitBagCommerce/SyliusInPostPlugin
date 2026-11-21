@@ -1,5 +1,5 @@
 #admin-inpost-wrapper {
-    background-color: $white;
+    background-color: var(--tblr-bg-surface, #{$white});
 
     .inpost-header {
         margin-bottom: -$spacer * 1.05;

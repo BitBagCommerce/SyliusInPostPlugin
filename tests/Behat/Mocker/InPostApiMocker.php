@@ -11,44 +11,14 @@ declare(strict_types=1);
 
 namespace Tests\BitBag\SyliusInPostPlugin\Behat\Mocker;
 
-use BitBag\SyliusInPostPlugin\Api\WebClientInterface;
-use Sylius\Behat\Service\Mocker\MockerInterface;
-
+/**
+ * Sylius 2 no longer ships the Behat service mocker. No scenario exports shipments to the InPost API,
+ * so the action runs as is; add a test double for bitbag.sylius_inpost_plugin.api.web_client when one does.
+ */
 final class InPostApiMocker
 {
-    private MockerInterface $mocker;
-
-    public function __construct(MockerInterface $mocker)
-    {
-        $this->mocker = $mocker;
-    }
-
     public function performActionInApiSuccessfulScope(callable $action): void
     {
-        $this->mockApiSuccessfulInPostResponse();
         $action();
-        $this->mocker->unmockAll();
-    }
-
-    private function mockApiSuccessfulInPostResponse(): void
-    {
-        $createShipmentResult = (object) [
-            'createShipmentResult' => (object) [
-                'label' => (object) [
-                    'labelContent' => 'test',
-                    'labelType' => 't',
-                ],
-            ],
-        ];
-
-        $this
-            ->mocker
-            ->mockService(
-                'bitbag.sylius_inpost_plugin.api.web_client',
-                WebClientInterface::class,
-            )
-            ->shouldReceive('createShipment')
-            ->andReturn($createShipmentResult)
-        ;
     }
 }

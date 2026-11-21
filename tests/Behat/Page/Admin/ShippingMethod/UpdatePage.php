@@ -23,7 +23,7 @@ final class UpdatePage extends BaseUpdatePage implements UpdatePageInterface
         Assert::notEmpty($filesPath);
 
         $this->getDocument()->attachFileToField(
-            'sylius_shipping_method_image_file',
+            'sylius_admin_shipping_method_image_file',
             $filesPath . $path,
         );
     }

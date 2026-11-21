@@ -5,13 +5,14 @@
     align-items: center;
     margin: $spacer 0;
     padding: $spacer;
-    border: 1px solid $gray-200;
+    border: 1px solid var(--tblr-border-color, #{$gray-200});
     border-radius: $border-radius;
 
     &-btn {
         display: block;
         border: none;
-        background: $gray-200;
+        background: var(--tblr-bg-surface-secondary, #{$gray-200});
+        color: inherit;
         padding: $spacer * 0.5 $spacer;
         border-radius: 2px;
         cursor: pointer;
