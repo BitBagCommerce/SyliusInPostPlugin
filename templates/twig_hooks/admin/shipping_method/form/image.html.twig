@@ -1,0 +1,16 @@
+{% set form = hookable_metadata.context.form %}
+{% set image = form.image.vars.data %}
+
+<div class="card mb-3">
+    <div class="card-header">
+        <div class="card-title">
+            {{ 'sylius.ui.image'|trans }}
+        </div>
+    </div>
+    <div class="card-body">
+        {% if image is not null and image.path is not null %}
+            <p>{{ 'bitbag_sylius_inpost_plugin.ui.file'|trans }}: {{ image.path }}</p>
+        {% endif %}
+        {{ form_row(form.image.file) }}
+    </div>
+</div>

@@ -15,7 +15,6 @@ use BitBag\SyliusInPostPlugin\Checker\ShippingMethodCheckerInterface;
 use BitBag\SyliusInPostPlugin\Model\InPostPointsAwareInterface;
 use BitBag\SyliusInPostPlugin\Validator\Constraint\HasAllowedPaymentMethodInPostOrder;
 use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Payment\Model\PaymentInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -48,26 +47,17 @@ class HasAllowedPaymentMethodInPostOrderValidator extends ConstraintValidator
             return;
         }
 
-        if (true === $this->isSelectedCashOnDeliveryPaymentMethod($value)) {
-            $this->addPaymentMethodViolation();
+        foreach ($value->getPayments() as $index => $payment) {
+            if (self::CASH_ON_DELIVERY === $payment->getMethod()?->getCode()) {
+                $this->addPaymentMethodViolation($index);
+            }
         }
     }
 
-    private function isSelectedCashOnDeliveryPaymentMethod(OrderInterface $order): bool
-    {
-        return $order->getPayments()->exists(function ($index, PaymentInterface $payment): bool {
-            if (null === $payment->getMethod()) {
-                return false;
-            }
-
-            return self::CASH_ON_DELIVERY === $payment->getMethod()->getCode();
-        });
-    }
-
-    private function addPaymentMethodViolation(): void
+    private function addPaymentMethodViolation(int|string $index): void
     {
         $this->context->buildViolation(HasAllowedPaymentMethodInPostOrder::NOT_ALLOWED_PAYMENT_METHOD_MESSAGE)
-            ->atPath('payments.method')
+            ->atPath(sprintf('payments[%s].method', $index))
             ->addViolation();
     }
 }

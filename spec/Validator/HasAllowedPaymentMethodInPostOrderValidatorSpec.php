@@ -91,7 +91,7 @@ class HasAllowedPaymentMethodInPostOrderValidatorSpec extends ObjectBehavior
         $value->getPayments()->willReturn(new ArrayCollection([$payment]));
         $shippingMethodChecker->isInPost($value)->willReturn(true);
 
-        $violationBuilder->atPath('payments.method')->shouldBeCalled()->willReturn($violationBuilder);
+        $violationBuilder->atPath('payments[0].method')->shouldBeCalled()->willReturn($violationBuilder);
         $violationBuilder->addViolation()->shouldBeCalled();
 
         $violation = $context->buildViolation(HasAllowedPaymentMethodInPostOrder::NOT_ALLOWED_PAYMENT_METHOD_MESSAGE);

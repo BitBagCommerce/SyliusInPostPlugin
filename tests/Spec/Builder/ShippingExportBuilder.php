@@ -14,7 +14,7 @@ namespace Tests\BitBag\SyliusInPostPlugin\Spec\Builder;
 use BitBag\SyliusInPostPlugin\Entity\ShippingExportInterface;
 use BitBag\SyliusShippingExportPlugin\Entity\ShippingGatewayInterface;
 use Sylius\Component\Core\Model\ShipmentInterface;
-use Tests\BitBag\SyliusInPostPlugin\Application\src\Entity\ShippingExport;
+use Tests\BitBag\SyliusInPostPlugin\Entity\Shipping\ShippingExport;
 
 class ShippingExportBuilder
 {

@@ -19,3 +19,31 @@ sylius_twig_hooks:
             description:
                 template: '@BitBagSyliusInPostPlugin/twig_hooks/shop/checkout/select_shipping/content/form/shipments/shipment/choice/details/description.html.twig'
                 priority: 0
+
+        'sylius_admin.shipping_method.create.content.form#left':
+            image:
+                template: '@BitBagSyliusInPostPlugin/twig_hooks/admin/shipping_method/form/image.html.twig'
+                priority: -100
+
+        'sylius_admin.shipping_method.update.content.form#left':
+            image:
+                template: '@BitBagSyliusInPostPlugin/twig_hooks/admin/shipping_method/form/image.html.twig'
+                priority: -100
+
+        'sylius_shop.checkout.select_shipping.content':
+            form:
+                component: 'sylius_shop:checkout:shipping:form'
+                props:
+                    order: '@=_context.order'
+                    form: '@=_context.form'
+                    template: '@SyliusShop/checkout/select_shipping/content/form.html.twig'
+                priority: 0
+
+        'sylius_shop.checkout.select_payment.content':
+            form:
+                component: 'sylius_shop:checkout:payment:form'
+                props:
+                    resource: '@=_context.order'
+                    form: '@=_context.form'
+                    template: '@SyliusShop/checkout/select_payment/content/form.html.twig'
+                priority: 0
